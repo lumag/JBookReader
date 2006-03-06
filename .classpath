@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry output="bin-model" kind="src" path="src-model"/>
+	<classpathentry kind="src" path="src-misc"/>
+	<classpathentry output="bin-ui" kind="src" path="src-ui"/>
 	<classpathentry output="bin-parser" kind="src" path="src-parser"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="src" path="src-tests"/>

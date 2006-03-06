@@ -10,22 +10,26 @@
     <path id="project.classpath">
         <pathelement location="bin"/>
         <pathelement location="bin-parser"/>
+        <pathelement location="bin-ui"/>
         <pathelement location="bin-model"/>
         <pathelement location="${JUNIT_HOME}/junit.jar"/>
     </path>
     <target name="init">
         <mkdir dir="bin-model"/>
-        <mkdir dir="bin-parser"/>
         <mkdir dir="bin"/>
+        <mkdir dir="bin-ui"/>
+        <mkdir dir="bin-parser"/>
     </target>
     <target name="clean">
         <delete dir="bin-model"/>
-        <delete dir="bin-parser"/>
         <delete dir="bin"/>
+        <delete dir="bin-ui"/>
+        <delete dir="bin-parser"/>
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac destdir="bin">
+            <src path="src-misc"/>
             <src path="src-tests"/>
             <classpath refid="project.classpath"/>
         </javac>
@@ -37,9 +41,13 @@
             <src path="src-parser"/>
             <classpath refid="project.classpath"/>
         </javac>
+        <javac destdir="bin-ui">
+            <src path="src-ui"/>
+            <classpath refid="project.classpath"/>
+        </javac>
     </target>
     <target name="BookParserExample">
-        <java classname="org.jbookreader.BookParserExample" failonerror="true" fork="yes">
+        <java classname="org.jbookreader.ui.BookParserExample" failonerror="true" fork="yes">
             <classpath refid="project.classpath"/>
         </java>
     </target>

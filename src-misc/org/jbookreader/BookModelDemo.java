@@ -48,7 +48,9 @@ public class BookModelDemo {
 
 			node.setTagName("body");
 
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 			
 			this.myBook.addBody(node);
 			
@@ -64,7 +66,9 @@ public class BookModelDemo {
 			
 			node.setTagName("title");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 
 			this.mySection.setTitle(node);
 			
@@ -78,7 +82,9 @@ public class BookModelDemo {
 
 			node.setTagName("p");
 
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 			
 			this.myContainer = node;
 		}
@@ -88,7 +94,9 @@ public class BookModelDemo {
 			_TextNode node = new _TextNode();
 			node.setText("Title");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 		}
 		
 		// /p
@@ -107,7 +115,9 @@ public class BookModelDemo {
 			
 			node.setTagName("section");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 
 			this.mySection = node;
 
@@ -120,7 +130,9 @@ public class BookModelDemo {
 			
 			node.setTagName("title");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 
 			this.mySection.setTitle(node);
 			
@@ -134,7 +146,9 @@ public class BookModelDemo {
 			
 			node.setTagName("p");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 
 			this.myContainer = node;
 		}
@@ -144,7 +158,9 @@ public class BookModelDemo {
 			_TextNode node = new _TextNode();
 			node.setText("Section Title");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 		}
 		
 		// /p
@@ -164,7 +180,9 @@ public class BookModelDemo {
 			
 			node.setTagName("p");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 
 			this.myContainer = node;
 		}
@@ -174,7 +192,9 @@ public class BookModelDemo {
 			_TextNode node = new _TextNode();
 			node.setText("Section Text");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 		}
 		
 		// em
@@ -194,7 +214,9 @@ public class BookModelDemo {
 			_TextNode node = new _TextNode();
 			node.setText("in italic");
 			
-			this.myContainer.addChildNode(node);
+			if (this.myContainer != null) {
+				this.myContainer.addChildNode(node);
+			}
 		}
 		
 		// /em

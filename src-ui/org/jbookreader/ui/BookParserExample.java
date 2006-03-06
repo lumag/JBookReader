@@ -1,4 +1,5 @@
-package org.jbookreader;
+package org.jbookreader.ui;
+
 
 import org.jbookreader.book.Book;
 import org.jbookreader.book.bom.IContainerNode;
