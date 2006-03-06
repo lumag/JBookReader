@@ -37,7 +37,7 @@
     <title>
       <p>Title</p>
     </title>
-    <section>
+    <section id="t">
       <title>
         <p>
 	  Section title.
