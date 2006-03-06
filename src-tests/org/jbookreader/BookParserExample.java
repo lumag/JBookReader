@@ -9,7 +9,15 @@ public class BookParserExample {
 
 	public static void printNode(INode node) {
 		if (node.isContainer()) {
-			System.out.println('<' + node.getTagName() + '>');
+			System.out.print('<');
+			System.out.print(node.getTagName());
+
+			String id;
+			if ((id = node.getID()) != null) {
+				System.out.printf(" id=\"%s\"", id);
+			}
+			System.out.println('>');
+
 			IContainerNode cnode = (IContainerNode)node;
 			for (INode child : cnode.getChildNodes())
 				printNode(child);
