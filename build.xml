@@ -36,7 +36,6 @@
     </target>
     <target name="TextUI">
         <java classname="org.jbookreader.ui.text.TextUI" failonerror="true" fork="yes">
-            <arg value="examples/test.fb2"/>
             <classpath refid="project.classpath"/>
         </java>
     </target>
