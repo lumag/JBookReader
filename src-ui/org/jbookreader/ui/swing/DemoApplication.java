@@ -1,20 +1,26 @@
 package org.jbookreader.ui.swing;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.Dimension;
+
+import javax.swing.BorderFactory;
+import javax.swing.JComponent;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
 
 public class DemoApplication {
 	private JComponent createComponent() {
-//		JPanel pane = new JPanel();
+		JPanel pane = new JPanel();
 
 		JComponent text = new TextComponent();
-		Dimension dim = new Dimension(100,100);
+		Dimension dim = new Dimension(200,100);
 		text.setMinimumSize(dim);
 		text.setPreferredSize(dim);
-//		pane.add(text);	
+		pane.add(text);	
 
-		return text;
-//		return pane;
+		return pane;
+//		return text;
 	}
 	public DemoApplication() {
 		JFrame frame = new JFrame("Demo");
@@ -22,7 +28,7 @@ public class DemoApplication {
 
 		Container contentPane = frame.getContentPane();
 		JComponent component = createComponent();
-		component.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+		component.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 12));
 
 		contentPane.add(component, BorderLayout.CENTER);
 

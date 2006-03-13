@@ -1,6 +1,6 @@
 package org.jbookreader.ui.swing;
 
-import javax.swing.*;
+import javax.swing.JFrame;
 
 public class Main {
 	public static void createAndShowGUI() {
