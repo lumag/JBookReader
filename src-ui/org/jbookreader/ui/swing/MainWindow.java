@@ -32,6 +32,8 @@ public class MainWindow extends JFrame {
 		JPanel pane = new JPanel();
 
 		JComponent text = new TextComponent();
+		
+		text.setOpaque(true);
 		Dimension dim = new Dimension(200,100);
 		text.setMinimumSize(dim);
 		text.setPreferredSize(dim);
@@ -184,7 +186,7 @@ public class MainWindow extends JFrame {
 		Container contentPane = getContentPane();
 
 		JComponent component = createContents();
-		component.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 12));
+		component.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
 		contentPane.add(component, BorderLayout.CENTER);
 
 		pack();
