@@ -23,6 +23,9 @@ public class ImageNode extends AbstractNode {
 	 */
 	private String myTitle;
 	
+	/**
+	 * (temporary): display type of the node.
+	 */
 	private EDisplayType myDisplayType;
 
 	/**
@@ -50,6 +53,10 @@ public class ImageNode extends AbstractNode {
 		return this.myDisplayType;
 	}
 
+	/**
+	 * (temporary) sets the display type
+	 * @param displayType
+	 */
 	public void setDisplayType(EDisplayType displayType) {
 		this.myDisplayType = displayType;
 	}

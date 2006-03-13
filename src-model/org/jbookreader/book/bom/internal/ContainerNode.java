@@ -10,12 +10,19 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  *
  */
 public class ContainerNode extends AbstractContainerNode {
+	/**
+	 * (temporary)display type
+	 */
 	private EDisplayType myDisplayType = EDisplayType.INLINE;
 
 	public EDisplayType getDisplayType() {
 		return this.myDisplayType;
 	}
 
+	/**
+	 * (temporary) sets the display type
+	 * @param displayType
+	 */
 	public void setDisplayType(EDisplayType displayType) {
 		this.myDisplayType = displayType;
 	}
