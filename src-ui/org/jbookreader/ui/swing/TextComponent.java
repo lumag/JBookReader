@@ -7,7 +7,15 @@ import java.awt.Insets;
 
 import javax.swing.JComponent;
 
+/**
+ * This class represents a book-viewing component. TBD!
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
+@SuppressWarnings("serial")
 public class TextComponent extends JComponent {
+	@Override
 	protected void paintComponent(Graphics g) {
 		if (isOpaque()) { // paint background
 			g.setColor(getBackground());
@@ -35,5 +43,4 @@ public class TextComponent extends JComponent {
 		g2d.dispose();
 
 	}
-
 }
