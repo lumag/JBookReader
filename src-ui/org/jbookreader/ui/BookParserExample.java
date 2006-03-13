@@ -6,8 +6,18 @@ import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.parser.FB2Parser;
 
+/**
+ * This is a very simple application: it just parses the book and outputs the parsed tree as XML.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public class BookParserExample {
 
+	/**
+	 * The recursive helper function for printing the tree node,
+	 * @param node the node to print
+	 */
 	public static void printNode(INode node) {
 		if (node.isContainer()) {
 			System.out.print('<');
@@ -27,7 +37,13 @@ public class BookParserExample {
 			System.out.println(node.getText());
 		}
 	}
-	
+
+	/**
+	 * Parse the provided book (or "examples/simple.fb2" if none given) and output
+	 * the XML tree.
+	 * @param args the name of the book
+	 * @throws Exception in case of any error.
+	 */
 	public static void main(String[] args) throws Exception {
 		Book book = FB2Parser.parse(args.length>0?args[0]:"examples/simple.fb2");
 		for (INode node: book)

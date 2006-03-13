@@ -20,8 +20,17 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  */
 public class BookModelDemo {
 
+	/**
+	 * The book.
+	 */
 	private Book myBook;
+	/**
+	 * Current section.
+	 */
 	private ISectioningNode mySection;
+	/**
+	 * Current container.
+	 */
 	private IContainerNode myContainer;
 
 	/**

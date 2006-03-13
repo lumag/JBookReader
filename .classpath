@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry output="bin-model" kind="src" path="src-model"/>
-	<classpathentry kind="src" path="src-misc"/>
-	<classpathentry output="bin-ui" kind="src" path="src-ui"/>
-	<classpathentry output="bin-parser" kind="src" path="src-parser"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="src" path="src-model"/>
+	<classpathentry kind="src" path="src-parser"/>
+	<classpathentry kind="src" path="src-painter"/>
+	<classpathentry kind="src" path="src-ui"/>
 	<classpathentry kind="src" path="src-tests"/>
+	<classpathentry kind="src" path="src-misc"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry sourcepath="/ECLIPSE_HOME/plugins/org.eclipse.jdt.source_3.1.1/src/org.junit_3.8.1/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar">
 		<attributes>
 			<attribute value="file:/usr/share/doc/junit-doc/javadoc/" name="javadoc_location"/>
