@@ -8,6 +8,7 @@ import java.util.Map;
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.ISectioningNode;
+import org.jbookreader.book.stylesheet.IStyleSheet;
 
 
 /**
@@ -17,6 +18,7 @@ import org.jbookreader.book.bom.ISectioningNode;
  *
  */
 public class Book implements IBook {
+	private IStyleSheet mySystemStyleSheet;
 	/**
 	 * The list with book bodies.
 	 */
@@ -59,7 +61,15 @@ public class Book implements IBook {
 	public IBinaryData getBinaryData(String id) {
 		return this.myBinaries.get(id);
 	}
-	
+
+	public IStyleSheet getSystemStyleSheet() {
+		return this.mySystemStyleSheet;
+	}
+
+	public void setSystemStyleSheet(IStyleSheet systemStyleSheet) {
+		this.mySystemStyleSheet = systemStyleSheet;
+	}
+
 	/**
 	 * Returns a node associated with specified <code>id</code>
 	 * @param id the ID of the node

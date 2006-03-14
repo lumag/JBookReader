@@ -2,7 +2,6 @@ package org.jbookreader.book.bom;
 
 import java.util.Collection;
 
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This interface represents a container node.
@@ -26,12 +25,10 @@ public interface IContainerNode extends INode {
 	INode newTextNode(String text);
 	/**
 	 * Creates new child container node.
-	 * FIXME: remove second parameter!!!!!!!!
 	 * @param tagName the tag name of new node
-	 * @param type the display type of the node
 	 * @return new container node.
 	 */
-	IContainerNode newContainerNode(String tagName, EDisplayType type);
+	IContainerNode newContainerNode(String tagName);
 
 	/**
 	 * Returns true if this node also implements {@link ISectioningNode}

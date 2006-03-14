@@ -2,6 +2,8 @@ package org.jbookreader.book.bom;
 
 import java.util.Collection;
 
+import org.jbookreader.book.stylesheet.IStyleSheet;
+
 /**
  * This interface represents the main part of the BookObjectModel &mdash; the book itself.
  * 
@@ -48,4 +50,6 @@ public interface IBook {
 	 */
 	IBinaryData getBinaryData(String id);
 
+	IStyleSheet getSystemStyleSheet();
+	void setSystemStyleSheet(IStyleSheet stylesheet);
 }

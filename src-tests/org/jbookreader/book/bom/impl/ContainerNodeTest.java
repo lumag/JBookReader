@@ -5,20 +5,19 @@ import java.util.Collection;
 import junit.framework.TestCase;
 
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
- * This is a JUnit test case for the {@link AbstractContainerNode} class.
+ * This is a JUnit test case for the {@link ContainerNode} class.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class AbstractContainerNodeTest extends TestCase {
+public class ContainerNodeTest extends TestCase {
 	
 	/**
 	 * The node used for testing.
 	 */
-	private AbstractContainerNode myNode;
+	private ContainerNode myNode;
 	/**
 	 * The name of the testing node.
 	 */
@@ -26,11 +25,7 @@ public class AbstractContainerNodeTest extends TestCase {
 
 	@Override
 	protected void setUp() throws Exception {
-		this.myNode = new AbstractContainerNode() {
-			public EDisplayType getDisplayType() {
-				return EDisplayType.NONE;
-			}
-
+		this.myNode = new ContainerNode() {
 			@Override
 			public boolean isSectioningNode() {
 				return false;

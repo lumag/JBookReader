@@ -4,7 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.jbookreader.book.bom.InlineImageNodeTest;
-import org.jbookreader.book.bom.impl.AbstractContainerNodeTest;
+import org.jbookreader.book.bom.impl.ContainerNodeTest;
 import org.jbookreader.book.bom.impl.StringNodeTest;
 
 /**
@@ -23,7 +23,7 @@ public class AllTest  {
 		TestSuite test = new TestSuite();
 
 		test.addTestSuite(StringNodeTest.class);
-		test.addTestSuite(AbstractContainerNodeTest.class);
+		test.addTestSuite(ContainerNodeTest.class);
 		test.addTestSuite(InlineImageNodeTest.class);
 
 		return test;

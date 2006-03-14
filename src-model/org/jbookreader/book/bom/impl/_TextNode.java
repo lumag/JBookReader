@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom.impl;
 
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This class represens a simple text string w/o formatting or anything else.
@@ -32,10 +31,6 @@ class _TextNode extends AbstractNode {
 	 */
 	public void setText(String str) {
 		this.myString = str;
-	}
-
-	public EDisplayType getDisplayType() {
-		return EDisplayType.INLINE;
 	}
 
 }

@@ -1,9 +1,8 @@
 package org.jbookreader.book.bom;
 
-import org.jbookreader.book.bom.impl.ImageNode;
-import org.jbookreader.book.stylesheet.EDisplayType;
-
 import junit.framework.TestCase;
+
+import org.jbookreader.book.bom.impl.ImageNode;
 
 /**
  * This is a testsuite for the {@link org.jbookreader.book.bom.impl.ImageNode}.
@@ -38,13 +37,6 @@ public class InlineImageNodeTest extends TestCase {
 	 */
 	public void testIsContainer() {
 		assertFalse(this.myNode.isContainer());
-	}
-
-	/**
-	 * Test method for 'org.jbookreader.book.bom.InlineImageNode.getDisplayType()'
-	 */
-	public void testGetDisplayType() {
-		assertEquals(EDisplayType.INLINE, this.myNode.getDisplayType());
 	}
 
 	/**

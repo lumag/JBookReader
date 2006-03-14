@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 
 /**
@@ -16,7 +15,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-abstract class AbstractContainerNode extends AbstractNode implements IContainerNode {
+class ContainerNode extends AbstractNode implements IContainerNode {
 	
 	/**
 	 * The list of child nodes.
@@ -49,10 +48,9 @@ abstract class AbstractContainerNode extends AbstractNode implements IContainerN
 		return node;
 	}
 
-	public IContainerNode newContainerNode(String tagName, EDisplayType type) {
+	public IContainerNode newContainerNode(String tagName) {
 		ContainerNode node = new ContainerNode();
 		node.setTagName(tagName);
-		node.setDisplayType(type);
 		this.addChildNode(node);
 		return node;
 	}

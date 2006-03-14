@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom.impl;
 
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This class represents an inline image.
@@ -24,16 +23,10 @@ public class ImageNode extends AbstractNode {
 	private String myTitle;
 	
 	/**
-	 * (temporary): display type of the node.
-	 */
-	private EDisplayType myDisplayType;
-
-	/**
 	 * This constructs new inline image node.
 	 */
 	public ImageNode() {
 		this.setTagName("image");
-		this.setDisplayType(EDisplayType.INLINE);
 	}
 
 	@Override
@@ -47,18 +40,6 @@ public class ImageNode extends AbstractNode {
 	 */
 	public void setText(String text) {
 		this.myText = text;
-	}
-
-	public EDisplayType getDisplayType() {
-		return this.myDisplayType;
-	}
-
-	/**
-	 * (temporary) sets the display type
-	 * @param displayType
-	 */
-	public void setDisplayType(EDisplayType displayType) {
-		this.myDisplayType = displayType;
 	}
 
 	/**

@@ -7,7 +7,8 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.bom.impl.Book;
-import org.jbookreader.book.stylesheet.EDisplayType;
+import org.jbookreader.book.stylesheet.IStyleSheet;
+import org.jbookreader.book.stylesheet.impl.FB2StyleSheet;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
@@ -43,6 +44,7 @@ public class FB2Parser {
 		reader.setErrorHandler(new ParseErrorHandler());
 
 		IBook book = new Book();
+		book.setSystemStyleSheet(getFB2StyleSheet());
 		
 		reader.setContentHandler(new FB2ContentsHandler(book));
 
@@ -51,6 +53,15 @@ public class FB2Parser {
 		return book;	
 	}
 	
+	// FIXME: after finishing stylesheet loading, replace with reading of stylesheet.
+	private static IStyleSheet ssheet;
+	private static IStyleSheet getFB2StyleSheet() {
+		if (ssheet == null) {
+			ssheet = new FB2StyleSheet();
+		}
+		return ssheet;
+	}
+
 	/**
 	 * This is a handler for SAX events for FB2 parser.
 	 * 
@@ -193,22 +204,21 @@ public class FB2Parser {
 				this.myContainer = node;
 				this.mySection = node;
 			} else if (localName.equals("title")) {
-				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.BLOCK);
+				IContainerNode node = this.myContainer.newContainerNode(localName);
 
 				this.myContainer = node;
 				this.mySection.setTitle(node);
-			} else if (localName.equals("p") || localName.equals("empty-line")) {
-				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.BLOCK);
-
-				this.myContainer = node;
-			} else if(	   localName.equals("strong")
+			} else if (
+					  localName.equals("p")
+					|| localName.equals("empty-line")
+					|| localName.equals("strong")
 					|| localName.equals("emphasis")
 					|| localName.equals("strikethrough")
 					|| localName.equals("sub")
 					|| localName.equals("sup")
 					|| localName.equals("code")
 							) {
-				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.INLINE);
+				IContainerNode node = this.myContainer.newContainerNode(localName);
 
 				this.myContainer = node;
 			} else {

@@ -4,7 +4,6 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.bom.impl.Book;
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * A very simple demonstration for the book model.
@@ -59,7 +58,7 @@ public class BookModelDemo {
 		
 		// title
 		{
-			IContainerNode node = this.myContainer.newContainerNode("title", EDisplayType.BLOCK);
+			IContainerNode node = this.myContainer.newContainerNode("title");
 
 			this.mySection.setTitle(node);
 			
@@ -68,7 +67,7 @@ public class BookModelDemo {
 		
 		// p
 		{
-			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
+			IContainerNode node = this.myContainer.newContainerNode("p");
 			
 			this.myContainer = node;
 		}
@@ -98,7 +97,7 @@ public class BookModelDemo {
 		}
 		// title
 		{
-			IContainerNode node = this.myContainer.newContainerNode("title", EDisplayType.BLOCK);
+			IContainerNode node = this.myContainer.newContainerNode("title");
 
 			this.mySection.setTitle(node);
 			
@@ -107,7 +106,7 @@ public class BookModelDemo {
 		
 		// p
 		{
-			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
+			IContainerNode node = this.myContainer.newContainerNode("p");
 
 			this.myContainer = node;
 		}
@@ -129,7 +128,7 @@ public class BookModelDemo {
 		
 		// p
 		{
-			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
+			IContainerNode node = this.myContainer.newContainerNode("p");
 
 			this.myContainer = node;
 		}
@@ -141,7 +140,7 @@ public class BookModelDemo {
 		
 		// em
 		{
-			IContainerNode node = this.myContainer.newContainerNode("em", EDisplayType.INLINE);
+			IContainerNode node = this.myContainer.newContainerNode("em");
 
 			this.myContainer = node;
 		}

@@ -7,7 +7,6 @@ import java.util.List;
 
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.ISectioningNode;
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This class represents an abstract section.
@@ -15,7 +14,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-class SectioningNode extends AbstractContainerNode implements ISectioningNode {
+class SectioningNode extends ContainerNode implements ISectioningNode {
 	
 	/**
 	 * The title of the section.
@@ -33,10 +32,6 @@ class SectioningNode extends AbstractContainerNode implements ISectioningNode {
 	 * Annotation of the section.
 	 */
 	private IContainerNode myAnnotation;
-
-	public EDisplayType getDisplayType() {
-		return EDisplayType.BLOCK;
-	}
 
 	public IContainerNode getTitle() {
 		return this.myTitle;

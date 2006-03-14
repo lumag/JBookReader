@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom;
 
-import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This interface represents an element of the book.
@@ -21,12 +20,6 @@ public interface INode {
 	 */
 	String getText();
 
-	/**
-	 * Returns a displaying type of the node.
-	 * @return a displaying type of the node.
-	 */
-	EDisplayType getDisplayType();
-	
 	/**
 	 * Returns the tag-name of the node.
 	 * @return the tag-name of the node.
