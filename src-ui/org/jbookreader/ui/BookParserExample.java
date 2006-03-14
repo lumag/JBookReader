@@ -1,7 +1,7 @@
 package org.jbookreader.ui;
 
 
-import org.jbookreader.book.Book;
+import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.parser.FB2Parser;
@@ -45,8 +45,8 @@ public class BookParserExample {
 	 * @throws Exception in case of any error.
 	 */
 	public static void main(String[] args) throws Exception {
-		Book book = FB2Parser.parse(args.length>0?args[0]:"examples/simple.fb2");
-		for (INode node: book)
+		IBook book = FB2Parser.parse(args.length>0?args[0]:"examples/simple.fb2");
+		for (INode node: book.getBodies())
 			printNode(node);
 	}
 

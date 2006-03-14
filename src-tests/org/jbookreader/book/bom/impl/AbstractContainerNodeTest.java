@@ -1,10 +1,11 @@
-package org.jbookreader.book.bom;
+package org.jbookreader.book.bom.impl;
 
-import java.util.List;
-
-import org.jbookreader.book.stylesheet.EDisplayType;
+import java.util.Collection;
 
 import junit.framework.TestCase;
+
+import org.jbookreader.book.bom.INode;
+import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This is a JUnit test case for the {@link AbstractContainerNode} class.
@@ -59,10 +60,10 @@ public class AbstractContainerNodeTest extends TestCase {
 		assertTrue(this.myNode.getChildNodes().isEmpty());
 		this.myNode.addChildNode(new _TextNode());
 
-		List<INode> nodeList = this.myNode.getChildNodes();
+		Collection<INode> nodeList = this.myNode.getChildNodes();
 		assertFalse(nodeList.isEmpty());
 		assertEquals(1, nodeList.size());
-		assertTrue(nodeList.get(0) instanceof _TextNode);
+		assertTrue(nodeList.iterator().next() instanceof _TextNode);
 	}
 
 	/**

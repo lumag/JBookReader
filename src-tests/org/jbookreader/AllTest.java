@@ -1,10 +1,11 @@
 package org.jbookreader;
 
+import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.jbookreader.book.bom.AbstractContainerNodeTest;
 import org.jbookreader.book.bom.InlineImageNodeTest;
-import org.jbookreader.book.bom.StringNodeTest;
+import org.jbookreader.book.bom.impl.AbstractContainerNodeTest;
+import org.jbookreader.book.bom.impl.StringNodeTest;
 
 /**
  * This <code>TestSuite</code> calls all other <code>TestSuite</code>
@@ -13,18 +14,18 @@ import org.jbookreader.book.bom.StringNodeTest;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class AllTest extends TestSuite {
+public class AllTest  {
 	/**
-	 * This constructs the <code>AllTest</code> by adding all testsuites.
+	 * This creates testsuite.
+	 * @return all-test testsuite.
 	 */
-	public AllTest() {
-		addTestSuite(StringNodeTest.class);
-		addTestSuite(AbstractContainerNodeTest.class);
-		addTestSuite(InlineImageNodeTest.class);
+	public static Test suite () {
+		TestSuite test = new TestSuite();
+
+		test.addTestSuite(StringNodeTest.class);
+		test.addTestSuite(AbstractContainerNodeTest.class);
+		test.addTestSuite(InlineImageNodeTest.class);
+
+		return test;
 	}
-	
-	/**
-	 * This is an empty method just for the junit startup
-	 */
-	public void testDummy() {/*empty*/}
 }

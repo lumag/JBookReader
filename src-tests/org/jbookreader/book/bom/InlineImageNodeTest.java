@@ -1,11 +1,12 @@
 package org.jbookreader.book.bom;
 
+import org.jbookreader.book.bom.impl.ImageNode;
 import org.jbookreader.book.stylesheet.EDisplayType;
 
 import junit.framework.TestCase;
 
 /**
- * This is a testsuite for the {@link org.jbookreader.book.bom.ImageNode}.
+ * This is a testsuite for the {@link org.jbookreader.book.bom.impl.ImageNode}.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
@@ -37,15 +38,6 @@ public class InlineImageNodeTest extends TestCase {
 	 */
 	public void testIsContainer() {
 		assertFalse(this.myNode.isContainer());
-	}
-
-	/**
-	 * Test method for 'org.jbookreader.book.bom.InlineImageNode.getChildNodes()'
-	 */
-	public void testGetChildNodes() {
-		try {
-			fail ("Should throw UnsupportedOperationException");
-		} catch (UnsupportedOperationException success) {/*empty*/}
 	}
 
 	/**

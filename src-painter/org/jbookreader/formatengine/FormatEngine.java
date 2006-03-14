@@ -1,12 +1,12 @@
 package org.jbookreader.formatengine;
 
-import org.jbookreader.book.Book;
+import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 
 public class FormatEngine {
 	private ITextPainter myPainter;
-	private Book myBook;
+	private IBook myBook;
 
 	public ITextPainter getPainter() {
 		return this.myPainter;
@@ -16,11 +16,11 @@ public class FormatEngine {
 		this.myPainter = painter;
 	}
 
-	public Book getBook() {
+	public IBook getBook() {
 		return this.myBook;
 	}
 
-	public void setBook(Book book) {
+	public void setBook(IBook book) {
 		this.myBook = book;
 	}
 	
@@ -45,6 +45,10 @@ public class FormatEngine {
 				if (xpos + strut < this.myPainter.getWidth()) {
 					this.myPainter.addHorizontalStrut(strut);
 					xpos += strut;
+				} else {
+					// FIXME: vertical strut calculation
+					this.myPainter.flushString(0);
+					xpos = 0;
 				}
 			}
 

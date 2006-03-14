@@ -1,8 +1,12 @@
-package org.jbookreader.book.bom;
+package org.jbookreader.book.bom.impl;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
@@ -11,7 +15,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class SectioningNode extends AbstractContainerNode implements ISectioningNode {
+class SectioningNode extends AbstractContainerNode implements ISectioningNode {
 	
 	/**
 	 * The title of the section.
@@ -42,8 +46,8 @@ public class SectioningNode extends AbstractContainerNode implements ISectioning
 		this.myTitle = title;
 	}
 
-	public List<IContainerNode> getEpigraph() {
-		return this.myEpigraph;
+	public Collection<IContainerNode> getEpigraph() {
+		return Collections.unmodifiableCollection(this.myEpigraph);
 	}
 
 	public void addEpigraph(IContainerNode epigraph) {
@@ -69,5 +73,12 @@ public class SectioningNode extends AbstractContainerNode implements ISectioning
 
 	public void setAnnotation(IContainerNode annotation) {
 		this.myAnnotation = annotation;
+	}
+
+	public ISectioningNode newSectioningNode(String tagName) {
+		SectioningNode node = new SectioningNode();
+		node.setTagName(tagName);
+		this.addChildNode(node);
+		return node;
 	}
 }

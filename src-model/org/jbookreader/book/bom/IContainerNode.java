@@ -1,6 +1,8 @@
 package org.jbookreader.book.bom;
 
-import java.util.List;
+import java.util.Collection;
+
+import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
  * This interface represents a container node.
@@ -11,27 +13,25 @@ import java.util.List;
 public interface IContainerNode extends INode {
 
 	/**
-	 * Returns a list of child (contained in this one) nodes.
-	 * @return a list of child nodes.
+	 * Returns a collection of child (contained in this one) nodes.
+	 * @return a collection of child nodes.
 	 */
-	List<INode> getChildNodes();
-	/**
-	 * Adds new node to the list of child nodes.
-	 * @param node new node to add
-	 */
-	public void addChildNode(INode node);
+	Collection<INode> getChildNodes();
 
 	/**
-	 * Removes given child node from this list of children.
-	 * @param node a node to remove.
+	 * This creates new child text node with specified text.
+	 * @param text the text of created node
+	 * @return new text node.
 	 */
-	void removeChildNode(INode node);
-
+	INode newTextNode(String text);
 	/**
-	 * This sets the tag-name
-	 * @param tagName the new tag-name
+	 * Creates new child container node.
+	 * FIXME: remove second parameter!!!!!!!!
+	 * @param tagName the tag name of new node
+	 * @param type the display type of the node
+	 * @return new container node.
 	 */
-	void setTagName(String tagName);
+	IContainerNode newContainerNode(String tagName, EDisplayType type);
 
 	/**
 	 * Returns true if this node also implements {@link ISectioningNode}

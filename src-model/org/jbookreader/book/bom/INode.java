@@ -6,7 +6,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * This interface represents an element of the book.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
- * @see org.jbookreader.book.bom.AbstractContainerNode
+ * @see org.jbookreader.book.bom.IContainerNode
  */
 public interface INode {
 	/**
@@ -40,26 +40,9 @@ public interface INode {
 	IContainerNode getParentNode();
 	
 	/**
-	 * Sets the parent node for this one.
-	 * @deprecated
-	 * 
-	 * @see IContainerNode#addChildNode(INode)
-	 * 
-	 * @param parentNode the node, containing this one
-	 */
-	@Deprecated void setParentNode(IContainerNode parentNode);
-	
-	/**
 	 * Returns the ID of this node or null if this node has no ID.
 	 * @return  the ID of this node.
 	 */
 	String getID();
 	
-	/**
-	 * Sets the ID of the node.
-	 * @param id new id of the node
-	 * @deprecated
-	 * @see org.jbookreader.book.Book#setNodeID(String, INode)
-	 */
-	@Deprecated void setID(String id);
 }

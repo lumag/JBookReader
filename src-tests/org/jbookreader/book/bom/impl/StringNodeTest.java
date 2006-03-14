@@ -1,10 +1,12 @@
-package org.jbookreader.book.bom;
+package org.jbookreader.book.bom.impl;
 
+
+import org.jbookreader.book.bom.impl._TextNode;
 
 import junit.framework.TestCase;
 
 /**
- * This is a JUnit test for {@link org.jbookreader.book.bom._TextNode}.
+ * This is a JUnit test for {@link org.jbookreader.book.bom.impl._TextNode}.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *

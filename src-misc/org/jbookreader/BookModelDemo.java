@@ -1,12 +1,9 @@
 package org.jbookreader;
 
-import org.jbookreader.book.Book;
-import org.jbookreader.book.bom.BodyNode;
+import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.ISectioningNode;
-import org.jbookreader.book.bom.SectioningNode;
-import org.jbookreader.book.bom._TextNode;
-import org.jbookreader.book.bom.internal.ContainerNode;
+import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.book.stylesheet.EDisplayType;
 
 /**
@@ -15,7 +12,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
- * @see org.jbookreader.book.Book 
+ * @see org.jbookreader.book.bom.impl.Book 
  * @see org.jbookreader.book.bom 
  */
 public class BookModelDemo {
@@ -23,7 +20,7 @@ public class BookModelDemo {
 	/**
 	 * The book.
 	 */
-	private Book myBook;
+	private IBook myBook;
 	/**
 	 * Current section.
 	 */
@@ -53,16 +50,8 @@ public class BookModelDemo {
 		
 		// body
 		{
-			BodyNode node  = new BodyNode();
+			ISectioningNode node  = this.myBook.newBody("body", null);
 
-			node.setTagName("body");
-
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
-			
-			this.myBook.addBody(node);
-			
 			this.mySection = node;
 
 			this.myContainer = node;
@@ -70,14 +59,7 @@ public class BookModelDemo {
 		
 		// title
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.BLOCK);
-			
-			node.setTagName("title");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			IContainerNode node = this.myContainer.newContainerNode("title", EDisplayType.BLOCK);
 
 			this.mySection.setTitle(node);
 			
@@ -86,26 +68,14 @@ public class BookModelDemo {
 		
 		// p
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.BLOCK);
-
-			node.setTagName("p");
-
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
 			
 			this.myContainer = node;
 		}
 		
 		// #text
 		{
-			_TextNode node = new _TextNode();
-			node.setText("Title");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			this.myContainer.newTextNode("Title");
 		}
 		
 		// /p
@@ -120,28 +90,15 @@ public class BookModelDemo {
 		
 		// section
 		{
-			SectioningNode node = new SectioningNode();
+			ISectioningNode node = this.mySection.newSectioningNode("section");
 			
-			node.setTagName("section");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
-
 			this.mySection = node;
 
 			this.myContainer = node;
 		}
 		// title
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.BLOCK);
-			
-			node.setTagName("title");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			IContainerNode node = this.myContainer.newContainerNode("title", EDisplayType.BLOCK);
 
 			this.mySection.setTitle(node);
 			
@@ -150,26 +107,14 @@ public class BookModelDemo {
 		
 		// p
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.BLOCK);
-			
-			node.setTagName("p");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
 
 			this.myContainer = node;
 		}
 		
 		// #text
 		{
-			_TextNode node = new _TextNode();
-			node.setText("Section Title");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			this.myContainer.newTextNode("Section Title");
 		}
 		
 		// /p
@@ -184,48 +129,26 @@ public class BookModelDemo {
 		
 		// p
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.BLOCK);
-			
-			node.setTagName("p");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			IContainerNode node = this.myContainer.newContainerNode("p", EDisplayType.BLOCK);
 
 			this.myContainer = node;
 		}
 		
 		// #text
 		{
-			_TextNode node = new _TextNode();
-			node.setText("Section Text");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			this.myContainer.newTextNode("Section Text");
 		}
 		
 		// em
 		{
-			ContainerNode node = new ContainerNode();
-			node.setDisplayType(EDisplayType.INLINE);
-			
-			node.setTagName("em");
-			
-			this.myContainer.addChildNode(node);
+			IContainerNode node = this.myContainer.newContainerNode("em", EDisplayType.INLINE);
 
 			this.myContainer = node;
 		}
 		
 		// #text
 		{
-			_TextNode node = new _TextNode();
-			node.setText("in italic");
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
+			this.myContainer.newTextNode("in italic");
 		}
 		
 		// /em

@@ -2,15 +2,11 @@ package org.jbookreader.book.parser;
 
 import java.io.IOException;
 
-import org.jbookreader.book.BinaryData;
-import org.jbookreader.book.Book;
-import org.jbookreader.book.bom.AbstractContainerNode;
-import org.jbookreader.book.bom.BodyNode;
+import org.jbookreader.book.bom.IBinaryData;
+import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.ISectioningNode;
-import org.jbookreader.book.bom.SectioningNode;
-import org.jbookreader.book.bom._TextNode;
-import org.jbookreader.book.bom.internal.ContainerNode;
+import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.book.stylesheet.EDisplayType;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
@@ -40,13 +36,13 @@ public class FB2Parser {
 	 * @throws IOException in case of I/O problem
 	 * @throws SAXException in case of XML parsing problem
 	 */
-	public static Book parse(String uri) throws IOException, SAXException {
+	public static IBook parse(String uri) throws IOException, SAXException {
 		XMLReader reader;
 		
 		reader = XMLReaderFactory.createXMLReader();
 		reader.setErrorHandler(new ParseErrorHandler());
 
-		Book book = new Book();
+		IBook book = new Book();
 		
 		reader.setContentHandler(new FB2ContentsHandler(book));
 
@@ -70,11 +66,11 @@ public class FB2Parser {
 		/**
 		 * The book being parsed.
 		 */
-		private final Book myBook;
+		private final IBook myBook;
 		/**
 		 * Binary blob data being parsed.
 		 */
-		private BinaryData myBinaryData;
+		private IBinaryData myBinaryData;
 
 		/**
 		 * The section being parsed.
@@ -92,7 +88,7 @@ public class FB2Parser {
 		
 		/**
 		 * FIXME: remove this!!!!!
-		 * it a workaround: we can't parseXML metadata currently. Only bodies.
+		 * it a workaround: we can't parseXML metadata currently. Only bodies and binary.
 		 */
 		private boolean parseXML = false;
 		
@@ -100,7 +96,7 @@ public class FB2Parser {
 		 * This constructs new parser for given <code>book</code>
 		 * @param book the book being parsed.
 		 */
-		public FB2ContentsHandler(Book book) {
+		public FB2ContentsHandler(IBook book) {
 			this.myBook = book;
 		}
 
@@ -139,10 +135,8 @@ public class FB2Parser {
 			if (string.length() == 0) {
 				return;
 			}
-			_TextNode node = new _TextNode();
-			node.setText(string);
-
-			this.myContainer.addChildNode(node);
+			
+			this.myContainer.newTextNode(string);
 
 //			System.out.println("#text: '" + string + "'");
 		}
@@ -187,29 +181,26 @@ public class FB2Parser {
 			if (localName.equals("FictionBook")) {
 				// XXX: root book node
 			} else if (localName.equals("binary")) {
-				this.myBinaryData = new BinaryData();
-				this.myBinaryData.setContentType(attributes.getValue("content-type"));
-				this.myBinaryData.setID(attributes.getValue("id"));
-				this.myBook.addBinaryData(this.myBinaryData);
+				this.myBinaryData = this.myBook.newBinaryData(attributes.getValue("id"), attributes.getValue("content-type"));
 			} else if (localName.equals("body")) {
-				BodyNode node = new BodyNode();
+				ISectioningNode node  = this.myBook.newBody("body", attributes.getValue("name"));
 
-				handleBody(node, localName, attributes);
+				this.myContainer = node;
+				this.mySection = node;
 			} else if (localName.equals("section")) {
-				SectioningNode node = new SectioningNode();
+				ISectioningNode node = this.mySection.newSectioningNode(localName);
 				
-				handleSectioning(node, localName, attributes);
+				this.myContainer = node;
+				this.mySection = node;
 			} else if (localName.equals("title")) {
-				ContainerNode node = new ContainerNode();
-				node.setDisplayType(EDisplayType.BLOCK);
+				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.BLOCK);
 
-				handleTitle(node, localName, attributes);
+				this.myContainer = node;
+				this.mySection.setTitle(node);
 			} else if (localName.equals("p") || localName.equals("empty-line")) {
-				ContainerNode node = new ContainerNode();
-				node.setDisplayType(EDisplayType.BLOCK);
+				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.BLOCK);
 
-				// FIXME handleParagraph
-				handleContainer(node, localName, attributes);
+				this.myContainer = node;
 			} else if(	   localName.equals("strong")
 					|| localName.equals("emphasis")
 					|| localName.equals("strikethrough")
@@ -217,89 +208,24 @@ public class FB2Parser {
 					|| localName.equals("sup")
 					|| localName.equals("code")
 							) {
-				ContainerNode node = new ContainerNode();
-				node.setDisplayType(EDisplayType.INLINE);
+				IContainerNode node = this.myContainer.newContainerNode(localName, EDisplayType.INLINE);
 
-				handleContainer(node, localName, attributes);
+				this.myContainer = node;
 			} else {
 				throw new SAXParseException("Unsupported element: " + localName, this.myLocator);
 			}
 
+
+/*			{
+				String id;
+				if ((id = attributes.getValue("id")) != null) {
+					this.myBook.setNodeID(id, node);
+				}
+			}*/
+
 //			System.out.println(localName);
 		}
 		
-		/**
-		 * Processes the title node.
-		 * 
-		 * @param node the node to process
-		 * @param localName the XML tag name
-		 * @param attributes XML attributes
-		 */
-		private void handleTitle(ContainerNode node, String localName, Attributes attributes) {
-			handleContainer(node, localName, attributes);
-			this.mySection.setTitle(node);
-		}
-
-		/**
-		 * Processes the body node.
-		 * 
-		 * @param node the node to process
-		 * @param localName the XML tag name
-		 * @param attributes XML attributes
-		 */
-		private void handleBody(BodyNode node, String localName, Attributes attributes) {
-			handleSectioning(node, localName, attributes);
-
-			this.myBook.addBody(node);
-		}
-
-		/**
-		 * Processes the sectioning node.
-		 * 
-		 * @param node the node to process
-		 * @param localName the XML tag name
-		 * @param attributes XML attributes
-		 */
-		private void handleSectioning(SectioningNode node, String localName, Attributes attributes) {
-			handleContainer(node, localName, attributes);
-
-			this.mySection = node;
-		}
-
-		/**
-		 * Processes abstract container node.
-		 * 
-		 * @param node the node to process
-		 * @param localName the XML tag name
-		 * @param attributes XML attributes
-		 */
-		private void handleContainer(AbstractContainerNode node, String localName, Attributes attributes) {
-			handleNode(node, localName, attributes);
-
-			this.myContainer = node;
-		}
-
-		/**
-		 * Processes abstract node.
-		 * 
-		 * @param node the node to process
-		 * @param localName the XML tag name
-		 * @param attributes XML attributes
-		 */
-		private void handleNode(AbstractContainerNode node, String localName, Attributes attributes) {
-			node.setTagName(localName);
-			
-			String id;
-			
-			if ((id = attributes.getValue("id")) != null) {
-				this.myBook.setNodeID(id, node);
-			}
-			
-			if (this.myContainer != null) {
-				this.myContainer.addChildNode(node);
-			}
-		}
-
 		/**
 		 * An utitlity function. It generates a string from {@link java.lang.StringBuilder} with
 		 * starting and leading whitespace chars removed.

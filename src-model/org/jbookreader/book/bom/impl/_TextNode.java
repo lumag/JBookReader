@@ -1,4 +1,4 @@
-package org.jbookreader.book.bom;
+package org.jbookreader.book.bom.impl;
 
 import org.jbookreader.book.stylesheet.EDisplayType;
 
@@ -8,7 +8,7 @@ import org.jbookreader.book.stylesheet.EDisplayType;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class _TextNode extends AbstractNode {
+class _TextNode extends AbstractNode {
 	/**
 	 * The text, contained in the node.
 	 */
@@ -17,7 +17,7 @@ public class _TextNode extends AbstractNode {
 	/**
 	 * This constructs a new string node.
 	 */
-	public _TextNode() {
+	_TextNode() {
 		this.setTagName("#text");
 	}
 

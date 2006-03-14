@@ -1,18 +1,16 @@
-package org.jbookreader.book;
+package org.jbookreader.book.bom.impl;
+
+import org.jbookreader.book.bom.IBinaryData;
 
 /**
  * This class represents a single binary data blob. It can be viewed
  * in two representations: as a Base64-encoded string, or as a byte
- * array and a length.
+ * array with specified length.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class BinaryData {
-	/**
-	 * The id of the blob.
-	 */
-	private String myID;
+class BinaryData implements IBinaryData {
 	/**
 	 * Content-Type of the blob.
 	 */
@@ -27,40 +25,14 @@ public class BinaryData {
 	 */
 	private int myContentsLength;
 	
-	/**
-	 * Returns the content-type of the blob.
-	 * @return the content-type.
-	 */
 	public String getContentType() {
 		return this.myContentType;
 	}
-	/**
-	 * Sets the content-type of the blob.
-	 * @param contentType new content-type
-	 */
+
 	public void setContentType(String contentType) {
 		this.myContentType = contentType;
 	}
-	/**
-	 * Returns the ID of the blob.
-	 * @return the ID of the blob.
-	 */
-	public String getID() {
-		return this.myID;
-	}
-	/**
-	 * Sets the ID of the blob.
-	 * @param id new ID
-	 */
-	public void setID(String id) {
-		this.myID = id;
-	}
 
-	/**
-	 * Sets the contents of the blob by providing base64-encoding
-	 * representation of data.
-	 * @param base64Encoded
-	 */
 	public void setBase64Encoded(char[] base64Encoded) {
 		this.myContentsArray = new byte[base64Encoded.length/4*3];
 		this.myContentsLength = 0;
@@ -104,11 +76,6 @@ public class BinaryData {
 		}
 	}
 
-	/**
-	 * Sets the contents by providing a byte array and a length.
-	 * @param contents the new contents array.
-	 * @param length the length of contents.
-	 */
 	public void setContents(byte[] contents, int length) {
 		if (this.myContentsLength < length) {
 			this.myContentsArray = new byte[length];
@@ -119,19 +86,10 @@ public class BinaryData {
 		}
 	}
 
-	/**
-	 * Returns the contents array of the data.
-	 * Note, that data can fill not the whole array, but the part of it.
-	 * @return the contents array.
-	 * @see #getContentsLength()
-	 */
 	public byte[] getContentsArray() {
 		return this.myContentsArray;
 	}
-	/**
-	 * Returns the contents length
-	 * @return the length of the contents in the contents array.
-	 */
+
 	public int getContentsLength() {
 		return this.myContentsLength;
 	}

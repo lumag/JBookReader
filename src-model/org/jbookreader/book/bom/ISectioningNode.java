@@ -1,6 +1,8 @@
 package org.jbookreader.book.bom;
 
-import java.util.List;
+import java.util.Collection;
+
+import org.jbookreader.book.bom.impl.ImageNode;
 
 /**
  * This interface represents a sectioning node.
@@ -8,7 +10,7 @@ import java.util.List;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public interface ISectioningNode {
+public interface ISectioningNode extends IContainerNode {
 
 	/**
 	 * Returns the title of the section.
@@ -25,7 +27,7 @@ public interface ISectioningNode {
 	 * Returns the list of epigraphs for the section.
 	 * @return the list of epigraph nodes.
 	 */
-	List<IContainerNode> getEpigraph();
+	Collection<IContainerNode> getEpigraph();
 	
 	/**
 	 * Adds new epigraph for this section
@@ -56,5 +58,12 @@ public interface ISectioningNode {
 	 * @param annotation new annotation.
 	 */
 	void setAnnotation(IContainerNode annotation);
+	
+	/**
+	 * This creates new child sectioning node and returns it.
+	 * @param tagName the tag name of created section
+	 * @return new sectioning node.
+	 */
+	ISectioningNode newSectioningNode(String tagName);
 
 }
