@@ -269,11 +269,11 @@ public class FB2Parser {
 		 */
 		private static String trimStringBuilder(StringBuilder builder, boolean trimStart, boolean trimEnd) {
 			int length = builder.length();
-//			if ((length == 0)
-//					|| (builder.charAt(0) > '\u0020')
-//					&& (builder.charAt(length-1) > '\u0020')) {
-//				return builder.toString();
-//			}
+			if ((length == 0)
+					|| (builder.charAt(0) > '\u0020')
+					&& (builder.charAt(length-1) > '\u0020')) {
+				return builder.toString();
+			}
 
 			int begin = 0;
 			int end = length-1;
@@ -289,10 +289,7 @@ public class FB2Parser {
 			}
 			if (begin > end)
 				return "";
-			/* String answer =  */
 			return builder.substring(begin, end+1);
-			// System.out.println("'" + (trimStart?"{":"") + answer + (trimEnd?"}":"") + "'");
-			// return answer;
 		}
 		
 	}
