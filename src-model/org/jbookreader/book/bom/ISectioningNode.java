@@ -18,10 +18,10 @@ public interface ISectioningNode extends IContainerNode {
 	 */
 	IContainerNode getTitle();
 	/**
-	 * Sets the title of the section.
-	 * @param title the new title node
+	 * Allocates the title of the section.
+	 * @param tagName the tag name of the title node
 	 */
-	void setTitle(IContainerNode title);
+	IContainerNode newTitle(String tagName);
 
 	/**
 	 * Returns the list of epigraphs for the section.
@@ -31,9 +31,9 @@ public interface ISectioningNode extends IContainerNode {
 	
 	/**
 	 * Adds new epigraph for this section
-	 * @param epigraph new epigraph
+	 * @param tagName the tag name of the epigraph
 	 */
-	void addEpigraph(IContainerNode epigraph);
+	IContainerNode newEpigraph(String tagName);
 
 	/**
 	 * Returns the image for this section.
@@ -42,10 +42,10 @@ public interface ISectioningNode extends IContainerNode {
 	ImageNode getImage();
 	
 	/**
-	 * Sets the image for this section.
-	 * @param image new image of this section
+	 * Allocates the image for this section.
+	 * @param tagName the tag name
 	 */
-	void setImage(ImageNode image);
+	ImageNode newImage(String tagName);
 
 	/**
 	 * Returns the annotation for the section.
@@ -54,10 +54,10 @@ public interface ISectioningNode extends IContainerNode {
 	IContainerNode getAnnotation();
 	
 	/**
-	 * Sets the annotation for the section.
-	 * @param annotation new annotation.
+	 * Allocates the annotation for the section.
+	 * @param tagName the tag name
 	 */
-	void setAnnotation(IContainerNode annotation);
+	IContainerNode newAnnotation(String tagName);
 	
 	/**
 	 * This creates new child sectioning node and returns it.
@@ -66,4 +66,5 @@ public interface ISectioningNode extends IContainerNode {
 	 */
 	ISectioningNode newSectioningNode(String tagName);
 
+	ISectioningNode getParentSection();
 }

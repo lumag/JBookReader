@@ -37,6 +37,10 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 	 */
 	protected void addChildNode(AbstractNode node) {
 		this.myChildNodes.add(node);
+		this.setupChildNode(node);
+	}
+	
+	protected void setupChildNode(AbstractNode node) {
 		node.setBook(this.getBook());
 		node.setParentNode(this);
 	}

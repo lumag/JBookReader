@@ -1,4 +1,4 @@
-package org.jbookreader.book.bom;
+package org.jbookreader.book.bom.impl;
 
 import junit.framework.TestCase;
 

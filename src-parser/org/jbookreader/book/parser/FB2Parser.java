@@ -98,10 +98,17 @@ public class FB2Parser {
 		private StringBuilder myText = new StringBuilder();
 		
 		/**
+		 * Flag used for whitespace trimming.
+		 */
+		private boolean hadOpenTag = false;
+		
+		/**
 		 * FIXME: remove this!!!!!
 		 * it a workaround: we can't parseXML metadata currently. Only bodies and binary.
 		 */
 		private boolean parseXML = false;
+
+		private boolean myParseText = false;
 		
 		/**
 		 * This constructs new parser for given <code>book</code>
@@ -131,16 +138,21 @@ public class FB2Parser {
 			if (!this.parseXML)
 				return;
 			
+			if (!this.myParseText)
+				// FIXME: check if it's whitespace?
+				return;
+			
 			this.myText.append(ch, start, length);
 		}
 		
 		/**
 		 * This processes information in <code>this.myText</code> into new #text node.
+		 * @param hasCloseTag TODO
 		 *
-		 *@see FB2ContentsHandler#myText
+		 * @see FB2ContentsHandler#myText
 		 */
-		private void processTextNode() {
-			String string = trimStringBuilder(this.myText);
+		private void processTextNode(boolean hasCloseTag) {
+			String string = trimStringBuilder(this.myText, this.hadOpenTag, hasCloseTag);
 			this.myText.setLength(0);
 			
 			if (string.length() == 0) {
@@ -164,16 +176,22 @@ public class FB2Parser {
 				this.myBinaryData = null;
 			} else {
 				// part of body
-				processTextNode();
+				processTextNode(true);
+				this.hadOpenTag = false;
 				
+				if (localName.equals("p")) {
+					this.myParseText = false;
+				}
+				
+				if (this.myContainer.isSectioningNode()) {
+					this.mySection = this.mySection.getParentSection();
+				}
+					
 				this.myContainer = this.myContainer.getParentNode();
 
-				if (this.myContainer == null || this.myContainer.isSectioningNode()) {
-					this.mySection = (ISectioningNode)(this.myContainer);
-				}
 			}
 
-//			System.out.println("/" + localName);
+			// System.out.println("</" + localName);
 		}
 
 		@Override
@@ -187,7 +205,10 @@ public class FB2Parser {
 				this.parseXML = true;
 			}
 			
-			processTextNode();
+			// System.out.println("<" + localName);
+
+			processTextNode(false);
+			this.hadOpenTag = true;
 			
 			if (localName.equals("FictionBook")) {
 				// XXX: root book node
@@ -204,13 +225,16 @@ public class FB2Parser {
 				this.myContainer = node;
 				this.mySection = node;
 			} else if (localName.equals("title")) {
+				IContainerNode node = this.mySection.newTitle(localName);
+
+				this.myContainer = node;
+			} else if (localName.equals("p")) {
 				IContainerNode node = this.myContainer.newContainerNode(localName);
 
 				this.myContainer = node;
-				this.mySection.setTitle(node);
-			} else if (
-					  localName.equals("p")
-					|| localName.equals("empty-line")
+				
+				this.myParseText  = true;
+			} else if (localName.equals("empty-line")
 					|| localName.equals("strong")
 					|| localName.equals("emphasis")
 					|| localName.equals("strikethrough")
@@ -233,34 +257,42 @@ public class FB2Parser {
 				}
 			}*/
 
-//			System.out.println(localName);
 		}
 		
 		/**
 		 * An utitlity function. It generates a string from {@link java.lang.StringBuilder} with
 		 * starting and leading whitespace chars removed.
 		 * @param builder the <code>StringBuilder</code> to generate string
+		 * @param trimEnd 
+		 * @param trimStart 
 		 * @return a string from <code>builder</code>.
 		 */
-		private static String trimStringBuilder(StringBuilder builder) {
+		private static String trimStringBuilder(StringBuilder builder, boolean trimStart, boolean trimEnd) {
 			int length = builder.length();
-			if ((length == 0)
-					|| (builder.charAt(0) > '\u0020')
-					&& (builder.charAt(length-1) > '\u0020')) {
-				return builder.toString();
-			}
+//			if ((length == 0)
+//					|| (builder.charAt(0) > '\u0020')
+//					&& (builder.charAt(length-1) > '\u0020')) {
+//				return builder.toString();
+//			}
 
 			int begin = 0;
 			int end = length-1;
-			while ((begin <= end) && (builder.charAt(begin) <= '\u0020')) {
-				begin++;
+			if (trimStart) {
+				while ((begin <= end) && (builder.charAt(begin) <= '\u0020')) {
+					begin++;
+				}
 			}
-			while ((begin <= end) && (builder.charAt(end) <= '\u0020')) {
-				end--;
+			if (trimEnd) {
+				while ((begin <= end) && (builder.charAt(end) <= '\u0020')) {
+					end--;
+				}
 			}
 			if (begin > end)
 				return "";
+			/* String answer =  */
 			return builder.substring(begin, end+1);
+			// System.out.println("'" + (trimStart?"{":"") + answer + (trimEnd?"}":"") + "'");
+			// return answer;
 		}
 		
 	}

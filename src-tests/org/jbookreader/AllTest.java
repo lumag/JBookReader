@@ -3,8 +3,8 @@ package org.jbookreader;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.jbookreader.book.bom.InlineImageNodeTest;
 import org.jbookreader.book.bom.impl.ContainerNodeTest;
+import org.jbookreader.book.bom.impl.InlineImageNodeTest;
 import org.jbookreader.book.bom.impl.StringNodeTest;
 
 /**

@@ -1,8 +1,5 @@
-package org.jbookreader;
+package org.jbookreader.book.bom;
 
-import org.jbookreader.book.bom.IBook;
-import org.jbookreader.book.bom.IContainerNode;
-import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.bom.impl.Book;
 
 /**
@@ -14,7 +11,7 @@ import org.jbookreader.book.bom.impl.Book;
  * @see org.jbookreader.book.bom.impl.Book 
  * @see org.jbookreader.book.bom 
  */
-public class BookModelDemo {
+public class BookModelTest {
 
 	/**
 	 * The book.
@@ -34,7 +31,7 @@ public class BookModelDemo {
 	 * @param args unused
 	 */
 	public static void main(String[] args) {
-		new BookModelDemo().run();
+		new BookModelTest().run();
 	}
 
 	/**
@@ -52,23 +49,18 @@ public class BookModelDemo {
 			ISectioningNode node  = this.myBook.newBody("body", null);
 
 			this.mySection = node;
-
 			this.myContainer = node;
 		}
 		
 		// title
 		{
-			IContainerNode node = this.myContainer.newContainerNode("title");
-
-			this.mySection.setTitle(node);
-			
+			IContainerNode node = this.mySection.newTitle("title");
 			this.myContainer = node;
 		}
 		
 		// p
 		{
 			IContainerNode node = this.myContainer.newContainerNode("p");
-			
 			this.myContainer = node;
 		}
 		
@@ -97,10 +89,8 @@ public class BookModelDemo {
 		}
 		// title
 		{
-			IContainerNode node = this.myContainer.newContainerNode("title");
+			IContainerNode node = this.mySection.newTitle("title");
 
-			this.mySection.setTitle(node);
-			
 			this.myContainer = node;
 		}
 		
@@ -164,16 +154,14 @@ public class BookModelDemo {
 		{
 			this.myContainer = this.myContainer.getParentNode();
 			
-			// FIXME: provide a way to do the same w/o typecast
-			this.mySection = (ISectioningNode)(this.myContainer);
+			this.mySection = this.mySection.getParentSection();
 		}
 		
 		// /body
 		{
 			this.myContainer = this.myContainer.getParentNode();
 			
-			// FIXME: provide a way to do the same w/o typecast
-			this.mySection = (ISectioningNode)(this.myContainer);
+			this.mySection = this.mySection.getParentSection();
 		}
 		
 		// /FictionBook

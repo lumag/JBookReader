@@ -32,29 +32,19 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 	 * Annotation of the section.
 	 */
 	private IContainerNode myAnnotation;
+	
+	private ISectioningNode myParentSection;
 
 	public IContainerNode getTitle() {
 		return this.myTitle;
 	}
-
-	public void setTitle(IContainerNode title) {
-		this.myTitle = title;
-	}
-
+	
 	public Collection<IContainerNode> getEpigraph() {
 		return Collections.unmodifiableCollection(this.myEpigraph);
 	}
 
-	public void addEpigraph(IContainerNode epigraph) {
-		this.myEpigraph.add(epigraph);
-	}
-
 	public ImageNode getImage() {
 		return this.myImage;
-	}
-
-	public void setImage(ImageNode image) {
-		this.myImage = image;
 	}
 
 	@Override
@@ -66,14 +56,52 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 		return this.myAnnotation;
 	}
 
-	public void setAnnotation(IContainerNode annotation) {
-		this.myAnnotation = annotation;
-	}
-
 	public ISectioningNode newSectioningNode(String tagName) {
 		SectioningNode node = new SectioningNode();
 		node.setTagName(tagName);
 		this.addChildNode(node);
+		node.setParentSection(this);
 		return node;
 	}
+
+	public ISectioningNode getParentSection() {
+		return this.myParentSection;
+	}
+
+	void setParentSection(ISectioningNode parentSection) {
+		this.myParentSection = parentSection;
+	}
+
+	public IContainerNode newTitle(String tagName) {
+		ContainerNode node = new ContainerNode();
+		node.setTagName(tagName);
+		this.setupChildNode(node);
+		this.myTitle = node;
+		return node;
+	}
+
+	public IContainerNode newEpigraph(String tagName) {
+		ContainerNode node = new ContainerNode();
+		node.setTagName(tagName);
+		this.setupChildNode(node);
+		this.myEpigraph.add(node);
+		return node;
+	}
+
+	public ImageNode newImage(String tagName) {
+		ImageNode node = new ImageNode();
+		node.setTagName(tagName);
+		this.setupChildNode(node);
+		this.myImage = node;
+		return node;
+	}
+
+	public IContainerNode newAnnotation(String tagName) {
+		ContainerNode node = new ContainerNode();
+		node.setTagName(tagName);
+		this.setupChildNode(node);
+		this.myAnnotation = node;
+		return node;
+	}
+
 }
