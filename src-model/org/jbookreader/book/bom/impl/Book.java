@@ -18,6 +18,9 @@ import org.jbookreader.book.stylesheet.IStyleSheet;
  *
  */
 public class Book implements IBook {
+	/**
+	 * The system stylesheet of the book.
+	 */
 	private IStyleSheet mySystemStyleSheet;
 	/**
 	 * The list with book bodies.

@@ -50,6 +50,16 @@ public interface IBook {
 	 */
 	IBinaryData getBinaryData(String id);
 
+	/**
+	 * Returns the system stylesheet for specified book.
+	 * @return the system stylesheet for specified book.
+	 */
 	IStyleSheet getSystemStyleSheet();
+	
+	/**
+	 * Don't use this for now.
+	 * TODO
+	 * @param stylesheet
+	 */
 	void setSystemStyleSheet(IStyleSheet stylesheet);
 }

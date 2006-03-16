@@ -6,6 +6,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.ISectioningNode;
 
 /**
@@ -27,12 +28,15 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 	/**
 	 * Associated image.
 	 */
-	private ImageNode myImage;
+	private IImageNode myImage;
 	/**
 	 * Annotation of the section.
 	 */
 	private IContainerNode myAnnotation;
 	
+	/**
+	 * The parent sectioning node.
+	 */
 	private ISectioningNode myParentSection;
 
 	public IContainerNode getTitle() {
@@ -43,7 +47,7 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 		return Collections.unmodifiableCollection(this.myEpigraph);
 	}
 
-	public ImageNode getImage() {
+	public IImageNode getImage() {
 		return this.myImage;
 	}
 
@@ -60,16 +64,12 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 		SectioningNode node = new SectioningNode();
 		node.setTagName(tagName);
 		this.addChildNode(node);
-		node.setParentSection(this);
+		node.myParentSection = this;
 		return node;
 	}
 
 	public ISectioningNode getParentSection() {
 		return this.myParentSection;
-	}
-
-	void setParentSection(ISectioningNode parentSection) {
-		this.myParentSection = parentSection;
 	}
 
 	public IContainerNode newTitle(String tagName) {
@@ -88,7 +88,7 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 		return node;
 	}
 
-	public ImageNode newImage(String tagName) {
+	public IImageNode newImage(String tagName) {
 		ImageNode node = new ImageNode();
 		node.setTagName(tagName);
 		this.setupChildNode(node);

@@ -40,6 +40,10 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		this.setupChildNode(node);
 	}
 	
+	/**
+	 * Sets the node as a child for this one.
+	 * @param node the node to set up
+	 */
 	protected void setupChildNode(AbstractNode node) {
 		node.setBook(this.getBook());
 		node.setParentNode(this);

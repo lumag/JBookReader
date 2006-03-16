@@ -38,4 +38,9 @@ public interface INode {
 	 */
 	String getID();
 	
+	/**
+	 * Returns a book containing this node.
+	 * @return a book containing this node.
+	 */
+	IBook getBook();
 }

@@ -17,8 +17,14 @@ import org.jbookreader.book.stylesheet.IStyleSheet;
  */
 public class FB2StyleSheet implements IStyleSheet {
 	
+	/**
+	 * This mapping holds tagName -> display type information.
+	 */
 	private Map<String, EDisplayType> myDisplayTypes = new HashMap<String,EDisplayType>();
 	
+	/**
+	 * These are <code>{display: block;}</code> tags.
+	 */
 	private static final String[] FB2_BLOCK_TAGS = {
 		"body",
 		"section",
@@ -27,6 +33,9 @@ public class FB2StyleSheet implements IStyleSheet {
 		"empty-line"
 		};
 	
+	/**
+	 * These are <code>{display: inline;}</code> tags.
+	 */
 	private static final String[] FB2_INLINE_TAGS = {
 		"strong",
 		"emphasis",
@@ -37,6 +46,10 @@ public class FB2StyleSheet implements IStyleSheet {
 		"#text"
 		};
 	
+	/**
+	 * Constructs the stylesheet by filling information in internal structures.
+	 *
+	 */
 	public FB2StyleSheet() {
 		for (String s: FB2_INLINE_TAGS) {
 			this.myDisplayTypes.put(s, EDisplayType.INLINE);

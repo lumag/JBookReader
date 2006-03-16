@@ -38,7 +38,7 @@ abstract class AbstractNode implements INode {
 	 * Returns the book, corresponding to this node.
 	 * @return the book, corresponding to this node.
 	 */
-	IBook getBook() {
+	public IBook getBook() {
 		return this.myBook;
 	}
 	
@@ -75,7 +75,7 @@ abstract class AbstractNode implements INode {
 	 * 
 	 * @param parentNode the node, containing this one
 	 */
-	void setParentNode(IContainerNode parentNode) {
+	protected void setParentNode(IContainerNode parentNode) {
 		this.myParentNode = parentNode;
 	}
 
@@ -91,8 +91,8 @@ abstract class AbstractNode implements INode {
 	 * Sets the ID of the node.
 	 * @param id new id of the node
 	 */
-	void setID(String id) {
+/*	private void setID(String id) {
 		this.myID = id;
-	}
+	} */
 
 }

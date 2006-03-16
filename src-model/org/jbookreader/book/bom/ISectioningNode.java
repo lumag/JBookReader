@@ -2,7 +2,6 @@ package org.jbookreader.book.bom;
 
 import java.util.Collection;
 
-import org.jbookreader.book.bom.impl.ImageNode;
 
 /**
  * This interface represents a sectioning node.
@@ -20,6 +19,7 @@ public interface ISectioningNode extends IContainerNode {
 	/**
 	 * Allocates the title of the section.
 	 * @param tagName the tag name of the title node
+	 * @return newly created container node.
 	 */
 	IContainerNode newTitle(String tagName);
 
@@ -32,6 +32,7 @@ public interface ISectioningNode extends IContainerNode {
 	/**
 	 * Adds new epigraph for this section
 	 * @param tagName the tag name of the epigraph
+	 * @return newly created container node.
 	 */
 	IContainerNode newEpigraph(String tagName);
 
@@ -39,13 +40,14 @@ public interface ISectioningNode extends IContainerNode {
 	 * Returns the image for this section.
 	 * @return the image for this section.
 	 */
-	ImageNode getImage();
+	IImageNode getImage();
 	
 	/**
 	 * Allocates the image for this section.
 	 * @param tagName the tag name
+	 * @return newly created image node.
 	 */
-	ImageNode newImage(String tagName);
+	IImageNode newImage(String tagName);
 
 	/**
 	 * Returns the annotation for the section.
@@ -56,6 +58,7 @@ public interface ISectioningNode extends IContainerNode {
 	/**
 	 * Allocates the annotation for the section.
 	 * @param tagName the tag name
+	 * @return newly created container node.
 	 */
 	IContainerNode newAnnotation(String tagName);
 	
@@ -66,5 +69,9 @@ public interface ISectioningNode extends IContainerNode {
 	 */
 	ISectioningNode newSectioningNode(String tagName);
 
+	/**
+	 * Returns the parent section for this one.
+	 * @return the parent section for this one.
+	 */
 	ISectioningNode getParentSection();
 }

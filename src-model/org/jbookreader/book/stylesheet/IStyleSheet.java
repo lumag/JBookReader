@@ -11,5 +11,10 @@ import org.jbookreader.book.bom.INode;
  *
  */
 public interface IStyleSheet {
+	/**
+	 * Returns the 'display' property of the node
+	 * @param node the node to check
+	 * @return display type of the node.
+	 */
 	EDisplayType getNodeDisplayType(INode node);
 }

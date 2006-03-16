@@ -1,5 +1,7 @@
 package org.jbookreader.book.bom.impl;
 
+import org.jbookreader.book.bom.IImageNode;
+
 
 /**
  * This class represents an inline image.
@@ -7,7 +9,7 @@ package org.jbookreader.book.bom.impl;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class ImageNode extends AbstractNode {
+public class ImageNode extends AbstractNode implements IImageNode {
 	/**
 	 * Hyperlink reference to the image.
 	 */
