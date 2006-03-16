@@ -1,6 +1,6 @@
 package org.jbookreader.ui.text;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
 
 import org.jbookreader.formatengine.ITextFont;
 import org.jbookreader.formatengine.ITextPainter;
@@ -17,16 +17,19 @@ public class TextPainter implements ITextPainter {
 	/**
 	 * Output device.
 	 */
-	private final PrintStream myOutput;
+	private final PrintWriter myOutput;
 
+	/**
+	 * Current X position of the cursor.
+	 */
 	private double myXPosition = 0;
 
 	/**
 	 * This constructs new <code>TextPainter</code> with specified
-	 * <code>PrintStream</code> as the output device.
+	 * <code>PrintWriter</code> as the output device.
 	 * @param output output stream
 	 */
-	public TextPainter(PrintStream output) {
+	public TextPainter(PrintWriter output) {
 		this.myOutput = output;
 	}
 

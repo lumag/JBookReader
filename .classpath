@@ -4,7 +4,7 @@
 	<classpathentry kind="src" path="src-parser"/>
 	<classpathentry kind="src" path="src-painter"/>
 	<classpathentry kind="src" path="src-ui"/>
-	<classpathentry kind="src" path="src-tests"/>
+	<classpathentry output="bin-tests" kind="src" path="src-tests"/>
 	<classpathentry kind="src" path="src-misc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry sourcepath="JUNIT_SRC_HOME/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
