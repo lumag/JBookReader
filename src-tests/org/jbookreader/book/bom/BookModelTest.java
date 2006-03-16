@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom;
 
-import java.io.File;
 import java.io.IOException;
 
 import junit.framework.TestCase;
@@ -183,7 +182,7 @@ public class BookModelTest extends TestCase {
 		assertNull(this.mySection);
 		assertNull(this.myContainer);
 		
-		ModelDumper.testBOM(this.myBook, "tests", "BOM");
+		ModelDumper.testBOM(this.myBook, "BOM", "BOM.xml");
 	}
 	
 	/**

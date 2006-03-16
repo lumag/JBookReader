@@ -4,6 +4,7 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.jbookreader.book.bom.BookModelTest;
+import org.jbookreader.parser.ParserTest;
 
 /**
  * This <code>TestSuite</code> calls all other <code>TestSuite</code>
@@ -21,6 +22,7 @@ public class AllTest  {
 		TestSuite test = new TestSuite();
 
 		test.addTestSuite(BookModelTest.class);
+		test.addTest(ParserTest.suite());
 
 		return test;
 	}

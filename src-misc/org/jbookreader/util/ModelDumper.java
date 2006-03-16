@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
+import org.jbookreader.TestsConfig;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
@@ -96,12 +97,15 @@ public class ModelDumper {
 		return file;
 	}
 	
-	public static void testBOM(IBook book, String dir, String id) throws IOException {
+	public static void testBOM(IBook book, String module, String id) throws IOException {
 		File f = dumpBOM(book);
 		
-		FilesTester.assertFileEqualsStream(new File(dir, id + ".expected"), f);
+		File expected = new File(new File(TestsConfig.getExpectedDir(), module), id);
+		
+		FilesTester.assertFileEqualsStream(expected, f);
 		
 		f.delete();
 	}
 
 }
+	

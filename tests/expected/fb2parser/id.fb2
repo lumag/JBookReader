@@ -1,0 +1,19 @@
+<FictionBook>
+<body>
+<title>
+<p>
+Title
+</p>
+</title><section id="t">
+<title>
+<p>
+Section title.
+</p>
+</title><p>
+Section text <emphasis>
+in italic
+</emphasis>.
+</p>
+</section>
+</body>
+</FictionBook>

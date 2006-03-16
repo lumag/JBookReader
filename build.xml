@@ -6,7 +6,7 @@
 -->
 <project basedir="." default="build" name="JBookReader">
     &buildfile;
-    <property name="JUNIT_HOME" value="/usr/share/eclipse/plugins/org.junit_3.8.1"/>
+    <property name="JUNIT_HOME" value="/usr/share/java"/>
     <path id="project.classpath">
         <pathelement location="bin"/>
         <pathelement location="bin-tests"/>

@@ -1,5 +1,6 @@
 package org.jbookreader.book.parser;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.jbookreader.book.bom.IBinaryData;
@@ -51,6 +52,10 @@ public class FB2Parser {
 		reader.parse(new InputSource(uri));
 
 		return book;	
+	}
+	
+	public static IBook parse(File file) throws IOException, SAXException {
+		return parse(file.getAbsolutePath());
 	}
 	
 	// FIXME: after finishing stylesheet loading, replace with reading of stylesheet.
@@ -135,12 +140,12 @@ public class FB2Parser {
 
 		@Override
 		public void startDocument() {
-			System.out.println("Started parsing of '" + this.myLocator.getSystemId() + "'");
+//			System.out.println("Started parsing of '" + this.myLocator.getSystemId() + "'");
 		}
 
 		@Override
 		public void endDocument() {
-			System.out.println("Finished parsing of '" + this.myLocator.getSystemId() + "'");
+//			System.out.println("Finished parsing of '" + this.myLocator.getSystemId() + "'");
 		}
 
 		@Override
@@ -210,7 +215,7 @@ public class FB2Parser {
 				if (!localName.equals("body")) {
 					return;
 				}
-				System.out.println("Got first body tag");
+//				System.out.println("Got first body tag");
 				
 				this.parseXML = true;
 			}
