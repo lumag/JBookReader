@@ -27,7 +27,7 @@
  * SUCH DAMAGE.
  */
 
-package org.jbookreader;
+package org.jbookreader.util;
 
 import java.util.ArrayList;
 import java.util.List;
