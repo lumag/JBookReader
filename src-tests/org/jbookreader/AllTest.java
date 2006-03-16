@@ -3,9 +3,7 @@ package org.jbookreader;
 import junit.framework.Test;
 import junit.framework.TestSuite;
 
-import org.jbookreader.book.bom.impl.ContainerNodeTest;
-import org.jbookreader.book.bom.impl.InlineImageNodeTest;
-import org.jbookreader.book.bom.impl.StringNodeTest;
+import org.jbookreader.book.bom.BookModelTest;
 
 /**
  * This <code>TestSuite</code> calls all other <code>TestSuite</code>
@@ -22,9 +20,7 @@ public class AllTest  {
 	public static Test suite () {
 		TestSuite test = new TestSuite();
 
-		test.addTestSuite(StringNodeTest.class);
-		test.addTestSuite(ContainerNodeTest.class);
-		test.addTestSuite(InlineImageNodeTest.class);
+		test.addTestSuite(BookModelTest.class);
 
 		return test;
 	}
