@@ -4,6 +4,13 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 
+/**
+ * This class represents the core of the program: the text-formatting engine.
+ * 
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public class FormatEngine {
 	private ITextPainter myPainter;
 	private IBook myBook;

@@ -24,15 +24,23 @@ public interface ITextPainter {
 	 */
 	double getHeight();
 	
+	/**
+	 * Returns current X position.
+	 * @return current X position.
+	 */
 	double getXPosition();
+	/**
+	 * Returns current Y position.
+	 * @return current Y position.
+	 */
 	double getYPosition();
 	
 	/**
-	 * Calculates dimensions to be used for rendering the specified string
+	 * Calculates dimensions to be used for rendering the specified string part
 	 * with given font.
 	 * @param s the string to calculate dimensions for 
-	 * @param start TODO
-	 * @param end TODO
+	 * @param start The index of the first character in the string
+	 * @param end The index of the character following the last character in the subsequence
 	 * @param font the font to work with
 	 * @return the dimensions of the string when rendered.
 	 */
@@ -40,8 +48,8 @@ public interface ITextPainter {
 	/**
 	 * Renders the string with given font
 	 * @param s the string to render
-	 * @param start TODO
-	 * @param end TODO
+	 * @param start The index of the first character in the string
+	 * @param end The index of the character following the last character in the subsequence
 	 * @param font the font to use for rendering
 	 */
 	void renderString(String s, int start, int end, ITextFont font);
@@ -59,5 +67,11 @@ public interface ITextPainter {
 	 */
 	void flushString(double vStrut);
 	
+	/**
+	 * Allocates and returns specified font.
+	 * @param name the name of the font
+	 * @param size font size
+	 * @return the allocated font object.
+	 */
 	ITextFont getFont(String name, int size);
 }

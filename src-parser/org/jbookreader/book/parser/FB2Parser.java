@@ -54,7 +54,14 @@ public class FB2Parser {
 	}
 	
 	// FIXME: after finishing stylesheet loading, replace with reading of stylesheet.
+	/**
+	 * The fb2 format stylesheet
+	 */
 	private static IStyleSheet ssheet;
+	/**
+	 * Returns FB2 system style sheet.
+	 * @return FB2 system style sheet.
+	 */
 	private static IStyleSheet getFB2StyleSheet() {
 		if (ssheet == null) {
 			ssheet = new FB2StyleSheet();
@@ -108,6 +115,9 @@ public class FB2Parser {
 		 */
 		private boolean parseXML = false;
 
+		/**
+		 * True if the current node can containt text.
+		 */
 		private boolean myParseText = false;
 		
 		/**
