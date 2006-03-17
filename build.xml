@@ -52,18 +52,6 @@
             <classpath refid="project.classpath"/>
         </junit>
     </target>
-    <target name="BookModelDemo">
-        <java classname="org.jbookreader.BookModelDemo" failonerror="true" fork="yes">
-            <classpath refid="project.classpath"/>
-        </java>
-    </target>
-    <target name="StringNodeTest">
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="plain"/>
-            <test name="org.jbookreader.dom.StringNodeTest"/>
-            <classpath refid="project.classpath"/>
-        </junit>
-    </target>
     <target name="BookModelTest">
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="plain"/>

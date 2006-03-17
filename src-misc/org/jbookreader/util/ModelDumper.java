@@ -1,10 +1,5 @@
 package org.jbookreader.util;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import org.jbookreader.book.bom.IBook;
@@ -78,23 +73,5 @@ public class ModelDumper {
 		writer.print("</FictionBook>");
 	}
 	
-	/**
-	 * Dumps BOM to temporary random file.
-	 * @param book the book to dump
-	 * @return the File object to which BOM was dumped. 
-	 * @throws IOException
-	 */
-	public static File dumpBOM(IBook book) throws IOException {
-		File file = File.createTempFile("bomdump", ".xml");
-		
-		PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(file))));
-		
-		dumpBOM(pwr, book);
-		
-		pwr.close();
-		
-		return file;
-	}
-
 }
 	
