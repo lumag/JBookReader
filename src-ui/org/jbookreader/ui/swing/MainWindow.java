@@ -29,15 +29,15 @@ public class MainWindow extends JFrame {
 	 * @return a JComponent to be placed on the ContentsPlane.
 	 */
 	private JComponent createContents() {
-		JPanel pane = new JPanel();
+		JPanel pane = new JPanel(new BorderLayout());
 
 		JComponent text = new TextComponent();
 		
 		text.setOpaque(true);
 		Dimension dim = new Dimension(200,100);
-		text.setMinimumSize(dim);
-		text.setPreferredSize(dim);
-		pane.add(text);	
+		pane.add(text, BorderLayout.CENTER);	
+		pane.setMinimumSize(dim);
+		pane.setPreferredSize(dim);
 
 		return pane;
 	}
