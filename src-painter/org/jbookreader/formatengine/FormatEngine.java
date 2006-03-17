@@ -3,6 +3,9 @@ package org.jbookreader.formatengine;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
+import org.jbookreader.book.bom.ISectioningNode;
+import org.jbookreader.book.stylesheet.EDisplayType;
+import org.jbookreader.book.stylesheet.IStyleSheet;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -85,10 +88,48 @@ public class FormatEngine {
 	}
 	
 	private void renderNode(INode node) {
+		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
 		if (node.isContainer()) {
 			IContainerNode cnode = (IContainerNode)node;
-			for (INode child : cnode.getChildNodes())
+			boolean hadInline = false;
+			
+			if (cnode.isSectioningNode()) {
+				ISectioningNode snode = (ISectioningNode)cnode;
+				IContainerNode tempNode;
+
+				if ((tempNode = snode.getTitle()) != null)
+					renderNode(tempNode);
+				
+				if ((tempNode = snode.getAnnotation()) != null)
+					renderNode(tempNode);
+
+				for (IContainerNode epigraph: snode.getEpigraph())
+					renderNode(epigraph);
+			}
+
+			for (INode child : cnode.getChildNodes()) {
 				renderNode(child);
+
+				try {
+					if (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE)
+						hadInline = true;
+				} catch (IllegalStateException e) {
+					 // FIXME: work with exception.
+				}
+
+			}
+
+			/*
+			 * flush output block after paragraph end 
+			 */
+			try {
+				if (hadInline && (ssheet.getNodeDisplayType(node) == EDisplayType.BLOCK)) {
+					// FIXME: vstrut calculation
+					this.myPainter.flushString(0);
+				}
+			} catch (IllegalStateException e) {
+				// FIXME: work with exception.
+			}
 		} else {
 			pushString(node.getText());
 		}

@@ -30,7 +30,9 @@ public class FB2StyleSheet implements IStyleSheet {
 		"section",
 		"title",
 		"p",
-		"empty-line"
+		"empty-line",
+		"abstract",
+		"epigraph"
 		};
 	
 	/**
@@ -43,6 +45,7 @@ public class FB2StyleSheet implements IStyleSheet {
 		"sub",
 		"sup",
 		"code",
+		"a",
 		"#text"
 		};
 	
@@ -63,7 +66,7 @@ public class FB2StyleSheet implements IStyleSheet {
 	public EDisplayType getNodeDisplayType(INode node) throws IllegalStateException {
 		if (this.myDisplayTypes.containsKey(node.getTagName()))
 			return this.myDisplayTypes.get(node.getTagName());
-		throw new IllegalStateException("Got unknown tag! Check your parser version, please");
+		throw new IllegalStateException("Got unknown tag: '"+ node.getTagName() + "'! Check your parser version, please");
 	}
 
 }
