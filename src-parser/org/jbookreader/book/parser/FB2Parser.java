@@ -84,6 +84,7 @@ public class FB2Parser {
 		/**
 		 * The locator of the parser.
 		 */
+		@SuppressWarnings("unused")
 		private Locator myLocator;
 		
 		/**
@@ -229,48 +230,37 @@ public class FB2Parser {
 				// XXX: root book node
 			} else if (localName.equals("binary")) {
 				this.myBinaryData = this.myBook.newBinaryData(attributes.getValue("id"), attributes.getValue("content-type"));
-			} else if (localName.equals("body")) {
-				ISectioningNode node  = this.myBook.newBody("body", attributes.getValue("name"));
-
-				this.myContainer = node;
-				this.mySection = node;
-			} else if (localName.equals("section")) {
-				ISectioningNode node = this.mySection.newSectioningNode(localName);
-				
-				this.myContainer = node;
-				this.mySection = node;
-			} else if (localName.equals("title")) {
-				IContainerNode node = this.mySection.newTitle(localName);
-
-				this.myContainer = node;
-			} else if (localName.equals("p")) {
-				IContainerNode node = this.myContainer.newContainerNode(localName);
-
-				this.myContainer = node;
-				
-				this.myParseText  = true;
-			} else if (localName.equals("empty-line")
-					|| localName.equals("strong")
-					|| localName.equals("emphasis")
-					|| localName.equals("strikethrough")
-					|| localName.equals("sub")
-					|| localName.equals("sup")
-					|| localName.equals("code")
-							) {
-				IContainerNode node = this.myContainer.newContainerNode(localName);
-
-				this.myContainer = node;
+				return;
 			} else {
-				throw new SAXParseException("Unsupported element: " + localName, this.myLocator);
+				IContainerNode node;
+
+				if (localName.equals("body")) {
+					node  = this.mySection = this.myBook.newBody("body", attributes.getValue("name"));
+				} else if (localName.equals("section")) {
+					node = this.mySection = this.mySection.newSectioningNode(localName);
+				} else if (localName.equals("title")) {
+					node = this.mySection.newTitle(localName);
+				} else if (localName.equals("p")) {
+					node = this.myContainer.newContainerNode(localName);
+	
+					this.myParseText  = true;
+				} else {
+					/*
+					 * Threat every unknown node as a simple container.
+					 */
+					node = this.myContainer.newContainerNode(localName);
+				}
+				
+				this.myContainer = node;
+				{
+					String id;
+					if ((id = attributes.getValue("id")) != null) {
+						node.setID(id);
+					}
+				}
 			}
 
 
-/*			{
-				String id;
-				if ((id = attributes.getValue("id")) != null) {
-					this.myBook.setNodeID(id, node);
-				}
-			}*/
 
 		}
 		
