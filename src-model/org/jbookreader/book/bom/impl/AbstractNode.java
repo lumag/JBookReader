@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom.impl;
 
-import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 
@@ -32,13 +31,13 @@ abstract class AbstractNode implements INode {
 	/**
 	 * The book to which this node belongs.
 	 */
-	private IBook myBook;
+	private Book myBook;
 	
 	/**
 	 * Returns the book, corresponding to this node.
 	 * @return the book, corresponding to this node.
 	 */
-	public IBook getBook() {
+	public Book getBook() {
 		return this.myBook;
 	}
 	
@@ -46,7 +45,7 @@ abstract class AbstractNode implements INode {
 	 * Sets the book, corresponding to this node.
 	 * @param book the book for this node.
 	 */
-	void setBook(IBook book) {
+	void setBook(Book book) {
 		this.myBook = book;
 	}
 
@@ -87,12 +86,9 @@ abstract class AbstractNode implements INode {
 		return this.myID;
 	}
 
-	/**
-	 * Sets the ID of the node.
-	 * @param id new id of the node
-	 */
-/*	private void setID(String id) {
+	public void setID(String id) {
 		this.myID = id;
-	} */
+		this.myBook.mapIdNode(this);
+	}
 
 }

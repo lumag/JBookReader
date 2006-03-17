@@ -39,6 +39,12 @@ public interface INode {
 	String getID();
 	
 	/**
+	 * Sets the ID of this node
+	 * @param id new ID
+	 */
+	void setID(String id);
+	
+	/**
 	 * Returns a book containing this node.
 	 * @return a book containing this node.
 	 */

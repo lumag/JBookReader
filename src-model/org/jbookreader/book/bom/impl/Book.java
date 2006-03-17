@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
+import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 
@@ -29,7 +30,7 @@ public class Book implements IBook {
 	/**
 	 * Maps id -> node.
 	 */
-//	private Map<String, INode> myIDmap = new LinkedHashMap<String, INode>();
+	private Map<String, INode> myIDmap = new LinkedHashMap<String, INode>();
 	/**
 	 * The list with binary blobs, encapsulated in the book.
 	 */
@@ -78,8 +79,14 @@ public class Book implements IBook {
 	 * @param id the ID of the node
 	 * @return a node associated with <code>id</code>.
 	 */
-//	public INode getNodeByID(String id) {
-//		return this.myIDmap.get(id);
-//	}
+	public INode getNodeByID(String id) {
+		return this.myIDmap.get(id);
+	}
+	
+	void mapIdNode(INode node) {
+		String id = node.getID();
+		if (id != null)
+			this.myIDmap.put(id, node);
+	}
 
 }
