@@ -1,10 +1,17 @@
 package org.jbookreader.book.bom;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import junit.framework.TestCase;
 
+import org.jbookreader.TestsConfig;
 import org.jbookreader.book.bom.impl.Book;
+import org.jbookreader.util.FilesTester;
 import org.jbookreader.util.ModelDumper;
 
 /**
@@ -182,7 +189,7 @@ public class BookModelTest extends TestCase {
 		assertNull(this.mySection);
 		assertNull(this.myContainer);
 		
-		ModelDumper.testBOM(this.myBook, "BOM", "BOM.xml");
+		BookModelTest.testBOM(this.myBook, TestsConfig.getExpectedFile("BOM", "BOM.xml"));
 	}
 	
 	/**
@@ -328,5 +335,19 @@ public class BookModelTest extends TestCase {
 		assertEquals("#text", node.getTagName());
 		assertFalse(node.isContainer());
 		assertEquals("test text", node.getText());
+	}
+
+	public static void testBOM(IBook book, File expected) throws IOException {
+		File tempFile = File.createTempFile(expected.getName() + '.', ".test", TestsConfig.getTempDir());
+		
+		PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tempFile))));
+		
+		ModelDumper.dumpBOM(pwr, book);
+		
+		pwr.close();
+		
+		FilesTester.assertFileEqualsStream(expected, tempFile);
+		
+		tempFile.delete();
 	}
 }

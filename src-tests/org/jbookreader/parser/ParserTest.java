@@ -9,9 +9,9 @@ import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
 import org.jbookreader.TestsConfig;
+import org.jbookreader.book.bom.BookModelTest;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
-import org.jbookreader.util.ModelDumper;
 import org.xml.sax.SAXException;
 
 public class ParserTest {
@@ -26,7 +26,7 @@ public class ParserTest {
 		
 		public void testParser() throws IOException, SAXException {
 			IBook book = FB2Parser.parse(this.myFile);
-			ModelDumper.testBOM(book, "fb2parser", this.myFile.getName());
+			BookModelTest.testBOM(book, TestsConfig.getExpectedFile("fb2parser", this.myFile.getName()));
 		}
 	}
 	
