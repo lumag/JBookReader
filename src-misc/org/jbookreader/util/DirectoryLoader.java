@@ -88,7 +88,7 @@ public class DirectoryLoader extends ClassLoader {
 		List<Buffer> blist = new ArrayList<Buffer>();
 		int totalLength = 0;
 
-		for(;;) {
+		while (true) {
 			Buffer b = new Buffer();
 			b.array = new byte[1024];
 			b.length = input.read(b.array);

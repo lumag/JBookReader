@@ -14,7 +14,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;
 import org.xml.sax.SAXException;
-import org.xml.sax.SAXParseException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
@@ -54,6 +53,13 @@ public class FB2Parser {
 		return book;	
 	}
 	
+	/**
+	 * Parses specified book
+	 * @param file the file with the book
+	 * @return the parsed book representation
+	 * @throws IOException in case of I/O problem
+	 * @throws SAXException in case of XML parsing problem
+	 */
 	public static IBook parse(File file) throws IOException, SAXException {
 		return parse(file.getAbsolutePath());
 	}
@@ -211,7 +217,7 @@ public class FB2Parser {
 		}
 
 		@Override
-		public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXParseException {
+		public void startElement(String uri, String localName, String qName, Attributes attributes) {
 			if (!this.parseXML) {
 				if (!localName.equals("body")) {
 					return;

@@ -83,6 +83,10 @@ public class Book implements IBook {
 		return this.myIDmap.get(id);
 	}
 	
+	/**
+	 * Adds a node to ID mapping. The node should already have correct ID.
+	 * @param node the node to put into the mapping.
+	 */
 	void mapIdNode(INode node) {
 		String id = node.getID();
 		if (id != null)

@@ -63,5 +63,10 @@ public interface IBook {
 	 */
 	void setSystemStyleSheet(IStyleSheet stylesheet);
 	
+	/**
+	 * Returns the node with specified ID.
+	 * @param id the if of node
+	 * @return the node with specified ID.
+	 */
 	INode getNodeByID(String id);
 }
