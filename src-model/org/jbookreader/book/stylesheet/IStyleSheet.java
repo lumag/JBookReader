@@ -17,4 +17,8 @@ public interface IStyleSheet {
 	 * @return display type of the node.
 	 */
 	EDisplayType getNodeDisplayType(INode node);
+	
+	double getLeftMargin(INode node);
+	double getFirstLineMargin(INode node);
+	double getRightMargin(INode node);
 }

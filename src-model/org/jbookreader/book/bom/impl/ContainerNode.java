@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom.impl;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -27,8 +26,8 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		return true;
 	}
 
-	public Collection<INode> getChildNodes() throws UnsupportedOperationException {
-		return Collections.unmodifiableCollection(this.myChildNodes);
+	public List<INode> getChildNodes() throws UnsupportedOperationException {
+		return Collections.unmodifiableList(this.myChildNodes);
 	}
 	
 	/**
@@ -37,18 +36,10 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 	 */
 	protected void addChildNode(AbstractNode node) {
 		this.myChildNodes.add(node);
-		this.setupChildNode(node);
-	}
-	
-	/**
-	 * Sets the node as a child for this one.
-	 * @param node the node to set up
-	 */
-	protected void setupChildNode(AbstractNode node) {
 		node.setBook(this.getBook());
 		node.setParentNode(this);
 	}
-
+	
 	public INode newTextNode(String text) {
 		_TextNode node = new _TextNode();
 		node.setText(text);

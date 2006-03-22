@@ -1,10 +1,5 @@
 package org.jbookreader.book.bom.impl;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.ISectioningNode;
@@ -24,7 +19,7 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 	/**
 	 * The list of epigraphs.
 	 */
-	private List<IContainerNode> myEpigraph = new LinkedList<IContainerNode>();
+//	private List<IContainerNode> myEpigraph = new LinkedList<IContainerNode>();
 	/**
 	 * Associated image.
 	 */
@@ -43,9 +38,9 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 		return this.myTitle;
 	}
 	
-	public Collection<IContainerNode> getEpigraph() {
-		return Collections.unmodifiableCollection(this.myEpigraph);
-	}
+//	public Collection<IContainerNode> getEpigraph() {
+//		return Collections.unmodifiableCollection(this.myEpigraph);
+//	}
 
 	public IImageNode getImage() {
 		return this.myImage;
@@ -75,23 +70,23 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 	public IContainerNode newTitle(String tagName) {
 		ContainerNode node = new ContainerNode();
 		node.setTagName(tagName);
-		this.setupChildNode(node);
+		this.addChildNode(node);
 		this.myTitle = node;
 		return node;
 	}
 
-	public IContainerNode newEpigraph(String tagName) {
-		ContainerNode node = new ContainerNode();
-		node.setTagName(tagName);
-		this.setupChildNode(node);
-		this.myEpigraph.add(node);
-		return node;
-	}
+//	public IContainerNode newEpigraph(String tagName) {
+//		ContainerNode node = new ContainerNode();
+//		node.setTagName(tagName);
+//		this.addChildNode(node);
+////		this.myEpigraph.add(node);
+//		return node;
+//	}
 
 	public IImageNode newImage(String tagName) {
 		ImageNode node = new ImageNode();
 		node.setTagName(tagName);
-		this.setupChildNode(node);
+		this.addChildNode(node);
 		this.myImage = node;
 		return node;
 	}
@@ -99,7 +94,7 @@ class SectioningNode extends ContainerNode implements ISectioningNode {
 	public IContainerNode newAnnotation(String tagName) {
 		ContainerNode node = new ContainerNode();
 		node.setTagName(tagName);
-		this.setupChildNode(node);
+		this.addChildNode(node);
 		this.myAnnotation = node;
 		return node;
 	}

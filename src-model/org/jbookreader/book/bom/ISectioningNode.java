@@ -1,6 +1,5 @@
 package org.jbookreader.book.bom;
 
-import java.util.Collection;
 
 
 /**
@@ -27,14 +26,14 @@ public interface ISectioningNode extends IContainerNode {
 	 * Returns the list of epigraphs for the section.
 	 * @return the list of epigraph nodes.
 	 */
-	Collection<IContainerNode> getEpigraph();
+//	Collection<IContainerNode> getEpigraph();
 	
 	/**
 	 * Adds new epigraph for this section
 	 * @param tagName the tag name of the epigraph
 	 * @return newly created container node.
 	 */
-	IContainerNode newEpigraph(String tagName);
+//	IContainerNode newEpigraph(String tagName);
 
 	/**
 	 * Returns the image for this section.

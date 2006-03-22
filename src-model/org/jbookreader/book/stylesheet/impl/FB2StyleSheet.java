@@ -63,10 +63,29 @@ public class FB2StyleSheet implements IStyleSheet {
 		}
 	}
 
-	public EDisplayType getNodeDisplayType(INode node) throws IllegalStateException {
+	public EDisplayType getNodeDisplayType(INode node) {
 		if (this.myDisplayTypes.containsKey(node.getTagName()))
 			return this.myDisplayTypes.get(node.getTagName());
-		throw new IllegalStateException("Got unknown tag: '"+ node.getTagName() + "'! Check your parser version, please");
+
+		System.err.println("Got unknown tag: '"+ node.getTagName() + "'! Check your parser version, please");
+
+		// sane default
+		return EDisplayType.BLOCK;
+	}
+
+	public double getLeftMargin(INode node) {
+		// TODO Auto-generated method stub
+		return 5;
+	}
+
+	public double getFirstLineMargin(INode node) {
+		// TODO Auto-generated method stub
+		return 10;
+	}
+
+	public double getRightMargin(INode node) {
+		// TODO Auto-generated method stub
+		return 5;
 	}
 
 }

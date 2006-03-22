@@ -1,6 +1,6 @@
 package org.jbookreader.book.bom;
 
-import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -15,7 +15,7 @@ public interface IContainerNode extends INode {
 	 * Returns a collection of child (contained in this one) nodes.
 	 * @return a collection of child nodes.
 	 */
-	Collection<INode> getChildNodes();
+	List<INode> getChildNodes();
 
 	/**
 	 * This creates new child text node with specified text.
