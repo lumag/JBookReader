@@ -5,7 +5,6 @@ import java.io.PrintWriter;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.bom.ISectioningNode;
 
 /**
  * This is utility class for dumping BOM.
@@ -40,15 +39,6 @@ public class ModelDumper {
 		if (node.isContainer()) {
 			IContainerNode cnode = (IContainerNode)node;
 			
-			if (cnode.isSectioningNode()) {
-				ISectioningNode snode = (ISectioningNode)cnode;
-				printNode(writer, snode.getTitle());
-				printNode(writer, snode.getAnnotation());
-				printNode(writer, snode.getImage());
-				for (IContainerNode enode: snode.getEpigraph()) {
-					printNode(writer, enode);
-				}
-			}
 			for (INode child : cnode.getChildNodes())
 				printNode(writer, child);
 			writer.println();
