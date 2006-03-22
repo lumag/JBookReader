@@ -201,9 +201,16 @@ public class BookModelTest extends TestCase {
 	 */
 	public void testNewSection() {
 		IContainerNode pnode = this.myBook.getMainBody();
-		INode node = pnode.getChildNodes().iterator().next();
+		INode node = null;
 		
-		assertEquals("section", node.getTagName());
+		for (INode temp: pnode.getChildNodes()) {
+			if (temp.getTagName().equals("section")) {
+				node = temp;
+				break;
+			}
+		}
+		
+		assertNotNull("Can't find 'section' node", node);
 		
 		assertTrue(node.isContainer());
 		IContainerNode cnode = (IContainerNode)node;
@@ -222,7 +229,16 @@ public class BookModelTest extends TestCase {
 		ISectioningNode pnode = this.myBook.getMainBody();
 		
 		assertNotNull(pnode.getTitle());
-		INode node = pnode.getChildNodes().iterator().next();
+
+		INode node = null;
+		for (INode temp: pnode.getChildNodes()) {
+			if (temp.getTagName().equals("section")) {
+				node = temp;
+				break;
+			}
+		}
+		
+		assertNotNull("Can't find 'section' node", node);
 		
 		assertTrue(node.isContainer());
 		IContainerNode cnode = (IContainerNode)node;
@@ -235,13 +251,13 @@ public class BookModelTest extends TestCase {
 		assertEquals("title", title.getTagName());
 		assertEquals(this.myBook,title.getBook());
 		assertEquals(snode,title.getParentNode());
-		assertFalse(snode.getChildNodes().contains(title));
+		assertTrue(snode.getChildNodes().contains(title));
 	}
 
 	/**
 	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newEpigraph()'
 	 */
-	public void testNewEpigraph() {
+/*	public void testNewEpigraph() {
 		ISectioningNode pnode = this.myBook.getMainBody();
 		
 		IContainerNode epigraph = pnode.newEpigraph("epigraph");
@@ -253,7 +269,7 @@ public class BookModelTest extends TestCase {
 		assertEquals(this.myBook,enode.getBook());
 		assertEquals(pnode,enode.getParentNode());
 		assertFalse(pnode.getChildNodes().contains(enode));
-	}
+	}*/
 
 	/**
 	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newAnnotation()'
@@ -267,7 +283,7 @@ public class BookModelTest extends TestCase {
 
 		assertEquals(this.myBook,annotation.getBook());
 		assertEquals(pnode,annotation.getParentNode());
-		assertFalse(pnode.getChildNodes().contains(annotation));
+		assertTrue(pnode.getChildNodes().contains(annotation));
 	}
 
 	/**
@@ -284,7 +300,7 @@ public class BookModelTest extends TestCase {
 
 		assertEquals(this.myBook,image.getBook());
 		assertEquals(pnode,image.getParentNode());
-		assertFalse(pnode.getChildNodes().contains(image));
+		assertTrue(pnode.getChildNodes().contains(image));
 	}
 
 	/**
