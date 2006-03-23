@@ -19,16 +19,16 @@ public class TextUI {
 	 * @throws Exception
 	 */
 	public static void main(String[] args) throws Exception {
-		IBook book = FB2Parser.parse(args.length>0?args[0]:"examples/simple.fb2");
+		IBook book = FB2Parser.parse(args.length>0?args[0]:"tests/simple.fb2");
 
 		PrintWriter wr = new PrintWriter(System.out);
-		TextPainter painter = new TextPainter(wr);
+		TextPainter painter = new TextPainter(wr, args.length > 1?Integer.parseInt(args[1]): 80);
 
 		FormatEngine engine = new FormatEngine();
 		engine.setBook(book);
 		engine.setPainter(painter);
 		
-		engine.renderPage();
+		engine.renderPage(false);
 
 		wr.close();
 	}

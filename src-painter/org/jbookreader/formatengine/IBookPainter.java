@@ -1,12 +1,14 @@
 package org.jbookreader.formatengine;
 
+import org.jbookreader.formatengine.model.RenderingDimensions;
+
 /**
  * This interface represents a not-so-simple displaying device.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public interface ITextPainter {
+public interface IBookPainter {
 	/**
 	 * Clears the output device, if it makes sense.
 	 *
@@ -25,17 +27,6 @@ public interface ITextPainter {
 	double getHeight();
 	
 	/**
-	 * Returns current X position.
-	 * @return current X position.
-	 */
-	double getXPosition();
-	/**
-	 * Returns current Y position.
-	 * @return current Y position.
-	 */
-	double getYPosition();
-	
-	/**
 	 * Calculates dimensions to be used for rendering the specified string part
 	 * with given font.
 	 * @param s the string to calculate dimensions for 
@@ -44,15 +35,16 @@ public interface ITextPainter {
 	 * @param font the font to work with
 	 * @return the dimensions of the string when rendered.
 	 */
-	StringDimensions calculateStringDimensions(String s, int start, int end, ITextFont font);
+	RenderingDimensions calculateStringDimensions(String s, int start, int end, ITextFont font);
 	/**
 	 * Renders the string with given font
 	 * @param s the string to render
 	 * @param start The index of the first character in the string
 	 * @param end The index of the character following the last character in the subsequence
 	 * @param font the font to use for rendering
+	 * @param dimensions The dimensions from calculateStringDimensions()
 	 */
-	void renderString(String s, int start, int end, ITextFont font);
+	void renderString(String s, int start, int end, ITextFont font, RenderingDimensions dimensions);
 	
 	/**
 	 * This adds the horizontal space of given size.
@@ -61,11 +53,15 @@ public interface ITextPainter {
 	void addHorizontalStrut(double size);
 	
 	/**
-	 * This starts new string output after adding given space between string baselines
-	 *  FIXME: think some less idiotic for this!
-	 * @param vStrut
+	 * This adds the vertical space of given size.
+	 * @param size the size of necessary vertical space.
 	 */
-	void flushString(double vStrut);
+	void addVerticalStrut(double size);
+	
+	/**
+	 * Moves the cursor to the start of the string..
+	 */
+	void flushString();
 	
 	/**
 	 * Allocates and returns specified font.
@@ -74,4 +70,10 @@ public interface ITextPainter {
 	 * @return the allocated font object.
 	 */
 	ITextFont getFont(String name, int size);
+
+	/**
+	 * Returns current Y coordinate.
+	 * @return current Y coordinate. 
+	 */
+	double getYCoordinate();
 }

@@ -1,33 +1,36 @@
 package org.jbookreader.formatengine;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleSheet;
+import org.jbookreader.formatengine.model.HorizontalGlue;
+import org.jbookreader.formatengine.model.IRenderingObject;
+import org.jbookreader.formatengine.model.Line;
+import org.jbookreader.formatengine.model.MetaString;
+import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
- * 
+ * Each paragraph-level node is processed recursievly and each text node is
+ * processed word-by-word. Words intermixed with horizontal glue objects are
+ * put into lines. Then the list of lines is reprocessed and rendered with
+ * corresponding {@link org.jbookreader.formatengine.IBookPainter} instance.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
 public class FormatEngine {
-	private ITextPainter myPainter;
+	private IBookPainter myPainter;
 	private IBook myBook;
 
-	public ITextPainter getPainter() {
-		return this.myPainter;
-	}
-
-	public void setPainter(ITextPainter painter) {
+	public void setPainter(IBookPainter painter) {
 		this.myPainter = painter;
-	}
-
-	public IBook getBook() {
-		return this.myBook;
 	}
 
 	public void setBook(IBook book) {
@@ -39,106 +42,196 @@ public class FormatEngine {
 			start ++;
 		return start;
 	}
+	
+	// TODO: style stack
+	private Line formatNode(List<Line> result, Line currentLine, IContainerNode cnode) {
+		for (INode node: cnode.getChildNodes()) {
+			if (node.isContainer()) {
+				// TODO: apply styles
+				currentLine = formatNode(result, currentLine, (IContainerNode) node);
+			} else {
+				String text = node.getText();
+				int start = 0, end = 0;
+				// TODO: font!
+				ITextFont font = this.myPainter.getFont("default", 10);
 
-	private int pushString(String text) {
-		int start = 0, end = 0;
-		double xpos = this.myPainter.getXPosition();
-		ITextFont font = null;
+				while (end < text.length()) {
+					int temp = consumeWhitespace(text, start);
+					if (temp > start) {
+						// XXX: calculate more correct space size?
+						double strut = font.getSpaceWidth();
 
-		while (end < text.length()) {
-			int temp;
-			temp = consumeWhitespace(text, start);
-			if (temp > start) {
-				// FIXME: correct space size!
-				double strut = 1;
-				
-				if (xpos + strut < this.myPainter.getWidth()) {
-					this.myPainter.addHorizontalStrut(strut);
-					xpos += strut;
-				} else {
-					// FIXME: vertical strut calculation
-					this.myPainter.flushString(0);
-					xpos = 0;
+						if (currentLine.getLeftMargin() + currentLine.getWidth() + strut + currentLine.getRightMargin()> this.myPainter.getWidth()) {
+							currentLine = flushLine(result, currentLine);
+						} else {
+							currentLine.addObject(new HorizontalGlue(strut, this.myPainter));
+						}
+					}
+					end = start = temp;
+
+					if (end >= text.length())
+						break;
+
+					while ((end < text.length()) && (text.charAt(end) > '\u0020')) {
+						end ++;
+					}
+					
+					RenderingDimensions dim = this.myPainter.calculateStringDimensions(text, start, end, font);
+					
+					// XXX: this is the main place for rendering decision
+					if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
+					    && !currentLine.getObjects().isEmpty()) {
+						currentLine = flushLine(result, currentLine);
+					}
+					currentLine.addObject(new MetaString(text, start, end, this.myPainter, font));
+					start = end;
 				}
 			}
-
-			end = start = temp;
-			if (end >= text.length())
-				return -1;
-
-			while ((end < text.length()) && (text.charAt(end) > '\u0020')) {
-				end ++;
-			}
-			
-//			end --;
-			
-			StringDimensions dim = this.myPainter.calculateStringDimensions(text, start, end, font);
-			
-			// FIXME: this is the main place for rendering decision
-			if (xpos + dim.width > this.myPainter.getWidth()) {
-				// FIXME: vstrut calculation
-				this.myPainter.flushString(0);
-				xpos = 0;
-			}
-			this.myPainter.renderString(text, start, end, font);
-			xpos += dim.width;
-			start = end;
 		}
-		return -1;
+
+		return currentLine;
 	}
 	
-	private void renderNode(INode node) {
+	/**
+	 * Flushes and pushes the line into resulting lines list.
+	 * After that new line is creates and returned.
+	 * @param result resulting lines list
+	 * @param currentLine current line to flush
+	 * @return new line for current paragraph.
+	 */
+	private Line flushLine(List<Line> result, Line currentLine) {
+		// XXX: adjust glue objects in the line
+		result.add(currentLine);
+		IContainerNode node = currentLine.getParagraphNode();
+		Line line = new Line(false, node);
+		line.setLeftMargin(this.myBook.getSystemStyleSheet().getLeftMargin(node));
+		line.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
+		return line;
+	}
+
+	private List<Line> myLines = new ArrayList<Line>();
+	private int myStartLine;
+	private int myNextPageLine;
+	
+	private IContainerNode getNextParagraphNode(IContainerNode node) {
+		while (true) {
+			IContainerNode pnode = node.getParentNode();
+
+			// end of book
+			// XXX: maybe handle other bodies?
+			if (pnode == null) {
+				return null;
+			}
+
+			List<INode> children = pnode.getChildNodes();
+			int index = children.indexOf(node);
+			if (index == -1) {
+				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
+			} else if (index +1 < children.size()) {
+				node = (IContainerNode) children.get(index + 1);
+				break;
+			}
+			node = pnode;
+		}
+
+		return getFirstParagraphNodeDown(node);
+	}
+
+	private IContainerNode getFirstParagraphNodeDown(IContainerNode node) {
 		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
-		if (node.isContainer()) {
-			IContainerNode cnode = (IContainerNode)node;
-			boolean hadInline = false;
+
+		while (true) {
+			if (!node.isContainer())
+				return node;
+
+			List<INode> children = node.getChildNodes();
+			if (children.isEmpty())
+				return node;
 			
-			if (cnode.isSectioningNode()) {
-				ISectioningNode snode = (ISectioningNode)cnode;
-				IContainerNode tempNode;
-
-				if ((tempNode = snode.getTitle()) != null)
-					renderNode(tempNode);
-				
-				if ((tempNode = snode.getAnnotation()) != null)
-					renderNode(tempNode);
-
-				for (IContainerNode epigraph: snode.getEpigraph())
-					renderNode(epigraph);
+			INode child0 = children.get(0);
+			if  (ssheet.getNodeDisplayType(child0) == EDisplayType.INLINE) {
+				return node;
 			}
+			
+			if (!child0.isContainer())
+				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child0.getTagName());
 
-			for (INode child : cnode.getChildNodes()) {
-				renderNode(child);
+			node = (IContainerNode) child0;
+		}
+	}
 
-				try {
-					if (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE)
-						hadInline = true;
-				} catch (IllegalStateException e) {
-					 // FIXME: work with exception.
-				}
+	// FIXME: move to stylesheet!
+	// FIXME: make them font-size-dependant!
+	private static final double BASE_LINE_SKIP = 12.0;
+	private static final double LINE_SKIP_LIMIT = 1.0;
+	private static final double LINE_SKIP = 1.0;
+	
+	public void renderPage(boolean reformat) {
+		IContainerNode savedNode = null;
+		
+		this.myPainter.clear();
 
-			}
+		// FIXME: work with this case in more realistic maner
+		if (reformat && this.myStartLine < this.myLines.size()) {
+			savedNode = this.myLines.get(this.myStartLine).getParagraphNode();
+			int line =  this.myStartLine;
 
-			/*
-			 * flush output block after paragraph end 
-			 */
-			try {
-				if (hadInline && (ssheet.getNodeDisplayType(node) == EDisplayType.BLOCK)) {
-					// FIXME: vstrut calculation
-					this.myPainter.flushString(0);
-				}
-			} catch (IllegalStateException e) {
-				// FIXME: work with exception.
-			}
-		} else {
-			pushString(node.getText());
+			while (!this.myLines.get(line).isFirstLine())
+				line --;
+
+			this.myStartLine -= line; 
+			this.myLines.clear();
 		}
 		
-	}
-	
-	// FIXME: think about returning positions, etc.
-	public void renderPage() {
-		// FIXME!
-		renderNode(this.myBook.getMainBody());
+		int lineNum = this.myStartLine;
+		double previousDepth = 0;
+		
+		while (this.myPainter.getYCoordinate() < this.myPainter.getHeight()) {
+			if (lineNum >= this.myLines.size()) {
+//				System.out.println("here" + lineNum + " : " + this.myLines.size());
+				IContainerNode node;
+				if (this.myLines.size() == 0) {
+					if (savedNode == null)
+						node = getFirstParagraphNodeDown(this.myBook.getMainBody());
+					else
+						node = savedNode;
+				} else {
+					IContainerNode lastNode = this.myLines.get(this.myLines.size()-1).getParagraphNode();
+					node = getNextParagraphNode(lastNode);
+				}
+
+				if (node == null)
+					break; // end of book!
+				
+				Line cur = new Line(true, node);
+				cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
+				cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
+				cur = formatNode(this.myLines, cur, node);
+				this.myLines.add(cur);
+			}
+			
+			Line line = this.myLines.get(lineNum);
+
+			if (previousDepth + LINE_SKIP_LIMIT + line.getHeight() < BASE_LINE_SKIP) {
+				this.myPainter.addVerticalStrut(BASE_LINE_SKIP);
+			} else {
+				this.myPainter.addVerticalStrut(previousDepth + LINE_SKIP + line.getHeight());
+			}
+
+			this.myPainter.addHorizontalStrut(line.getLeftMargin());
+			for (Iterator<IRenderingObject> it = line.getObjects().iterator(); it.hasNext(); ) {
+				IRenderingObject ro = it.next();
+				if (ro.isGlue() && !it.hasNext())
+					break;
+				ro.render();
+			}
+			this.myPainter.flushString();
+			
+			previousDepth = line.getDepth();
+
+			lineNum ++;
+		}
+		
+		this.myNextPageLine = lineNum;
 	}
 }

@@ -5,6 +5,7 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
@@ -16,6 +17,10 @@ import javax.swing.JPanel;
 import javax.swing.JSeparator;
 import javax.swing.KeyStroke;
 
+import org.jbookreader.book.bom.IBook;
+import org.jbookreader.book.parser.FB2Parser;
+import org.xml.sax.SAXException;
+
 /**
  * This class represents a main application window.
  * 
@@ -25,17 +30,21 @@ import javax.swing.KeyStroke;
 @SuppressWarnings("serial")
 public class MainWindow extends JFrame {
 	/**
+	 * This is the heart of the application &mdash; the book component
+	 */
+	private JBookComponent myBookComponent;
+	/**
 	 * This creates main window contents.
 	 * @return a JComponent to be placed on the ContentsPlane.
 	 */
 	private JComponent createContents() {
 		JPanel pane = new JPanel(new BorderLayout());
 
-		JComponent text = new TextComponent();
+		this.myBookComponent = new JBookComponent();
 		
-		text.setOpaque(true);
+		this.myBookComponent.setOpaque(true);
 		Dimension dim = new Dimension(200,100);
-		pane.add(text, BorderLayout.CENTER);	
+		pane.add(this.myBookComponent, BorderLayout.CENTER);	
 		pane.setMinimumSize(dim);
 		pane.setPreferredSize(dim);
 
@@ -192,4 +201,38 @@ public class MainWindow extends JFrame {
 		pack();
 	}
 
+	/**
+	 * The instance of the main window.
+	 */
+	private static MainWindow ourWindow;
+	/**
+	 * Returns the main window object. If the window wasn't created, creates new
+	 *  instance.
+	 * @return the main window object.
+	 */
+	public static MainWindow getMainWindow() {
+		if (ourWindow == null) {
+			ourWindow = new MainWindow();
+		}
+		return ourWindow;
+	}
+
+	/**
+	 * Opens book from specified uri. In it's simplest form the uri can be the filename
+	 * of the book.
+	 * @param uri the uri of the book
+	 */
+	public void openBook(String uri) {
+		try {
+			IBook book;
+			book = FB2Parser.parse(uri);
+			this.myBookComponent.setBook(book);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SAXException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

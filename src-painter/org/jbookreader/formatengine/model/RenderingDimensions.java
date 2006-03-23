@@ -1,7 +1,7 @@
-package org.jbookreader.formatengine;
+package org.jbookreader.formatengine.model;
 
 /**
- * This class represents dimensions of the string for precise positioning.
+ * This class represents dimensions of the rendering object for precise positioning.
  * As usual, these dimensions don't specify 'the real dimensions', i.e. there can be pixels
  * higher than <code>StringDimesions.height</code> over the baseline, but you should
  * use the specified numbers for string positioning.
@@ -9,7 +9,7 @@ package org.jbookreader.formatengine;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class StringDimensions {
+public class RenderingDimensions {
 	/**
 	 * The height of the string over the baseline.
 	 */
@@ -29,7 +29,7 @@ public class StringDimensions {
 	 * @param depth the height of the string below the baseline.
 	 * @param width the width of the string.
 	 */
-	public StringDimensions(double height, double depth, double width) {
+	public RenderingDimensions(double height, double depth, double width) {
 		this.height = height;
 		this.depth = depth;
 		this.width = width;

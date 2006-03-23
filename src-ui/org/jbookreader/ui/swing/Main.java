@@ -17,7 +17,7 @@ public class Main {
         		//Make sure we have nice window decorations.
 		JFrame.setDefaultLookAndFeelDecorated(true);
 
-		JFrame main = new MainWindow();
+		MainWindow main = MainWindow.getMainWindow();
 		main.setVisible(true);
 	}
 
@@ -26,9 +26,15 @@ public class Main {
 	 * @param args currently unused.
 	 */
 	public static void main(String[] args) {
+		// FIXME: remove default after providing File->Open
+		final String bookname = args.length>0?args[0]:"tests/simple.fb2";
+
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
+				if (bookname != null) {
+					MainWindow.getMainWindow().openBook(bookname);
+				}
 			}
 		});
 	}

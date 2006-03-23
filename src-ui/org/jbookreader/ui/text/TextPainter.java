@@ -3,8 +3,8 @@ package org.jbookreader.ui.text;
 import java.io.PrintWriter;
 
 import org.jbookreader.formatengine.ITextFont;
-import org.jbookreader.formatengine.ITextPainter;
-import org.jbookreader.formatengine.StringDimensions;
+import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
  * This class represents a simple painter over the console with width 80.
@@ -12,7 +12,7 @@ import org.jbookreader.formatengine.StringDimensions;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class TextPainter implements ITextPainter {
+public class TextPainter implements IBookPainter {
 	
 	/**
 	 * Output device.
@@ -20,17 +20,19 @@ public class TextPainter implements ITextPainter {
 	private final PrintWriter myOutput;
 
 	/**
-	 * Current X position of the cursor.
+	 * The width of formatted text.
 	 */
-	private double myXPosition = 0;
+	private double myWidth;
 
 	/**
 	 * This constructs new <code>TextPainter</code> with specified
 	 * <code>PrintWriter</code> as the output device.
 	 * @param output output stream
+	 * @param width the width of text stram
 	 */
-	public TextPainter(PrintWriter output) {
+	public TextPainter(PrintWriter output, int width) {
 		this.myOutput = output;
+		this.myWidth = width;
 	}
 
 	public void clear() {
@@ -38,42 +40,33 @@ public class TextPainter implements ITextPainter {
 	}
 
 	public double getWidth() {
-		return 80;
+		return this.myWidth;
 	}
 
 	public double getHeight() {
 		return Double.POSITIVE_INFINITY;
 	}
 	
-	public double getXPosition() {
-		return this.myXPosition;
+	public RenderingDimensions calculateStringDimensions(String s, int start, int end, ITextFont font) {
+		return new RenderingDimensions(1, 0,  end - start);
 	}
 
-	public double getYPosition() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	public StringDimensions calculateStringDimensions(String s, int start, int end, ITextFont font) {
-		return new StringDimensions(1, 0,  end - start);
-	}
-
-	public void renderString(String s, int start, int end, ITextFont font) {
+	public void renderString(String s, int start, int end, ITextFont font, RenderingDimensions dimensions) {
 		this.myOutput.append(s, start, end);
-		this.myXPosition += end-start;
 	}
 
 	public void addHorizontalStrut(double size) {
 		while (size >= 0.5) {
 			this.myOutput.append(' ');
-			this.myXPosition += 1;
 			size -= 1;
 		}
 	}
 
-	public void flushString(double vStrut) {
-		// FIXME: implement vertical spaces!
-		this.myXPosition = 0;
+	public void addVerticalStrut(double size) {
+		// ignored
+	}
+
+	public void flushString() {
 		this.myOutput.println();
 	}
 
@@ -90,9 +83,19 @@ public class TextPainter implements ITextPainter {
 	private ITextFont myFont; 
 	public ITextFont getFont(String name, int size) {
 		if (this.myFont == null) {
-			this.myFont = new ITextFont() {/*empty*/};
+			this.myFont = new ITextFont() {
+
+				public double getSpaceWidth() {
+					return 1;
+				}
+			};
 		}
 		return this.myFont;
+	}
+
+	public double getYCoordinate() {
+		// allways 0, as we don't count vertical size
+		return 0;
 	}
 
 }
