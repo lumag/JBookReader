@@ -91,12 +91,16 @@ public class JBookComponent extends JComponent {
 		this.myBook = book;
 		this.myEngine.setBook(this.myBook);
 		this.myReformatBook = true;
-		// XXX: is this a right way?
-		revalidate();
+		repaint();
 	}
 
+	/**
+	 * Scrolls the display one page down
+	 *
+	 */
 	public void scrollPageDown() {
 		this.myEngine.scrollPageDown();
+		repaint();
 	}
 
 }

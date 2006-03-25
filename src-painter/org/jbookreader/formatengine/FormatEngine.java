@@ -205,8 +205,10 @@ public class FormatEngine {
 					node = getNextParagraphNode(lastNode);
 				}
 
-				if (node == null)
-					break; // end of book!
+				if (node == null) {
+					this.myNextPageLine = this.myStartLine;
+					return;
+				}
 				
 				Line cur = new Line(true, node);
 				cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
@@ -237,6 +239,10 @@ public class FormatEngine {
 			lineNum ++;
 		}
 		
-		this.myNextPageLine = lineNum;
+		this.myNextPageLine = lineNum-1;
+	}
+
+	public void scrollPageDown() {
+		this.myStartLine = this.myNextPageLine;
 	}
 }
