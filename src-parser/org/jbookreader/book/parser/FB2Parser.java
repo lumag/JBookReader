@@ -185,6 +185,21 @@ public class FB2Parser {
 
 //			System.out.println("#text: '" + string + "'");
 		}
+		
+		/**
+		 * Returns true if passed tag name denotes start of paragraph.
+		 * @param tagName the name of the tag
+		 * @return whether passed tag name denotes start of paragraph.
+		 */
+		private boolean isParagraphTag(String tagName) {
+			if (tagName.equals("p")
+			 || tagName.equals("subtitle")
+			 || tagName.equals("text-author")
+			 || tagName.equals("v"))
+				return true;
+			
+			return false;
+		}
 
 		@Override
 		public void endElement(String uri, String localName, String qName) {
@@ -201,7 +216,7 @@ public class FB2Parser {
 				processTextNode(true);
 				this.hadOpenTag = false;
 				
-				if (localName.equals("p")) {
+				if (isParagraphTag(localName)) {
 					this.myParseText = false;
 				}
 				
@@ -246,7 +261,7 @@ public class FB2Parser {
 					node = this.mySection = this.mySection.newSectioningNode(localName);
 				} else if (localName.equals("title")) {
 					node = this.mySection.newTitle(localName);
-				} else if (localName.equals("p")) {
+				} else if (isParagraphTag(localName)) {
 					node = this.myContainer.newContainerNode(localName);
 	
 					this.myParseText  = true;
