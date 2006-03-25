@@ -21,6 +21,11 @@ import javax.swing.KeyStroke;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
+import org.jbookreader.ui.swing.actions.OpenAction;
+import org.jbookreader.ui.swing.actions.PageDownAction;
+import org.jbookreader.ui.swing.actions.QuitAction;
+import org.jbookreader.ui.swing.actions.ScrollDownAction;
+import org.jbookreader.ui.swing.actions.ScrollUpAction;
 import org.xml.sax.SAXException;
 
 /**
@@ -212,6 +217,20 @@ public class MainWindow {
 				PageDownAction.getAction().getValue(Action.NAME),
 				PageDownAction.getAction());
 
+		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
+					ScrollDownAction.getAction().getValue(Action.NAME));
+		this.myFrame.getRootPane().getActionMap().put(
+				ScrollDownAction.getAction().getValue(Action.NAME),
+				ScrollDownAction.getAction());
+
+		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_UP, 0),
+					ScrollUpAction.getAction().getValue(Action.NAME));
+		this.myFrame.getRootPane().getActionMap().put(
+				ScrollUpAction.getAction().getValue(Action.NAME),
+				ScrollUpAction.getAction());
+
 		this.myFrame.pack();
 	}
 
@@ -249,15 +268,27 @@ public class MainWindow {
 		}
 	}
 
-	JFrame getFrame() {
+	/**
+	 * Returns the <code>JFrame</code> representing the main window.
+	 * @return the <code>JFrame</code> representing the main window.
+	 */
+	public JFrame getFrame() {
 		return this.myFrame;
 	}
 
+	/**
+	 * Disposes the frame and all associated resources.
+	 *
+	 */
 	public void dispose() {
 		this.myFrame.dispose();
 	}
 
-	JBookComponent getBookComponent() {
+	/**
+	 * Returns current book component.
+	 * @return current book component.
+	 */
+	public JBookComponent getBookComponent() {
 		return this.myBookComponent;
 	}
 }

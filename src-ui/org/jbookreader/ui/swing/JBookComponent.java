@@ -103,4 +103,22 @@ public class JBookComponent extends JComponent {
 		repaint();
 	}
 
+	/**
+	 * Scroll the display down by specified amount of lines
+	 * @param lines the amount of lines to scroll
+	 */
+	public void scrollDown(int lines) {
+		this.myEngine.scrollDown(lines);
+		repaint();
+	}
+
+	/**
+	 * Scroll the display up by specified amount of lines
+	 * @param lines the amount of lines to scroll
+	 */
+	public void scrollUp(int lines) {
+		this.myEngine.scrollUp(lines);
+		repaint();
+	}
+
 }

@@ -1,4 +1,4 @@
-package org.jbookreader.ui.swing;
+package org.jbookreader.ui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
@@ -6,9 +6,11 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 
-import org.jbookreader.book.parser.FB2Parser;
+import org.jbookreader.ui.swing.GenericFileFilter;
+import org.jbookreader.ui.swing.MainWindow;
+import org.jbookreader.ui.swing.Messages;
 
-
+@SuppressWarnings("serial")
 public class OpenAction extends AbstractAction {
 	
 	private OpenAction() {
@@ -17,14 +19,14 @@ public class OpenAction extends AbstractAction {
 		putValue(SHORT_DESCRIPTION, Messages.getString("OpenAction.Description")); //$NON-NLS-1$
 	}
 
-	static Action action;
+	private static Action ourAction;
 
-	static Action getAction() {
-		if (action == null) {
-			action = new OpenAction();
+	public static Action getAction() {
+		if (ourAction == null) {
+			ourAction = new OpenAction();
 		}
 
-		return action;
+		return ourAction;
 	}
 
 	public void actionPerformed(ActionEvent e) {

@@ -1,11 +1,15 @@
-package org.jbookreader.ui.swing;
+package org.jbookreader.ui.swing.actions;
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import org.jbookreader.ui.swing.MainWindow;
+import org.jbookreader.ui.swing.Messages;
 
+
+@SuppressWarnings("serial")
 public class QuitAction extends AbstractAction {
 	
 	private QuitAction() {
@@ -14,14 +18,14 @@ public class QuitAction extends AbstractAction {
 		putValue(SHORT_DESCRIPTION, Messages.getString("QuitAction.Description")); //$NON-NLS-1$
 	}
 
-	static Action action;
+	private static Action ourAction;
 
-	static Action getAction() {
-		if (action == null) {
-			action = new QuitAction();
+	public static Action getAction() {
+		if (ourAction == null) {
+			ourAction = new QuitAction();
 		}
 
-		return action;
+		return ourAction;
 	}
 
 	public void actionPerformed(ActionEvent e) {
