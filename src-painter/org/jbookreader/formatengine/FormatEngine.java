@@ -35,6 +35,8 @@ public class FormatEngine {
 
 	public void setBook(IBook book) {
 		this.myBook = book;
+		this.myStartLine = 0;
+		this.myLines.clear();
 	}
 	
 	private int consumeWhitespace(String text, int start) {
@@ -171,15 +173,18 @@ public class FormatEngine {
 		
 		this.myPainter.clear();
 
-		// FIXME: work with this case in more realistic maner
-		if (reformat && this.myStartLine < this.myLines.size()) {
-			savedNode = this.myLines.get(this.myStartLine).getParagraphNode();
-			int line =  this.myStartLine;
+		if (reformat) {
+			// FIXME: work with this case in more realistic maner
+			if (this.myStartLine < this.myLines.size()) {
+				savedNode = this.myLines.get(this.myStartLine).getParagraphNode();
+				// int line =  this.myStartLine;
 
-			while (!this.myLines.get(line).isFirstLine())
-				line --;
+				// while (!this.myLines.get(line).isFirstLine())
+				//	line --;
 
-			this.myStartLine -= line; 
+				// this.myStartLine -= line; 
+				this.myStartLine = 0;
+			}
 			this.myLines.clear();
 		}
 		
