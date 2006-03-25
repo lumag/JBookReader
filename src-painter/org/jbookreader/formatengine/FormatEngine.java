@@ -26,26 +26,54 @@ import org.jbookreader.formatengine.model.RenderingDimensions;
  *
  */
 public class FormatEngine {
+	/**
+	 * Current book painter.
+	 */
 	private IBookPainter myPainter;
+	/**
+	 * Current book.
+	 */
 	private IBook myBook;
 
+	/**
+	 * Sets <code>painter</code> as a new output device.
+	 * @param painter painter representing new output device.
+	 */
 	public void setPainter(IBookPainter painter) {
 		this.myPainter = painter;
 	}
 
+	/**
+	 * Sets the new book to be output.
+	 * @param book new book to display.
+	 */
 	public void setBook(IBook book) {
 		this.myBook = book;
 		this.myStartLine = 0;
 		this.myLines.clear();
 	}
 	
+	/**
+	 * Skip all whitespace in the provided string and return the the index of first non-whitespace char.
+	 * @param text the string.
+	 * @param start the start of the string
+	 * @return the index of first non-whitespace character.
+	 */
 	private int consumeWhitespace(String text, int start) {
 		while ((start < text.length()) && (text.charAt(start) <= '\u0020'))
 			start ++;
 		return start;
 	}
 	
-	// TODO: style stack
+	/**
+	 * Formats a single paragraph node. Formatted lines are stored in the <code>result</code>
+	 * list.
+	 * TODO: style stack
+	 * @param result the list with fully formatted lines
+	 * @param currentLine the current line which maybe already has some rendered objects
+	 * @param cnode the node to format
+	 * @return new partially-formatted line.
+	 */
 	private Line formatNode(List<Line> result, Line currentLine, IContainerNode cnode) {
 		for (INode node: cnode.getChildNodes()) {
 			if (node.isContainer()) {
@@ -111,10 +139,25 @@ public class FormatEngine {
 		return line;
 	}
 
+	/**
+	 * The list with formatted lines.
+	 */
 	private List<Line> myLines = new ArrayList<Line>();
+	/**
+	 * The index of the line at the top of the displaying screen. 
+	 */
 	private int myStartLine;
-	private int myNextPageLine;
+	/**
+	 * The index of the line that shold start next page.
+	 * Or <code>-1</code> if this line isn't calculated yet. 
+	 */
+	private int myNextPageLine = -1;
 	
+	/**
+	 * Returns the paragraph node to be formatted right after <code>node</code>
+	 * @param node current node
+	 * @return next paragraph node.
+	 */
 	private IContainerNode getNextParagraphNode(IContainerNode node) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
@@ -139,6 +182,40 @@ public class FormatEngine {
 		return getFirstParagraphNodeDown(node);
 	}
 
+	/**
+	 * Returns the paragraph node to be formatted right before <code>node</code>
+	 * @param node current node
+	 * @return previous paragraph node.
+	 */
+	private IContainerNode getPreviousParagraphNode(IContainerNode node) {
+		while (true) {
+			IContainerNode pnode = node.getParentNode();
+
+			// end of book
+			// XXX: maybe handle other bodies?
+			if (pnode == null) {
+				return null;
+			}
+
+			List<INode> children = pnode.getChildNodes();
+			int index = children.indexOf(node);
+			if (index == -1) {
+				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
+			} else if (index - 1 >= 0) {
+				node = (IContainerNode) children.get(index - 1);
+				break;
+			}
+			node = pnode;
+		}
+
+		return getLastParagraphNodeDown(node);
+	}
+	
+	/**
+	 * Returns the first paragraph node in the specified container node.
+	 * @param node the container node.
+	 * @return the first paragraph node in the specified container node.
+	 */
 	private IContainerNode getFirstParagraphNodeDown(IContainerNode node) {
 		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
 
@@ -150,24 +227,65 @@ public class FormatEngine {
 			if (children.isEmpty())
 				return node;
 			
-			INode child0 = children.get(0);
-			if  (ssheet.getNodeDisplayType(child0) == EDisplayType.INLINE) {
+			INode child = children.get(0);
+			if  (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE) {
 				return node;
 			}
 			
-			if (!child0.isContainer())
-				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child0.getTagName());
+			if (!child.isContainer())
+				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child.getTagName());
 
-			node = (IContainerNode) child0;
+			node = (IContainerNode) child;
+		}
+	}
+
+	/**
+	 * Returns the last paragraph node in the specified container node.
+	 * @param node the container node.
+	 * @return the last paragraph node in the specified container node.
+	 */
+	private IContainerNode getLastParagraphNodeDown(IContainerNode node) {
+		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
+
+		while (true) {
+			if (!node.isContainer())
+				return node;
+
+			List<INode> children = node.getChildNodes();
+			if (children.isEmpty())
+				return node;
+			
+			INode child = children.get(children.size()-1);
+			if  (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE) {
+				return node;
+			}
+			
+			if (!child.isContainer())
+				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child.getTagName());
+
+			node = (IContainerNode) child;
 		}
 	}
 
 	// FIXME: move to stylesheet!
 	// FIXME: make them font-size-dependant!
+	/**
+	 * The basic distance between lines
+	 */
 	private static final double BASE_LINE_SKIP = 12.0;
+	/**
+	 * The minimal distance between lines 
+	 */
 	private static final double LINE_SKIP_LIMIT = 1.0;
+	/**
+	 * The default distance between lines.
+	 */
 	private static final double LINE_SKIP = 1.0;
 	
+	/**
+	 * Renders a page of text.
+	 * @param reformat whether we could use cached preformatted lines from previous calls.
+	 */
 	public void renderPage(boolean reformat) {
 		IContainerNode savedNode = null;
 		
@@ -177,12 +295,6 @@ public class FormatEngine {
 			// FIXME: work with this case in more realistic maner
 			if (this.myStartLine < this.myLines.size()) {
 				savedNode = this.myLines.get(this.myStartLine).getParagraphNode();
-				// int line =  this.myStartLine;
-
-				// while (!this.myLines.get(line).isFirstLine())
-				//	line --;
-
-				// this.myStartLine -= line; 
 				this.myStartLine = 0;
 			}
 			this.myLines.clear();
@@ -206,6 +318,12 @@ public class FormatEngine {
 				}
 
 				if (node == null) {
+					// don't scroll the text completely out of screen
+					if (this.myStartLine >= this.myLines.size()) {
+						lineNum = this.myStartLine = this.myLines.size()-1;
+						continue;
+					}
+
 					this.myNextPageLine = this.myStartLine;
 					return;
 				}
@@ -242,7 +360,81 @@ public class FormatEngine {
 		this.myNextPageLine = lineNum-1;
 	}
 
-	public void scrollPageDown() {
-		this.myStartLine = this.myNextPageLine;
+	/**
+	 * Removes unused cached lines from the start.
+	 *
+	 */
+	private void cleanStartLines() {
+		int line =  this.myStartLine;
+
+		while (!this.myLines.get(line).isFirstLine())
+			line --;
+		
+		for (int i = 0; i < line; i++)
+			this.myLines.remove(0);
+
+		this.myStartLine -= line; 
 	}
+
+	/**
+	 * Scrolls text one page down.
+	 *
+	 */
+	public void scrollPageDown() {
+		if (this.myNextPageLine < 0)
+			return;
+		this.myStartLine = this.myNextPageLine;
+		
+		cleanStartLines();
+	}
+
+	/**
+	 * Scrolls text down by specified number of lines
+	 * @param lines the number of lines to scroll
+	 */
+	public void scrollDown(int lines) {
+		this.myStartLine += lines;
+
+		// will be restored during repaint
+		this.myNextPageLine = -1;
+
+		if (this.myStartLine >= this.myLines.size())
+			return;
+		
+		if (this.myLines.get(this.myStartLine).isFirstLine())
+			cleanStartLines();
+		
+	}
+
+	/**
+	 * Scrolls text up by specified number of lines
+	 * @param lines the number of lines to scroll
+	 */
+	public void scrollUp(int lines) {
+		this.myStartLine -= lines;
+		// will be restored during repaint
+		this.myNextPageLine = -1;
+		
+		while (this.myStartLine < 0) {
+			// format previous paragraph
+			IContainerNode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
+			
+			if (node == null) {
+				this.myStartLine = 0;
+				return;
+			}
+
+			List<Line> curParagraph = new ArrayList<Line>();
+			Line cur = new Line(true, node);
+			cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
+			cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
+			cur = formatNode(curParagraph, cur, node);
+			curParagraph.add(cur);
+			
+			this.myLines.addAll(0, curParagraph);
+			this.myStartLine += curParagraph.size();
+		}
+
+	}
+
 }
