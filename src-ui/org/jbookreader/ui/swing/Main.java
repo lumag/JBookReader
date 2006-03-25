@@ -1,5 +1,7 @@
 package org.jbookreader.ui.swing;
 
+import java.io.File;
+
 import javax.swing.JFrame;
 
 /**
@@ -18,7 +20,7 @@ public class Main {
 		JFrame.setDefaultLookAndFeelDecorated(true);
 
 		MainWindow main = MainWindow.getMainWindow();
-		main.setVisible(true);
+		main.getFrame().setVisible(true);
 	}
 
 	/**
@@ -27,13 +29,13 @@ public class Main {
 	 */
 	public static void main(String[] args) {
 		// FIXME: remove default after providing File->Open
-		final String bookname = args.length>0?args[0]:"tests/simple.fb2";
+		final String bookname = args.length>0?args[0]:"tests/simple.fb2"; //$NON-NLS-1$
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
 				createAndShowGUI();
 				if (bookname != null) {
-					MainWindow.getMainWindow().openBook(bookname);
+					MainWindow.getMainWindow().openBook(new File(bookname));
 				}
 			}
 		});

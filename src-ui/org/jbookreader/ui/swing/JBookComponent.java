@@ -95,4 +95,8 @@ public class JBookComponent extends JComponent {
 		revalidate();
 	}
 
+	public void scrollPageDown() {
+		this.myEngine.scrollPageDown();
+	}
+
 }

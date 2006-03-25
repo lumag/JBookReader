@@ -5,8 +5,10 @@ import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.io.IOException;
 
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 import javax.swing.JFrame;
@@ -27,12 +29,16 @@ import org.xml.sax.SAXException;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-@SuppressWarnings("serial")
-public class MainWindow extends JFrame {
+@SuppressWarnings("serial") //$NON-NLS-1$
+public class MainWindow {
 	/**
 	 * This is the heart of the application &mdash; the book component
 	 */
 	private JBookComponent myBookComponent;
+	/**
+	 * The frame for this window.
+	 */
+	private JFrame myFrame;
 	/**
 	 * This creates main window contents.
 	 * @return a JComponent to be placed on the ContentsPlane.
@@ -75,16 +81,16 @@ public class MainWindow extends JFrame {
 		JMenu menu;
 		JMenuItem menuItem;
 		
-		menu = new JMenu("File");
+		menu = new JMenu(Messages.getString("File")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_F);
 		
-		menuItem = new JMenuItem("Open", KeyEvent.VK_O);
+		menuItem = new JMenuItem(OpenAction.getAction());
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
 		menu.add(new JSeparator());
 		
-		menuItem = new JMenuItem("Quit", KeyEvent.VK_Q);
+		menuItem = new JMenuItem(QuitAction.getAction());
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_Q, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
@@ -99,24 +105,24 @@ public class MainWindow extends JFrame {
 		JMenu menu;
 		JMenuItem menuItem;
 		
-		menu = new JMenu("Edit");
+		menu = new JMenu(Messages.getString("Edit")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_E);
 		
-		menuItem = new JMenuItem("Find", KeyEvent.VK_F);
+		menuItem = new JMenuItem(Messages.getString("Find"), KeyEvent.VK_F); //$NON-NLS-1$
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Find Next", KeyEvent.VK_X);
+		menuItem = new JMenuItem(Messages.getString("FindNext"), KeyEvent.VK_X); //$NON-NLS-1$
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Find Previous", KeyEvent.VK_V);
+		menuItem = new JMenuItem(Messages.getString("FindPrevious"), KeyEvent.VK_V); //$NON-NLS-1$
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_G, ActionEvent.CTRL_MASK | ActionEvent.SHIFT_MASK));
 		menu.add(menuItem);
 		
 		menu.add(new JSeparator());
 
-		menuItem = new JMenuItem("Preferences", KeyEvent.VK_E);
+		menuItem = new JMenuItem(Messages.getString("Preferences"), KeyEvent.VK_E); //$NON-NLS-1$
 		menu.add(menuItem);
 		
 		return menu;
@@ -130,7 +136,7 @@ public class MainWindow extends JFrame {
 		JMenu menu;
 //		JMenuItem menuItem;
 		
-		menu = new JMenu("View");
+		menu = new JMenu(Messages.getString("View")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_V);
 		
 		// FIXME: add some generic view actions
@@ -146,14 +152,14 @@ public class MainWindow extends JFrame {
 		JMenu menu;
 		JMenuItem menuItem;
 		
-		menu = new JMenu("Bookmarks");
+		menu = new JMenu(Messages.getString("Bookmarks")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_B);
 		
-		menuItem = new JMenuItem("Add Bookmark", KeyEvent.VK_A);
+		menuItem = new JMenuItem(Messages.getString("AddBookmark"), KeyEvent.VK_A); //$NON-NLS-1$
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_D, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
-		menuItem = new JMenuItem("Edit Bookmarks", KeyEvent.VK_E);
+		menuItem = new JMenuItem(Messages.getString("EditBookmarks"), KeyEvent.VK_E); //$NON-NLS-1$
 		menuItem.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_B, ActionEvent.CTRL_MASK));
 		menu.add(menuItem);
 		
@@ -172,10 +178,10 @@ public class MainWindow extends JFrame {
 		JMenu menu;
 		JMenuItem menuItem;
 		
-		menu = new JMenu("Help");
+		menu = new JMenu(Messages.getString("Help")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		menuItem = new JMenuItem("About", KeyEvent.VK_A);
+		menuItem = new JMenuItem(Messages.getString("About"), KeyEvent.VK_A); //$NON-NLS-1$
 		menu.add(menuItem);
 		
 		return menu;
@@ -187,18 +193,26 @@ public class MainWindow extends JFrame {
 	 *
 	 */
 	public MainWindow() {
-		setTitle("JBookReader");
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.myFrame = new JFrame();
+		this.myFrame.setTitle("JBookReader"); //$NON-NLS-1$
+		this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
-		setJMenuBar(createMenuBar());
+		this.myFrame.setJMenuBar(createMenuBar());
 
-		Container contentPane = getContentPane();
+		Container contentPane = this.myFrame.getContentPane();
 
 		JComponent component = createContents();
 		component.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
 		contentPane.add(component, BorderLayout.CENTER);
+		
+		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0),
+					PageDownAction.getAction().getValue(Action.NAME));
+		this.myFrame.getRootPane().getActionMap().put(
+				PageDownAction.getAction().getValue(Action.NAME),
+				PageDownAction.getAction());
 
-		pack();
+		this.myFrame.pack();
 	}
 
 	/**
@@ -218,14 +232,13 @@ public class MainWindow extends JFrame {
 	}
 
 	/**
-	 * Opens book from specified uri. In it's simplest form the uri can be the filename
-	 * of the book.
-	 * @param uri the uri of the book
+	 * Opens book at specified file.
+	 * @param file the file of the book
 	 */
-	public void openBook(String uri) {
+	public void openBook(File file) {
 		try {
 			IBook book;
-			book = FB2Parser.parse(uri);
+			book = FB2Parser.parse(file);
 			this.myBookComponent.setBook(book);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -234,5 +247,17 @@ public class MainWindow extends JFrame {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+	}
+
+	JFrame getFrame() {
+		return this.myFrame;
+	}
+
+	public void dispose() {
+		this.myFrame.dispose();
+	}
+
+	JBookComponent getBookComponent() {
+		return this.myBookComponent;
 	}
 }
