@@ -3,9 +3,10 @@
 	<classpathentry kind="src" path="src-model"/>
 	<classpathentry kind="src" path="src-parser"/>
 	<classpathentry kind="src" path="src-painter"/>
-	<classpathentry kind="src" path="src-ui"/>
+	<classpathentry kind="src" path="src-swingui"/>
+	<classpathentry output="bin-misc" kind="src" path="src-misc"/>
+	<classpathentry output="bin-misc" kind="src" path="src-ui"/>
 	<classpathentry output="bin-tests" kind="src" path="src-tests"/>
-	<classpathentry kind="src" path="src-misc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry sourcepath="JUNIT_SRC_HOME/junitsrc.zip" kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="bin"/>
