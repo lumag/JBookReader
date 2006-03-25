@@ -28,8 +28,7 @@ public class Main {
 	 * @param args currently unused.
 	 */
 	public static void main(String[] args) {
-		// FIXME: remove default after providing File->Open
-		final String bookname = args.length>0?args[0]:"tests/simple.fb2"; //$NON-NLS-1$
+		final String bookname = args.length>0?args[0]:null;
 
 		javax.swing.SwingUtilities.invokeLater(new Runnable() {
 			public void run() {
