@@ -28,8 +28,15 @@ public class GenericFileFilter extends FileFilter {
 		if (pathname.isDirectory())
 			return true;
 		String name = pathname.getName();
-		String ext = name.substring(name.lastIndexOf(".") + 1); //$NON-NLS-1$
-		return this.myExtension.contains(ext);
+		int dotPosition = name.length();
+		while ((dotPosition = name.lastIndexOf(".", dotPosition-1)) > 0) { //$NON-NLS-1$
+			if (this.myExtension.contains(name.substring(dotPosition+1)))
+				return true;
+		}
+		if (this.myExtension.isEmpty()) {
+			return true;
+		}
+		return false;
 	}
 
 	@Override
