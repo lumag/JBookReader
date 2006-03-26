@@ -373,7 +373,8 @@ public class FormatEngine {
 		for (int i = 0; i < line; i++)
 			this.myLines.remove(0);
 
-		this.myStartLine -= line; 
+		this.myStartLine -= line;
+		this.myNextPageLine -= line;
 	}
 
 	/**
