@@ -1,6 +1,7 @@
 package org.jbookreader.book.parser;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 
 import org.jbookreader.book.bom.IBinaryData;
@@ -38,6 +39,28 @@ public class FB2Parser {
 	 * @throws SAXException in case of XML parsing problem
 	 */
 	public static IBook parse(String uri) throws IOException, SAXException {
+		return parse(new InputSource(uri));
+	}
+
+	/**
+	 * This parses the book at provided <code>InputStream</code>.
+	 * @param stream the stream with the book
+	 * @return the parsed book representation
+	 * @throws IOException in case of I/O problem
+	 * @throws SAXException in case of XML parsing problem
+	 */
+	public static IBook parse(InputStream stream) throws IOException, SAXException {
+		return parse(new InputSource(stream));
+	}
+
+	/**
+	 * This parses the book at provided <code>InputSource</code>.
+	 * @param source the source with the book
+	 * @return the parsed book representation
+	 * @throws IOException in case of I/O problem
+	 * @throws SAXException in case of XML parsing problem
+	 */
+	private static IBook parse(InputSource source) throws IOException, SAXException {
 		XMLReader reader;
 		
 		reader = XMLReaderFactory.createXMLReader();
@@ -48,7 +71,7 @@ public class FB2Parser {
 		
 		reader.setContentHandler(new FB2ContentsHandler(book));
 
-		reader.parse(new InputSource(uri));
+		reader.parse(source);
 
 		return book;	
 	}

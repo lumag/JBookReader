@@ -33,6 +33,7 @@ public class OpenAction extends AbstractAction {
 		JFileChooser chooser = new JFileChooser();
 		GenericFileFilter filter = new GenericFileFilter();
 		filter.addExtension("fb2"); //$NON-NLS-1$
+		filter.addExtension("zip"); //$NON-NLS-1$
 		filter.setDescription(Messages.getString("FB2Description")); //$NON-NLS-1$
 		chooser.setFileFilter(filter);
 		

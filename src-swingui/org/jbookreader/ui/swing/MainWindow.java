@@ -6,7 +6,9 @@ import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.zip.ZipInputStream;
 
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -257,7 +259,13 @@ public class MainWindow {
 	public void openBook(File file) {
 		try {
 			IBook book;
-			book = FB2Parser.parse(file);
+			if (file.getName().endsWith(".zip")) { // $NON-NLS-1$
+				ZipInputStream stream = new ZipInputStream(new FileInputStream(file));
+				stream.getNextEntry();
+				book = FB2Parser.parse(stream);
+			} else {
+				book = FB2Parser.parse(file);
+			}
 			this.myBookComponent.setBook(book);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
