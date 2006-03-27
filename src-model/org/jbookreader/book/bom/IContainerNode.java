@@ -31,9 +31,15 @@ public interface IContainerNode extends INode {
 	IContainerNode newContainerNode(String tagName);
 
 	/**
-	 * Returns true if this node also implements {@link ISectioningNode}
-	 * @return true if this node is a sectioning node.
+	 * Returns the title of the section.
+	 * @return the title of the section.
 	 */
-	boolean isSectioningNode();
+	IContainerNode getTitle();
+	/**
+	 * Allocates the title of the section.
+	 * @param tagName the tag name of the title node
+	 * @return newly created container node.
+	 */
+	IContainerNode newTitle(String tagName);
 
 }

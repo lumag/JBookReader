@@ -7,8 +7,8 @@ import java.util.Map;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
+import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 
 
@@ -26,7 +26,7 @@ public class Book implements IBook {
 	/**
 	 * The list with book bodies.
 	 */
-	private Map<String, ISectioningNode> myBodies = new LinkedHashMap<String, ISectioningNode>();
+	private Map<String, IContainerNode> myBodies = new LinkedHashMap<String, IContainerNode>();
 	/**
 	 * Maps id -> node.
 	 */
@@ -36,22 +36,22 @@ public class Book implements IBook {
 	 */
 	private Map<String, BinaryData> myBinaries = new LinkedHashMap<String, BinaryData>();
 	
-	public ISectioningNode newBody(String tagName, String name) {
-		SectioningNode body = new SectioningNode();
+	public IContainerNode newBody(String tagName, String name) {
+		ContainerNode body = new ContainerNode();
 		body.setTagName(tagName);
 		body.setBook(this);
 		this.myBodies.put(name, body);
 		return body;
 	}
 
-	public ISectioningNode getMainBody() {
-		ISectioningNode node = this.myBodies.get(null);
+	public IContainerNode getMainBody() {
+		IContainerNode node = this.myBodies.get(null);
 		if (node == null)
 			throw new IllegalStateException("No main body provided");
 		return node;
 	}
 	
-	public Collection<ISectioningNode> getBodies() {
+	public Collection<IContainerNode> getBodies() {
 		return Collections.unmodifiableCollection(this.myBodies.values());
 	}
 	

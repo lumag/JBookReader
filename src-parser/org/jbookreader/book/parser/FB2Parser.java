@@ -1,13 +1,12 @@
 package org.jbookreader.book.parser;
 
 import java.io.File;
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
-import org.jbookreader.book.bom.ISectioningNode;
 import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 import org.jbookreader.book.stylesheet.impl.FB2StyleSheet;
@@ -126,10 +125,6 @@ public class FB2Parser {
 		private IBinaryData myBinaryData;
 
 		/**
-		 * The section being parsed.
-		 */
-		private ISectioningNode mySection;
-		/**
 		 * The container being parsed.
 		 */
 		private IContainerNode myContainer;
@@ -229,6 +224,7 @@ public class FB2Parser {
 			if (!this.parseXML)
 				return;
 			
+			// System.out.println("</" + localName + ":" + ((this.myContainer!=null)?this.myContainer.getTagName():"null"));
 			if (localName.equals("FictionBook")) {
 				// XXX: root node;
 			} else if (localName.equals("binary")) {
@@ -243,10 +239,6 @@ public class FB2Parser {
 					this.myParseText = false;
 				}
 				
-				if (this.myContainer.isSectioningNode()) {
-					this.mySection = this.mySection.getParentSection();
-				}
-					
 				this.myContainer = this.myContainer.getParentNode();
 
 			}
@@ -279,11 +271,9 @@ public class FB2Parser {
 				IContainerNode node;
 
 				if (localName.equals("body")) {
-					node  = this.mySection = this.myBook.newBody("body", attributes.getValue("name"));
-				} else if (localName.equals("section")) {
-					node = this.mySection = this.mySection.newSectioningNode(localName);
+					node = this.myBook.newBody("body", attributes.getValue("name"));
 				} else if (localName.equals("title")) {
-					node = this.mySection.newTitle(localName);
+					node = this.myContainer.newTitle(localName);
 				} else if (isParagraphTag(localName)) {
 					node = this.myContainer.newContainerNode(localName);
 	

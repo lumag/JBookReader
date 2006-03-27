@@ -20,19 +20,19 @@ public interface IBook {
 	 * @param name the name of new body or null if it's main node.
 	 * @return new body node.
 	 */
-	ISectioningNode newBody(String tagName, String name);
+	IContainerNode newBody(String tagName, String name);
 
 	/**
 	 * Returns the main (the first) body of the book.
 	 * @return the main body of the book
 	 */
-	ISectioningNode getMainBody();
+	IContainerNode getMainBody();
 
 	/**
 	 * Returns a collection of book bodies.
 	 * @return a collection of book bodies.
 	 */
-	Collection<ISectioningNode> getBodies();
+	Collection<IContainerNode> getBodies();
 
 	/**
 	 * Allocates new binary data.

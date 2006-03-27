@@ -23,10 +23,6 @@ public class BookModelTest extends TestCase {
 	 */
 	private IBook myBook;
 	/**
-	 * Current section.
-	 */
-	private ISectioningNode mySection;
-	/**
 	 * Current container.
 	 */
 	private IContainerNode myContainer;
@@ -44,15 +40,14 @@ public class BookModelTest extends TestCase {
 		
 		// body
 		{
-			ISectioningNode node  = this.myBook.newBody("body", null);
+			IContainerNode node  = this.myBook.newBody("body", null);
 
-			this.mySection = node;
 			this.myContainer = node;
 		}
 		
 		// title
 		{
-			IContainerNode node = this.mySection.newTitle("title");
+			IContainerNode node = this.myContainer.newTitle("title");
 			this.myContainer = node;
 		}
 		
@@ -79,15 +74,13 @@ public class BookModelTest extends TestCase {
 		
 		// section
 		{
-			ISectioningNode node = this.mySection.newSectioningNode("section");
+			IContainerNode node = this.myContainer.newContainerNode("section");
 			
-			this.mySection = node;
-
 			this.myContainer = node;
 		}
 		// title
 		{
-			IContainerNode node = this.mySection.newTitle("title");
+			IContainerNode node = this.myContainer.newTitle("title");
 
 			this.myContainer = node;
 		}
@@ -156,15 +149,11 @@ public class BookModelTest extends TestCase {
 		// /section
 		{
 			this.myContainer = this.myContainer.getParentNode();
-			
-			this.mySection = this.mySection.getParentSection();
 		}
 		
 		// /body
 		{
 			this.myContainer = this.myContainer.getParentNode();
-			
-			this.mySection = this.mySection.getParentSection();
 		}
 		
 		// /FictionBook
@@ -179,7 +168,6 @@ public class BookModelTest extends TestCase {
 	 */
 	public void testSetUp() throws IOException {
 		assertNotNull(this.myBook);
-		assertNull(this.mySection);
 		assertNull(this.myContainer);
 		
 		TestUtil.compareBOM(this.myBook, TestUtil.getExpectedFile("BOM", "BOM.xml"));
@@ -189,44 +177,17 @@ public class BookModelTest extends TestCase {
 	 * This tests implementation of 'org.jbookreader.book.bom.IBody.newBody()'
 	 */
 	public void testNewBody() {
-		ISectioningNode body = this.myBook.getMainBody();
+		IContainerNode body = this.myBook.getMainBody();
 		assertEquals("body", body.getTagName());
 		assertEquals(this.myBook, body.getBook());
 		assertNull(body.getParentNode());
-		assertNull(body.getParentSection());
 	}
 	
 	/**
-	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newSectioningNode()'
-	 */
-	public void testNewSection() {
-		IContainerNode pnode = this.myBook.getMainBody();
-		INode node = null;
-		
-		for (INode temp: pnode.getChildNodes()) {
-			if (temp.getTagName().equals("section")) {
-				node = temp;
-				break;
-			}
-		}
-		
-		assertNotNull("Can't find 'section' node", node);
-		
-		assertTrue(node.isContainer());
-		IContainerNode cnode = (IContainerNode)node;
-		assertTrue(cnode.isSectioningNode());
-		ISectioningNode snode = (ISectioningNode)cnode;
-		
-		assertEquals(this.myBook, snode.getBook());
-		assertEquals(pnode, snode.getParentNode());
-		assertEquals(pnode, snode.getParentSection());
-	}
-
-	/**
-	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newTitle()'
+	 * This tests implementation of 'org.jbookreader.book.bom.IContainerNode.newTitle()'
 	 */
 	public void testNewTitle() {
-		ISectioningNode pnode = this.myBook.getMainBody();
+		IContainerNode pnode = this.myBook.getMainBody();
 		
 		assertNotNull(pnode.getTitle());
 
@@ -242,65 +203,14 @@ public class BookModelTest extends TestCase {
 		
 		assertTrue(node.isContainer());
 		IContainerNode cnode = (IContainerNode)node;
-		assertTrue(cnode.isSectioningNode());
-		ISectioningNode snode = (ISectioningNode)cnode;
 
-		assertNotNull(snode.getTitle());
+		assertNotNull(cnode.getTitle());
 		
-		IContainerNode title = snode.getTitle();
+		IContainerNode title = cnode.getTitle();
 		assertEquals("title", title.getTagName());
 		assertEquals(this.myBook,title.getBook());
-		assertEquals(snode,title.getParentNode());
-		assertTrue(snode.getChildNodes().contains(title));
-	}
-
-	/**
-	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newEpigraph()'
-	 */
-/*	public void testNewEpigraph() {
-		ISectioningNode pnode = this.myBook.getMainBody();
-		
-		IContainerNode epigraph = pnode.newEpigraph("epigraph");
-		assertEquals("epigraph", epigraph.getTagName());
-		assertFalse(pnode.getEpigraph().isEmpty());
-		IContainerNode enode = pnode.getEpigraph().iterator().next();
-		assertEquals(epigraph, enode);
-
-		assertEquals(this.myBook,enode.getBook());
-		assertEquals(pnode,enode.getParentNode());
-		assertFalse(pnode.getChildNodes().contains(enode));
-	}*/
-
-	/**
-	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newAnnotation()'
-	 */
-	public void testNewAnnotation() {
-		ISectioningNode pnode = this.myBook.getMainBody();
-		
-		IContainerNode annotation = pnode.newAnnotation("annotation");
-		assertEquals("annotation", annotation.getTagName());
-		assertEquals(annotation, pnode.getAnnotation());
-
-		assertEquals(this.myBook,annotation.getBook());
-		assertEquals(pnode,annotation.getParentNode());
-		assertTrue(pnode.getChildNodes().contains(annotation));
-	}
-
-	/**
-	 * This tests implementation of 'org.jbookreader.book.bom.ISectioningNode.newImage()'
-	 * FIXME: add more tests after finishing work with images!
-	 */
-	public void testNewImage() {
-		ISectioningNode pnode = this.myBook.getMainBody();
-		
-		IImageNode image = pnode.newImage("image");
-		assertEquals("image", image.getTagName());
-		assertEquals(image, pnode.getImage());
-		assertFalse(image.isContainer());
-
-		assertEquals(this.myBook,image.getBook());
-		assertEquals(pnode,image.getParentNode());
-		assertTrue(pnode.getChildNodes().contains(image));
+		assertEquals(cnode,title.getParentNode());
+		assertTrue(cnode.getChildNodes().contains(title));
 	}
 
 	/**

@@ -20,6 +20,10 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 	 * The list of child nodes.
 	 */
 	private List<INode> myChildNodes = new LinkedList<INode>();
+	/**
+	 * The title of the section.
+	 */
+	private IContainerNode myTitle;
 
 	@Override
 	public boolean isContainer() {
@@ -59,8 +63,16 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		super.setTagName(tagName);
 	}
 
-	public boolean isSectioningNode() {
-		return false;
+	public IContainerNode getTitle() {
+		return this.myTitle;
+	}
+
+	public IContainerNode newTitle(String tagName) {
+		ContainerNode node = new ContainerNode();
+		node.setTagName(tagName);
+		this.addChildNode(node);
+		this.myTitle = node;
+		return node;
 	}
 
 }
