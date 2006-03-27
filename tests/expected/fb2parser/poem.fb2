@@ -1,0 +1,43 @@
+<FictionBook>
+<body>
+<title>
+<p>
+Poem test
+</p>
+</title><section id="t">
+<title>
+<p>
+Poem section.
+</p>
+</title><poem>
+<title>
+<p>
+Poem
+</p>
+</title><stanza>
+<v>
+First line,
+</v><v>
+Second line
+</v><v>
+And a third one
+</v><v>
+In this short poem.
+</v>
+</stanza><stanza>
+<v>
+Another first line of stanza
+</v><v>
+This isn't smarter than before.
+</v><v>
+Just testing what can happen
+</v><v>
+And what is JBR ready for.
+</v>
+</stanza><text-author>
+Me
+</text-author>
+</poem>
+</section>
+</body>
+</FictionBook>
