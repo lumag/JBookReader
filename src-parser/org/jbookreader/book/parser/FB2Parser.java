@@ -7,6 +7,8 @@ import java.io.InputStream;
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.IImageNode;
+import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 import org.jbookreader.book.stylesheet.impl.FB2StyleSheet;
@@ -239,7 +241,9 @@ public class FB2Parser {
 					this.myParseText = false;
 				}
 				
-				this.myContainer = this.myContainer.getParentNode();
+				if (this.myContainer.getTagName().equals(localName)) {
+					this.myContainer = this.myContainer.getParentNode();
+				}
 
 			}
 
@@ -268,12 +272,30 @@ public class FB2Parser {
 				this.myBinaryData = this.myBook.newBinaryData(attributes.getValue("id"), attributes.getValue("content-type"));
 				return;
 			} else {
-				IContainerNode node;
+				INode node = null;
 
 				if (localName.equals("body")) {
 					node = this.myBook.newBody("body", attributes.getValue("name"));
 				} else if (localName.equals("title")) {
 					node = this.myContainer.newTitle(localName);
+				} else if (localName.equals("image")) {
+					String href = null;
+					href = attributes.getValue("http://www.w3.org/1999/xlink", "href");
+					if (href == null) {
+						href = attributes.getValue("href");
+					}
+					if (href == null) {
+						System.err.println("Can'f find image href!");
+					}
+					IImageNode image = this.myContainer.newImage(localName, href);
+					String str;
+					if ((str = attributes.getValue("alt")) != null) {
+						image.setText(str);
+					}
+					if ((str = attributes.getValue("title")) != null) {
+						image.setTitle(str);
+					}
+					node = image;
 				} else if (isParagraphTag(localName)) {
 					node = this.myContainer.newContainerNode(localName);
 	
@@ -285,7 +307,10 @@ public class FB2Parser {
 					node = this.myContainer.newContainerNode(localName);
 				}
 				
-				this.myContainer = node;
+				if (node.isContainer()) {
+					this.myContainer = (IContainerNode) node;
+				}
+
 				{
 					String id;
 					if ((id = attributes.getValue("id")) != null) {

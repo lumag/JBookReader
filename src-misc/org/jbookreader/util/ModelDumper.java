@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
 
 /**
@@ -21,12 +22,12 @@ public class ModelDumper {
 	private static void printNode(PrintWriter writer, INode node) {
 		if (node == null)
 			return;
-
+		
 		if (node.getTagName().equals("#text")) {
 			writer.print(node.getText());
 			return;
 		}
-
+		
 		writer.print('<');
 		writer.print(node.getTagName());
 
@@ -34,16 +35,37 @@ public class ModelDumper {
 		if ((id = node.getID()) != null) {
 			writer.printf(" id=\"%s\"", id);
 		}
-		writer.println('>');
 		
-		if (node.isContainer()) {
-			IContainerNode cnode = (IContainerNode)node;
-			
-			for (INode child : cnode.getChildNodes())
-				printNode(writer, child);
-			writer.println();
+		if (node instanceof IImageNode) {
+			IImageNode image = (IImageNode) node;
+			writer.format(" xlink:href=\"%s\"",  image.getHyperRef());
+			if (image.getText() != null) {
+				writer.format(" alt=\"%s\"", image.getText());
+			}
+			if (image.getTitle() != null) {
+				writer.format(" title=\"%s\"", image.getTitle());
+			}
 		}
 
+		if (!node.isContainer()) {
+			writer.print(" />");
+			return;
+		}
+		
+		IContainerNode cnode = (IContainerNode)node;
+		if (cnode.getChildNodes().isEmpty()) {
+			writer.print(" />");
+			return;
+		}
+
+
+		writer.println('>');
+		
+		for (INode child : cnode.getChildNodes()) {
+			printNode(writer, child);
+		}
+
+		writer.println();
 		writer.print("</");
 		writer.print(node.getTagName());
 		writer.print( '>');
@@ -56,8 +78,8 @@ public class ModelDumper {
 	 * @param book the book to dump
 	 */
 	public static void dumpBOM(PrintWriter writer, IBook book) {
-		writer.println("<FictionBook>");
-		for (INode node: book.getBodies())
+		writer.println("<FictionBook xmlns=\"http://www.gribuser.ru/xml/fictionbook/2.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">");
+		for (IContainerNode node: book.getBodies())
 			ModelDumper.printNode(writer, node);
 		writer.println();
 		writer.print("</FictionBook>");

@@ -1,0 +1,21 @@
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+<body>
+<image id="img" xlink:href="#test.jpg" alt="test section image" title="Title of image" /><title>
+<p>
+Title
+</p>
+</title><section id="t">
+<title>
+<p>
+Section title.
+</p>
+</title><p>
+After this paragraph should come second image.
+</p><p>
+<image xlink:href="#test.jpg" alt="test inline image" />
+</p><p>
+But before this line.
+</p>
+</section>
+</body>
+</FictionBook>

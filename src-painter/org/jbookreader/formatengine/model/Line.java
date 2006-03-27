@@ -4,7 +4,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.INode;
 
 /**
  * This class represents the main object of rendering engine &mdash; the line of text
@@ -44,14 +44,14 @@ public class Line {
 	/**
 	 * The node containing the pragraph.
 	 */
-	private IContainerNode myParagraphNode;
+	private INode myParagraphNode;
 	
 	/**
 	 * Constructs the new line with specified paragraph node.
 	 * @param firstLine true if this is the first line
 	 * @param node the corresponding node for the paragraph.
 	 */
-	public Line(boolean firstLine, IContainerNode node) {
+	public Line(boolean firstLine, INode node) {
 		this.myFirstLine = firstLine;
 		this.myParagraphNode = node;
 	}
@@ -140,7 +140,7 @@ public class Line {
 	 * Returns the corresponding paragraph node.
 	 * @return the corresponding paragraph node.
 	 */
-	public IContainerNode getParagraphNode() {
+	public INode getParagraphNode() {
 		return this.myParagraphNode;
 	}
 

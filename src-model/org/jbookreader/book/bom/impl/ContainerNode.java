@@ -5,6 +5,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
 
 
@@ -30,7 +31,7 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		return true;
 	}
 
-	public List<INode> getChildNodes() throws UnsupportedOperationException {
+	public List<INode> getChildNodes() {
 		return Collections.unmodifiableList(this.myChildNodes);
 	}
 	
@@ -72,6 +73,14 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		node.setTagName(tagName);
 		this.addChildNode(node);
 		this.myTitle = node;
+		return node;
+	}
+
+	public IImageNode newImage(String tagName, String href) {
+		ImageNode node = new ImageNode();
+		node.setTagName(tagName);
+		node.setHyperRef(href);
+		this.addChildNode(node);
 		return node;
 	}
 

@@ -24,30 +24,15 @@ public class ImageNode extends AbstractNode implements IImageNode {
 	 */
 	private String myTitle;
 	
-	/**
-	 * This constructs new inline image node.
-	 */
-	public ImageNode() {
-		this.setTagName("image");
-	}
-
 	@Override
 	public String getText() {
 		return this.myText;
 	}
 
-	/**
-	 * Sets the	 alternative text for the image.
-	 * @param text new alternative text
-	 */
 	public void setText(String text) {
 		this.myText = text;
 	}
 
-	/**
-	 * Returns the location of the image. Probably you should only use internal locations ('#id') for now.
-	 * @return the location of the image.
-	 */
 	public String getHyperRef() {
 		return this.myHyperRef;
 	}
@@ -62,18 +47,10 @@ public class ImageNode extends AbstractNode implements IImageNode {
 		this.myHyperRef = hyperRef;
 	}
 
-	/**
-	 * Returns the title of the image or null if there is no title.
-	 * @return the title of the image
-	 */
 	public String getTitle() {
 		return this.myTitle;
 	}
 
-	/**
-	 * Sets the title of the image.
-	 * @param title new title
-	 */
 	public void setTitle(String title) {
 		this.myTitle = title;
 	}

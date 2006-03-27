@@ -71,52 +71,55 @@ public class FormatEngine {
 	 * TODO: style stack
 	 * @param result the list with fully formatted lines
 	 * @param currentLine the current line which maybe already has some rendered objects
-	 * @param cnode the node to format
+	 * @param node the node to format
 	 * @return new partially-formatted line.
 	 */
-	private Line formatNode(List<Line> result, Line currentLine, IContainerNode cnode) {
-		for (INode node: cnode.getChildNodes()) {
-			if (node.isContainer()) {
-				// TODO: apply styles
-				currentLine = formatNode(result, currentLine, (IContainerNode) node);
-			} else {
-				String text = node.getText();
-				int start = 0, end = 0;
-				// TODO: font!
-				ITextFont font = this.myPainter.getFont("default", 10);
+	private Line formatNode(List<Line> result, Line currentLine, INode node) {
+		if (node.isContainer()) {
+			IContainerNode cnode = (IContainerNode) node;
+			// TODO: apply styles
+			for (INode childNode: cnode.getChildNodes()) {
+				currentLine = formatNode(result, currentLine, childNode);
+			}
+			
+			return currentLine;
+		}
 
-				while (end < text.length()) {
-					int temp = consumeWhitespace(text, start);
-					if (temp > start) {
-						// XXX: calculate more correct space size?
-						double strut = font.getSpaceWidth();
+		String text = node.getText();
+		int start = 0, end = 0;
+		// TODO: font!
+		ITextFont font = this.myPainter.getFont("default", 10);
 
-						if (currentLine.getLeftMargin() + currentLine.getWidth() + strut + currentLine.getRightMargin()> this.myPainter.getWidth()) {
-							currentLine = flushLine(result, currentLine);
-						} else {
-							currentLine.addObject(new HorizontalGlue(strut, this.myPainter));
-						}
-					}
-					end = start = temp;
+		while (end < text.length()) {
+			int temp = consumeWhitespace(text, start);
+			if (temp > start) {
+				// XXX: calculate more correct space size?
+				double strut = font.getSpaceWidth();
 
-					if (end >= text.length())
-						break;
-
-					while ((end < text.length()) && (text.charAt(end) > '\u0020')) {
-						end ++;
-					}
-					
-					RenderingDimensions dim = this.myPainter.calculateStringDimensions(text, start, end, font);
-					
-					// XXX: this is the main place for rendering decision
-					if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
-					    && !currentLine.getObjects().isEmpty()) {
-						currentLine = flushLine(result, currentLine);
-					}
-					currentLine.addObject(new MetaString(text, start, end, this.myPainter, font));
-					start = end;
+				if (currentLine.getLeftMargin() + currentLine.getWidth() + strut + currentLine.getRightMargin()> this.myPainter.getWidth()) {
+					currentLine = flushLine(result, currentLine);
+				} else {
+					currentLine.addObject(new HorizontalGlue(strut, this.myPainter));
 				}
 			}
+			end = start = temp;
+
+			if (end >= text.length())
+				break;
+
+			while ((end < text.length()) && (text.charAt(end) > '\u0020')) {
+				end ++;
+			}
+			
+			RenderingDimensions dim = this.myPainter.calculateStringDimensions(text, start, end, font);
+			
+			// XXX: this is the main place for rendering decision
+			if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
+			    && !currentLine.getObjects().isEmpty()) {
+				currentLine = flushLine(result, currentLine);
+			}
+			currentLine.addObject(new MetaString(text, start, end, this.myPainter, font));
+			start = end;
 		}
 
 		return currentLine;
@@ -132,7 +135,7 @@ public class FormatEngine {
 	private Line flushLine(List<Line> result, Line currentLine) {
 		// XXX: adjust glue objects in the line
 		result.add(currentLine);
-		IContainerNode node = currentLine.getParagraphNode();
+		INode node = currentLine.getParagraphNode();
 		Line line = new Line(false, node);
 		line.setLeftMargin(this.myBook.getSystemStyleSheet().getLeftMargin(node));
 		line.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
@@ -158,7 +161,7 @@ public class FormatEngine {
 	 * @param node current node
 	 * @return next paragraph node.
 	 */
-	private IContainerNode getNextParagraphNode(IContainerNode node) {
+	private INode getNextParagraphNode(INode node) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
 
@@ -187,7 +190,7 @@ public class FormatEngine {
 	 * @param node current node
 	 * @return previous paragraph node.
 	 */
-	private IContainerNode getPreviousParagraphNode(IContainerNode node) {
+	private INode getPreviousParagraphNode(INode node) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
 
@@ -216,14 +219,14 @@ public class FormatEngine {
 	 * @param node the container node.
 	 * @return the first paragraph node in the specified container node.
 	 */
-	private IContainerNode getFirstParagraphNodeDown(IContainerNode node) {
+	private INode getFirstParagraphNodeDown(INode node) {
 		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
 
 		while (true) {
 			if (!node.isContainer())
 				return node;
 
-			List<INode> children = node.getChildNodes();
+			List<INode> children = ((IContainerNode) node).getChildNodes();
 			if (children.isEmpty())
 				return node;
 			
@@ -232,10 +235,7 @@ public class FormatEngine {
 				return node;
 			}
 			
-			if (!child.isContainer())
-				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child.getTagName());
-
-			node = (IContainerNode) child;
+			node = child;
 		}
 	}
 
@@ -244,14 +244,14 @@ public class FormatEngine {
 	 * @param node the container node.
 	 * @return the last paragraph node in the specified container node.
 	 */
-	private IContainerNode getLastParagraphNodeDown(IContainerNode node) {
+	private INode getLastParagraphNodeDown(INode node) {
 		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
 
 		while (true) {
 			if (!node.isContainer())
 				return node;
 
-			List<INode> children = node.getChildNodes();
+			List<INode> children = ((IContainerNode) node).getChildNodes();
 			if (children.isEmpty())
 				return node;
 			
@@ -260,10 +260,7 @@ public class FormatEngine {
 				return node;
 			}
 			
-			if (!child.isContainer())
-				throw new IllegalStateException("child node isn't INLINE, but isn't a container: " + node.getTagName() + " -> " + child.getTagName());
-
-			node = (IContainerNode) child;
+			node = child;
 		}
 	}
 
@@ -287,7 +284,7 @@ public class FormatEngine {
 	 * @param reformat whether we could use cached preformatted lines from previous calls.
 	 */
 	public void renderPage(boolean reformat) {
-		IContainerNode savedNode = null;
+		INode savedNode = null;
 		
 		this.myPainter.clear();
 
@@ -306,14 +303,14 @@ public class FormatEngine {
 		while (this.myPainter.getYCoordinate() < this.myPainter.getHeight()) {
 			if (lineNum >= this.myLines.size()) {
 //				System.out.println("here" + lineNum + " : " + this.myLines.size());
-				IContainerNode node;
+				INode node;
 				if (this.myLines.size() == 0) {
 					if (savedNode == null)
 						node = getFirstParagraphNodeDown(this.myBook.getMainBody());
 					else
 						node = savedNode;
 				} else {
-					IContainerNode lastNode = this.myLines.get(this.myLines.size()-1).getParagraphNode();
+					INode lastNode = this.myLines.get(this.myLines.size()-1).getParagraphNode();
 					node = getNextParagraphNode(lastNode);
 				}
 
@@ -418,7 +415,7 @@ public class FormatEngine {
 		
 		while (this.myStartLine < 0) {
 			// format previous paragraph
-			IContainerNode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
+			INode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
 			
 			if (node == null) {
 				this.myStartLine = 0;

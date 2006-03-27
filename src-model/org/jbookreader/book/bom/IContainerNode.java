@@ -41,5 +41,13 @@ public interface IContainerNode extends INode {
 	 * @return newly created container node.
 	 */
 	IContainerNode newTitle(String tagName);
+	
+	/**
+	 * Allocates new Image node.
+	 * @param tagName the tag name of the image node
+	 * @param href the url of the image 
+	 * @return newly created image node.
+	 */
+	IImageNode newImage(String tagName, String href);
 
 }

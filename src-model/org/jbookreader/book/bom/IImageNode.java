@@ -15,9 +15,21 @@ public interface IImageNode extends INode {
 	String getHyperRef();
 
 	/**
+	 * Sets the alternative text for the image.
+	 * @param text new alternative text
+	 */
+	void setText(String text);
+
+	/**
 	 * Returns the title of the image or null if there is no title.
 	 * @return the title of the image
 	 */
 	String getTitle();
+
+	/**
+	 * Sets the title of the image.
+	 * @param title new title
+	 */
+	void setTitle(String title);
 
 }
