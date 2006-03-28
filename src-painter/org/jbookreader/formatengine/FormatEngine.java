@@ -86,6 +86,12 @@ public class FormatEngine {
 		}
 
 		String text = node.getText();
+
+		if (text == null) {
+			System.err.println("WARNING: node " + node.getTagName() + " doesn't has text");
+			return currentLine;
+		}
+
 		int start = 0, end = 0;
 		// TODO: font!
 		ITextFont font = this.myPainter.getFont("default", 10);
@@ -176,7 +182,7 @@ public class FormatEngine {
 			if (index == -1) {
 				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
 			} else if (index +1 < children.size()) {
-				node = (IContainerNode) children.get(index + 1);
+				node = children.get(index + 1);
 				break;
 			}
 			node = pnode;
@@ -205,7 +211,7 @@ public class FormatEngine {
 			if (index == -1) {
 				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
 			} else if (index - 1 >= 0) {
-				node = (IContainerNode) children.get(index - 1);
+				node = children.get(index - 1);
 				break;
 			}
 			node = pnode;
