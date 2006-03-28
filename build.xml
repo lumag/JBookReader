@@ -27,27 +27,27 @@
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac destdir="bin">
+        <javac debug="${build.debug}" destdir="bin">
             <src path="src-model"/>
         </javac>
-	<javac destdir="bin">
+	<javac debug="${build.debug}" destdir="bin">
             <src path="src-parser"/>
         </javac>
-	<javac destdir="bin">
+	<javac debug="${build.debug}" destdir="bin">
             <src path="src-painter"/>
         </javac>
-	<javac destdir="bin">
+	<javac debug="${build.debug}" destdir="bin">
             <src path="src-swingui"/>
         </javac>
 	<copy todir="bin">
 	    <fileset dir="src-swingui" includes="**/*.properties" />
 	</copy>
-        <javac destdir="bin-misc">
+        <javac debug="${build.debug}" destdir="bin-misc">
             <src path="src-misc"/>
             <src path="src-ui"/>
             <classpath refid="project.classpath"/>
         </javac>
-        <javac destdir="bin-tests">
+        <javac debug="${build.debug}" destdir="bin-tests">
             <src path="src-tests"/>
             <classpath refid="tests.classpath"/>
         </javac>
