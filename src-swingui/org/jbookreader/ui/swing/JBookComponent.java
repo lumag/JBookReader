@@ -8,6 +8,7 @@ import javax.swing.JComponent;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.formatengine.FormatEngine;
+import org.jbookreader.ui.swing.painter.SwingBookPainter;
 
 /**
  * This class represents a book-viewing component.

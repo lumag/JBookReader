@@ -1,5 +1,8 @@
 package org.jbookreader.formatengine;
 
+import java.io.InputStream;
+
+import org.jbookreader.formatengine.model.IRenderingObject;
 import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
@@ -72,8 +75,23 @@ public interface IBookPainter {
 	ITextFont getFont(String name, int size);
 
 	/**
+	 * Returns current X coordinate.
+	 * @return current X coordinate. 
+	 */
+	double getXCoordinate();
+
+	/**
 	 * Returns current Y coordinate.
 	 * @return current Y coordinate. 
 	 */
 	double getYCoordinate();
+	
+	/**
+	 * Returns a rendering object for the image or <code>null</code> if the image
+	 * can't be rendered. 
+	 * @param contentType the content type of the image
+	 * @param stream the stream with the image
+	 * @return a rendering object for the image.
+	 */
+	IRenderingObject getImage(String contentType, InputStream stream);
 }

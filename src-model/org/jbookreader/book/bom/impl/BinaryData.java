@@ -84,7 +84,7 @@ class BinaryData implements IBinaryData {
 			result.append("=");
 		}
 
-		if (this.myContentsLength % 52 != 0) {
+		if (this.myContentsLength % 54 != 0) {
 			result.append("\n");
 		}
 

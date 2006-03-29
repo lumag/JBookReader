@@ -1,9 +1,11 @@
 package org.jbookreader.ui.text;
 
+import java.io.InputStream;
 import java.io.PrintWriter;
 
-import org.jbookreader.formatengine.ITextFont;
 import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.ITextFont;
+import org.jbookreader.formatengine.model.IRenderingObject;
 import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
@@ -18,6 +20,8 @@ public class TextPainter implements IBookPainter {
 	 * Output device.
 	 */
 	private final PrintWriter myOutput;
+	
+	private int myX;
 
 	/**
 	 * The width of formatted text.
@@ -36,7 +40,7 @@ public class TextPainter implements IBookPainter {
 	}
 
 	public void clear() {
-		// do nothing.
+		this.myX = 0;
 	}
 
 	public double getWidth() {
@@ -58,6 +62,7 @@ public class TextPainter implements IBookPainter {
 	public void addHorizontalStrut(double size) {
 		while (size >= 0.5) {
 			this.myOutput.append(' ');
+			this.myX ++;
 			size -= 1;
 		}
 	}
@@ -67,6 +72,7 @@ public class TextPainter implements IBookPainter {
 	}
 
 	public void flushString() {
+		this.myX = 0;
 		this.myOutput.println();
 	}
 
@@ -93,9 +99,17 @@ public class TextPainter implements IBookPainter {
 		return this.myFont;
 	}
 
+	public double getXCoordinate() {
+		return this.myX;
+	}
 	public double getYCoordinate() {
 		// allways 0, as we don't count vertical size
 		return 0;
+	}
+
+	public IRenderingObject getImage(String contentType, InputStream stream) {
+		// allways null: we can't render images.
+		return null;
 	}
 
 }

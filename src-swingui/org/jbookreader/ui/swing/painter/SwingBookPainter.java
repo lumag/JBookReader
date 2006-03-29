@@ -1,15 +1,16 @@
-package org.jbookreader.ui.swing;
+package org.jbookreader.ui.swing.painter;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
-import java.awt.font.GlyphVector;
 import java.awt.font.LineMetrics;
 import java.awt.geom.Rectangle2D;
+import java.io.InputStream;
 
-import org.jbookreader.formatengine.ITextFont;
 import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.ITextFont;
+import org.jbookreader.formatengine.model.IRenderingObject;
 import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
@@ -21,51 +22,6 @@ import org.jbookreader.formatengine.model.RenderingDimensions;
  *
  */
 public class SwingBookPainter implements IBookPainter {
-	/**
-	 * This is the inner class used for representing fonts for the FE.
-	 * 
-	 * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
-	 *
-	 */
-	private class TextFontImpl implements ITextFont {
-		/**
-		 * Font object from AWT
-		 */
-		private final Font myFont;
-		/**
-		 * The width of single space in this font.
-		 */
-		private double mySpaceWidth = 0; 
-		
-		/**
-		 * This constructs the class representing the font with given name and size
-		 * @param name the name of the font
-		 * @param size the size of the font
-		 */
-		public TextFontImpl(String name, int size) {
-			this.myFont = new Font(name, Font.PLAIN, size);
-		}
-
-		public double getSpaceWidth() {
-			if (this.mySpaceWidth == 0) {
-				FontRenderContext frc = SwingBookPainter.this.myGraphics.getFontRenderContext();
-				GlyphVector gv = this.myFont.createGlyphVector(frc, new char[]{' '});
-				Rectangle2D r2d = gv.getLogicalBounds();
-				this.mySpaceWidth = r2d.getMaxX() - r2d.getMinX();
-			}
-			
-			return this.mySpaceWidth;
-		}
-
-		/**
-		 * Returns the corresponding Swing Font object.
-		 * @return the corresponding Swing Font object.
-		 */
-		public Font getFont() {
-			return this.myFont;
-		}
-	}
-
 	/**
 	 * The width of the corresponding component.
 	 */
@@ -151,11 +107,32 @@ public class SwingBookPainter implements IBookPainter {
 	}
 
 	public ITextFont getFont(String name, int size) {
-		return new TextFontImpl(name, size);
+		return new TextFontImpl(this, name, size);
+	}
+
+	public double getXCoordinate() {
+		return this.myCurrentX;
 	}
 
 	public double getYCoordinate() {
 		return this.myCurrentY;
+	}
+
+	public IRenderingObject getImage(String contentType, InputStream stream) {
+		try {
+			return new ImageRenderingObject(this, stream);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+
+	/**
+	 * Returns the graphics rendering context.
+	 * @return the graphics rendering context.
+	 */
+	Graphics2D getGraphics() {
+		return this.myGraphics;
 	}
 
 }

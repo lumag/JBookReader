@@ -68,7 +68,7 @@ public interface IBook {
 	
 	/**
 	 * Returns the node with specified ID.
-	 * @param id the if of node
+	 * @param id the id of node
 	 * @return the node with specified ID.
 	 */
 	INode getNodeByID(String id);

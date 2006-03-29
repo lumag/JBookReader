@@ -1,11 +1,16 @@
 package org.jbookreader.formatengine;
 
+import java.awt.image.MemoryImageSource;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
+import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleSheet;
@@ -83,8 +88,25 @@ public class FormatEngine {
 			}
 			
 			return currentLine;
-		}
+		} else if (node instanceof IImageNode) {
+			IRenderingObject robject;
+			IImageNode image = (IImageNode)node;
+			// XXX: correct work with url's.
+			IBinaryData blob = this.myBook.getBinaryData(image.getHyperRef().substring(1));
+			robject = this.myPainter.getImage(blob.getContentType(),
+					new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
+			if (robject != null) {
+				RenderingDimensions dim = robject.getDimensions();
+				if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
+						    && !currentLine.getObjects().isEmpty()) {
+							currentLine = flushLine(result, currentLine);
+						}
+						currentLine.addObject(robject);
 
+				return currentLine;
+			}
+		}
+		
 		String text = node.getText();
 
 		if (text == null) {
@@ -306,7 +328,7 @@ public class FormatEngine {
 		int lineNum = this.myStartLine;
 		double previousDepth = 0;
 		
-		while (this.myPainter.getYCoordinate() < this.myPainter.getHeight()) {
+		while (true) {
 			if (lineNum >= this.myLines.size()) {
 //				System.out.println("here" + lineNum + " : " + this.myLines.size());
 				INode node;
@@ -340,11 +362,14 @@ public class FormatEngine {
 			
 			Line line = this.myLines.get(lineNum);
 
+			double vstrut;
 			if (previousDepth + LINE_SKIP_LIMIT + line.getHeight() < BASE_LINE_SKIP) {
-				this.myPainter.addVerticalStrut(BASE_LINE_SKIP);
+				vstrut = BASE_LINE_SKIP;
 			} else {
-				this.myPainter.addVerticalStrut(previousDepth + LINE_SKIP + line.getHeight());
+				vstrut = previousDepth + LINE_SKIP + line.getHeight();
 			}
+			
+			this.myPainter.addVerticalStrut(vstrut);
 
 			this.myPainter.addHorizontalStrut(line.getLeftMargin());
 			for (Iterator<IRenderingObject> it = line.getObjects().iterator(); it.hasNext(); ) {
@@ -355,12 +380,16 @@ public class FormatEngine {
 			}
 			this.myPainter.flushString();
 			
+			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
+				this.myNextPageLine = lineNum;
+				return;
+			}
+			
 			previousDepth = line.getDepth();
 
 			lineNum ++;
 		}
 		
-		this.myNextPageLine = lineNum-1;
 	}
 
 	/**
