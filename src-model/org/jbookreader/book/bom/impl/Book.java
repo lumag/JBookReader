@@ -65,6 +65,10 @@ public class Book implements IBook {
 	public IBinaryData getBinaryData(String id) {
 		return this.myBinaries.get(id);
 	}
+	
+	public Map<String, ? extends IBinaryData> getBinaryMap() {
+		return Collections.unmodifiableMap(this.myBinaries);
+	}
 
 	public IStyleSheet getSystemStyleSheet() {
 		return this.mySystemStyleSheet;
@@ -74,11 +78,6 @@ public class Book implements IBook {
 		this.mySystemStyleSheet = systemStyleSheet;
 	}
 
-	/**
-	 * Returns a node associated with specified <code>id</code>
-	 * @param id the ID of the node
-	 * @return a node associated with <code>id</code>.
-	 */
 	public INode getNodeByID(String id) {
 		return this.myIDmap.get(id);
 	}

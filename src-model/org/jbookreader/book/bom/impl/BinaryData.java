@@ -33,16 +33,74 @@ class BinaryData implements IBinaryData {
 		this.myContentType = contentType;
 	}
 
+	private char getChar(long num) {
+		if (num < 0 || num > 63) {
+			throw new IllegalArgumentException("Bad character number during encoding: " + num);
+		} else if (num < 26) {
+			return (char) ('A' + num);
+		} else if (num < 52) {
+			return (char) ('a' + num - 26);
+		} else if (num < 62) {
+			return (char) ('0' + num - 52);
+		} else if (num == 62) {
+			return '+';
+		} else { // 63 
+			return '/' ;
+		}
+	}
+	
+	public CharSequence getBase64Encoded() {
+		StringBuilder result = new StringBuilder();
+		int bitbuffer = 0;
+		for (int i = 0; i < this.myContentsLength; i++) {
+			bitbuffer = (bitbuffer << 8) | (this.myContentsArray[i] & 0xff);
+
+			switch (i%3) {
+				case 0:
+					result.append(getChar((bitbuffer >>> 2) & 0x3F));
+					break;
+				case 1:
+					result.append(getChar((bitbuffer >>> 4) & 0x3F));
+					break;
+				case 2:
+					result.append(getChar((bitbuffer >>> 6) & 0x3F));
+					result.append(getChar((bitbuffer >>> 0) & 0x3F));
+					break;
+
+			}
+
+			if ((i + 1) % 54 == 0) { // 72 /4 * 3
+				result.append("\n");
+			}
+		}
+
+		if (this.myContentsLength % 3 == 1) {
+			bitbuffer <<= 8;
+			result.append(getChar((bitbuffer >>> 4) & 0x3F));
+			result.append("==");
+		} else if (this.myContentsLength % 3 == 2) {
+			bitbuffer <<= 8;
+			result.append(getChar((bitbuffer >>> 6) & 0x3F));
+			result.append("=");
+		}
+
+		if (this.myContentsLength % 52 != 0) {
+			result.append("\n");
+		}
+
+		return result;
+	}
+
 	public void setBase64Encoded(char[] base64Encoded) {
 		this.myContentsArray = new byte[base64Encoded.length/4*3];
 		this.myContentsLength = 0;
-		long bitBuffer = 0;
+		int bitBuffer = 0;
 		int bitBufferBytes = 0;
 		int byteBufferPad = 0;
 
 		for (int i = 0; i < base64Encoded.length; i++) {
 			char curch = base64Encoded[i]; 
-			if (curch == '\n' || curch == '\r') {
+			if (curch == '\n' || curch == '\r' || curch == ' ' || curch == '\t') {
 				continue;
 			}
 			bitBuffer <<= 6;
@@ -93,4 +151,5 @@ class BinaryData implements IBinaryData {
 	public int getContentsLength() {
 		return this.myContentsLength;
 	}
+
 }

@@ -55,7 +55,7 @@
       </p>
     </section>
   </body>
-  <binary content-type="image/jpeg" id="test.jpg">
+  <binary content-type="application/octet-stream" id="test.jpg">
 /9j/4AAQSkZJRgABAQEASABIAAD/4QAWRXhpZgAATU0AKgAAAAgAAAAAAAD//gATQ3JlYXRl
 ZCB3aXRoIEdJTVD/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwX
 ExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4e
@@ -70,4 +70,5 @@ YzqHmXaPFW24hQKVJPzIII7GmgqG2W+t7bexVtUBqkKeW2hlUmXFLr3rQMIbCirhIHQAA/Pe
 rfK8u925UZyNJFuvMupKHG103KVJIwQQVcjTTQYfX6vKrU4SZIQ2lCfWyy3n1sN/IqDaASSE
 AqOBnjocaaaaD//Z
   </binary>
+  
 </FictionBook>

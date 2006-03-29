@@ -1,7 +1,9 @@
 package org.jbookreader.util;
 
 import java.io.PrintWriter;
+import java.util.Map;
 
+import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.IImageNode;
@@ -82,6 +84,11 @@ public class ModelDumper {
 		for (IContainerNode node: book.getBodies())
 			ModelDumper.printNode(writer, node);
 		writer.println();
+		for (Map.Entry<String, ? extends IBinaryData> binaryEntry: book.getBinaryMap().entrySet()) {
+			writer.format("<binary id=\"%s\" content-type=\"%s\">%n", binaryEntry.getKey(), binaryEntry.getValue().getContentType());
+			writer.append(binaryEntry.getValue().getBase64Encoded());
+			writer.println("</binary>");
+		}
 		writer.print("</FictionBook>");
 	}
 	

@@ -181,7 +181,6 @@ public class FB2Parser {
 				return;
 			
 			if (!this.myParseText)
-				// FIXME: check if it's whitespace?
 				return;
 			
 			this.myText.append(ch, start, length);
@@ -194,6 +193,9 @@ public class FB2Parser {
 		 * @see FB2ContentsHandler#myText
 		 */
 		private void processTextNode(boolean hasCloseTag) {
+			if (!this.myParseText)
+				return;
+			
 			String string = trimStringBuilder(this.myText, this.hadOpenTag, hasCloseTag);
 			this.myText.setLength(0);
 			
@@ -232,6 +234,7 @@ public class FB2Parser {
 			} else if (localName.equals("binary")) {
 				this.myBinaryData.setBase64Encoded(this.myText.toString().toCharArray());
 				this.myBinaryData = null;
+				this.myParseText = false;
 			} else {
 				// part of body
 				processTextNode(true);
@@ -263,17 +266,18 @@ public class FB2Parser {
 			
 			// System.out.println("<" + localName);
 
-			processTextNode(false);
-			this.hadOpenTag = true;
-			
 			if (localName.equals("FictionBook")) {
 				// XXX: root book node
 			} else if (localName.equals("binary")) {
 				this.myBinaryData = this.myBook.newBinaryData(attributes.getValue("id"), attributes.getValue("content-type"));
+				this.myParseText = true;
 				return;
 			} else {
 				INode node = null;
 
+				processTextNode(false);
+				this.hadOpenTag = true;
+			
 				if (localName.equals("body")) {
 					node = this.myBook.newBody("body", attributes.getValue("name"));
 				} else if (localName.equals("title")) {

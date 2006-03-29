@@ -1,6 +1,7 @@
 package org.jbookreader.book.bom;
 
 import java.util.Collection;
+import java.util.Map;
 
 import org.jbookreader.book.stylesheet.IStyleSheet;
 
@@ -49,6 +50,8 @@ public interface IBook {
 	 * @return the binary blob associated with specified id.
 	 */
 	IBinaryData getBinaryData(String id);
+
+	Map<String, ? extends IBinaryData> getBinaryMap();
 
 	/**
 	 * Returns the system stylesheet for specified book.

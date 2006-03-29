@@ -21,6 +21,8 @@ public interface IBinaryData {
 	 * @param contentType new content-type
 	 */
 	void setContentType(String contentType);
+	
+	CharSequence getBase64Encoded();
 
 	/**
 	 * Sets the contents of the blob by providing base64-encoding

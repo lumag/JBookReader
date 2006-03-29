@@ -1,0 +1,22 @@
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+<body>
+<empty-line />
+</body>
+<binary id="null.jpg" content-type="application/octet-stream">
+</binary>
+<binary id="a.jpg" content-type="application/octet-stream">
+YQ==
+</binary>
+<binary id="ab.jpg" content-type="application/octet-stream">
+YWE=
+</binary>
+<binary id="abc.jpg" content-type="application/octet-stream">
+YWFh
+</binary>
+<binary id="54.jpg" content-type="application/octet-stream">
+YWFhQURHSk1QU1ZZYmVoa25xdHd6
+</binary>
+<binary id="55.jpg" content-type="application/octet-stream">
+YWFhQURHSk1QU1ZZYmVoa25xdHd6QURHSk1QU1ZZYmVoa25xdHd6Qw==
+</binary>
+</FictionBook>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+  <description>
+<title-info>
+<genre>sf</genre>
+<author>
+<first-name>Дмитрий</first-name>
+<middle-name>Петрович</middle-name>
+<last-name>Грибов</last-name>
+<home-page>http://www.gribuser.ru</home-page>
+<email>grib@gribuser.ru</email>
+</author>
+<book-title>Тестовый ознакомительный документ FictionBook 2.1</book-title>
+<keywords>test, fb2</keywords>
+<date value="2004-11-08">2004</date>
+<coverpage>
+<image xlink:href="#fish1.png"/>
+</coverpage>
+<lang>ru</lang>
+</title-info>
+<document-info>
+<author>
+<first-name>Дмитрий</first-name>
+<middle-name>Петрович</middle-name>
+<last-name>Грибов</last-name>
+<home-page>http://www.gribuser.ru</home-page>
+<email>grib@gribuser.ru</email>
+</author>
+<program-used>FB Tools, XMLSpy 4.4</program-used>
+<date value="2004-11-08">2004</date>
+<id>73E17C07-1199-470B-AB84-A51C722109C6</id>
+<version>1.0</version>
+</document-info>
+  </description>
+  <body>
+    <empty-line />
+  </body>
+  <binary content-type="application/octet-stream" id="null.jpg">
+  </binary>
+  <binary content-type="application/octet-stream" id="a.jpg">
+YQ==
+  </binary>
+  <binary content-type="application/octet-stream" id="ab.jpg">
+YWI=
+  </binary>
+  <binary content-type="application/octet-stream" id="abc.jpg">
+YWJj
+  </binary>
+  <binary content-type="application/octet-stream" id="54.jpg">
+QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ekFC
+  </binary>
+  <binary content-type="application/octet-stream" id="55.jpg">
+QUJDREVGR0hJSktMTU5PUFFSU1RVVldYWVphYmNkZWZnaGlqa2xtbm9wcXJzdHV2d3h5ekFC
+Qw==
+  </binary>
+</FictionBook>
