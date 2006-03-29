@@ -22,6 +22,12 @@ public interface IBinaryData {
 	 */
 	void setContentType(String contentType);
 	
+	/**
+	 * Returns a character sequence iterating over base64-encoded
+	 * representation of the binary data.
+	 * @return a character sequence iterating over base64-encoded
+	 * representation of the binary data.
+	 */
 	CharSequence getBase64Encoded();
 
 	/**

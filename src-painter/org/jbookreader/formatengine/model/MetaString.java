@@ -1,7 +1,8 @@
 package org.jbookreader.formatengine.model;
 
-import org.jbookreader.formatengine.ITextFont;
-import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.IFont;
+import org.jbookreader.formatengine.RenderingDimensions;
 
 /**
  * This class represents a part of the string as a rendering object
@@ -23,15 +24,11 @@ public class MetaString implements IRenderingObject {
 	 */
 	private final int myEnd;
 
-	/**
-	 * Corresponding painter.
-	 */
-	private final IBookPainter myPainter;
 
 	/**
 	 * The font that should be used for the string.
 	 */
-	private final ITextFont myFont;
+	private final IFont myFont;
 
 	/**
 	 * Calculated string dimensions.
@@ -43,18 +40,15 @@ public class MetaString implements IRenderingObject {
 	 * @param text the string, containing text of the object
 	 * @param start the index of starting symbol
 	 * @param end the index of the symbol next to the string
-	 * @param painter corresponding painter
 	 * @param font the font to render the string
 	 */
-	public MetaString(String text, int start, int end, IBookPainter painter, ITextFont font) {
+	public MetaString(String text, int start, int end, IFont font) {
 		this.myText = text;
 		this.myStart = start;
 		this.myEnd = end;
 		this.myFont = font;
 		
-		this.myPainter = painter;
-		
-		this.myDimensions = painter.calculateStringDimensions(this.myText, start, end, font);
+		this.myDimensions = font.calculateStringDimensions(this.myText, start, end);
 	}
 	
 	public RenderingDimensions getDimensions() {
@@ -62,7 +56,7 @@ public class MetaString implements IRenderingObject {
 	}
 
 	public void render() {
-		this.myPainter.renderString(this.myText, this.myStart, this.myEnd, this.myFont, this.myDimensions);
+		this.myFont.renderString(this.myText, this.myStart, this.myEnd, this.myDimensions);
 	}
 
 	public boolean isGlue() {

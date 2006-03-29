@@ -1,8 +1,6 @@
 package org.jbookreader.formatengine;
 
-import java.awt.image.MemoryImageSource;
 import java.io.ByteArrayInputStream;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -15,10 +13,8 @@ import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 import org.jbookreader.formatengine.model.HorizontalGlue;
-import org.jbookreader.formatengine.model.IRenderingObject;
 import org.jbookreader.formatengine.model.Line;
 import org.jbookreader.formatengine.model.MetaString;
-import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -116,7 +112,7 @@ public class FormatEngine {
 
 		int start = 0, end = 0;
 		// TODO: font!
-		ITextFont font = this.myPainter.getFont("default", 10);
+		IFont font = this.myPainter.getFont("default", 10);
 
 		while (end < text.length()) {
 			int temp = consumeWhitespace(text, start);
@@ -139,14 +135,14 @@ public class FormatEngine {
 				end ++;
 			}
 			
-			RenderingDimensions dim = this.myPainter.calculateStringDimensions(text, start, end, font);
+			RenderingDimensions dim = font.calculateStringDimensions(text, start, end);
 			
 			// XXX: this is the main place for rendering decision
 			if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
 			    && !currentLine.getObjects().isEmpty()) {
 				currentLine = flushLine(result, currentLine);
 			}
-			currentLine.addObject(new MetaString(text, start, end, this.myPainter, font));
+			currentLine.addObject(new MetaString(text, start, end, font));
 			start = end;
 		}
 

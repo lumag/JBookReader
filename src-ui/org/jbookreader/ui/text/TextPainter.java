@@ -4,9 +4,9 @@ import java.io.InputStream;
 import java.io.PrintWriter;
 
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.ITextFont;
-import org.jbookreader.formatengine.model.IRenderingObject;
-import org.jbookreader.formatengine.model.RenderingDimensions;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.IFont;
+import org.jbookreader.formatengine.RenderingDimensions;
 
 /**
  * This class represents a simple painter over the console with width 80.
@@ -21,6 +21,9 @@ public class TextPainter implements IBookPainter {
 	 */
 	private final PrintWriter myOutput;
 	
+	/**
+	 * Current X coordinate.
+	 */
 	private int myX;
 
 	/**
@@ -51,14 +54,6 @@ public class TextPainter implements IBookPainter {
 		return Double.POSITIVE_INFINITY;
 	}
 	
-	public RenderingDimensions calculateStringDimensions(String s, int start, int end, ITextFont font) {
-		return new RenderingDimensions(1, 0,  end - start);
-	}
-
-	public void renderString(String s, int start, int end, ITextFont font, RenderingDimensions dimensions) {
-		this.myOutput.append(s, start, end);
-	}
-
 	public void addHorizontalStrut(double size) {
 		while (size >= 0.5) {
 			this.myOutput.append(' ');
@@ -86,14 +81,23 @@ public class TextPainter implements IBookPainter {
 	/**
 	 * The w/a for the all font problems.
 	 */
-	private ITextFont myFont; 
-	public ITextFont getFont(String name, int size) {
+	private IFont myFont; 
+	public IFont getFont(String name, int size) {
 		if (this.myFont == null) {
-			this.myFont = new ITextFont() {
+			this.myFont = new IFont() {
 
 				public double getSpaceWidth() {
 					return 1;
 				}
+
+				public RenderingDimensions calculateStringDimensions(String s, int start, int end) {
+					return new RenderingDimensions(1, 0,  end - start);
+				}
+
+				public void renderString(String s, int start, int end, RenderingDimensions dimensions) {
+					TextPainter.this.myOutput.append(s, start, end);
+				}
+
 			};
 		}
 		return this.myFont;

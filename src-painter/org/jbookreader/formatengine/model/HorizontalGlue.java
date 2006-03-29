@@ -1,6 +1,8 @@
 package org.jbookreader.formatengine.model;
 
 import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.RenderingDimensions;
 
 /**
  * This class represents horizontal glue rendering object (whitespace).

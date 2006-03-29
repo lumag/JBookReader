@@ -1,4 +1,5 @@
-package org.jbookreader.formatengine.model;
+package org.jbookreader.formatengine;
+
 
 /**
  * This interface represents an abstract rendering object.

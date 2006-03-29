@@ -1,17 +1,12 @@
 package org.jbookreader.ui.swing.painter;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.font.FontRenderContext;
-import java.awt.font.LineMetrics;
-import java.awt.geom.Rectangle2D;
 import java.io.InputStream;
 
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.ITextFont;
-import org.jbookreader.formatengine.model.IRenderingObject;
-import org.jbookreader.formatengine.model.RenderingDimensions;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.IFont;
 
 /**
  * This is swing-based implementation of the {@link org.jbookreader.formatengine.IBookPainter}.
@@ -75,25 +70,6 @@ public class SwingBookPainter implements IBookPainter {
 		return this.myWidth;
 	}
 
-	public RenderingDimensions calculateStringDimensions(String s, int start, int end, ITextFont ifont) {
-		TextFontImpl fontImpl = (TextFontImpl)ifont;
-		Font font = fontImpl.getFont();
-		FontRenderContext frc = this.myGraphics.getFontRenderContext();
-		LineMetrics metrics = font.getLineMetrics(s, start, end, frc);
-		Rectangle2D r2d = font.getStringBounds(s, start, end, frc);
-		return new RenderingDimensions(metrics.getAscent(), metrics.getDescent(), r2d.getMaxX() - r2d.getMinX());
-	}
-
-	public void renderString(String s, int start, int end, ITextFont ifont, RenderingDimensions dimensions) {
-		TextFontImpl fontImpl = (TextFontImpl)ifont;
-		Font font = fontImpl.getFont();
-		if (!this.myGraphics.getFont().equals(font))
-			this.myGraphics.setFont(font);
-		this.myGraphics.setColor(Color.BLACK);
-		this.myGraphics.drawString(s.substring(start, end), this.myCurrentX, this.myCurrentY);
-		this.myCurrentX += dimensions.width;
-	}
-
 	public void addHorizontalStrut(double size) {
 		this.myCurrentX += size;
 	}
@@ -106,8 +82,8 @@ public class SwingBookPainter implements IBookPainter {
 		this.myCurrentX = 0;
 	}
 
-	public ITextFont getFont(String name, int size) {
-		return new TextFontImpl(this, name, size);
+	public IFont getFont(String name, int size) {
+		return new SwingFont(this, name, size);
 	}
 
 	public double getXCoordinate() {

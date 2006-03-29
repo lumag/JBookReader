@@ -2,8 +2,6 @@ package org.jbookreader.formatengine;
 
 import java.io.InputStream;
 
-import org.jbookreader.formatengine.model.IRenderingObject;
-import org.jbookreader.formatengine.model.RenderingDimensions;
 
 /**
  * This interface represents a not-so-simple displaying device.
@@ -30,26 +28,6 @@ public interface IBookPainter {
 	double getHeight();
 	
 	/**
-	 * Calculates dimensions to be used for rendering the specified string part
-	 * with given font.
-	 * @param s the string to calculate dimensions for 
-	 * @param start The index of the first character in the string
-	 * @param end The index of the character following the last character in the subsequence
-	 * @param font the font to work with
-	 * @return the dimensions of the string when rendered.
-	 */
-	RenderingDimensions calculateStringDimensions(String s, int start, int end, ITextFont font);
-	/**
-	 * Renders the string with given font
-	 * @param s the string to render
-	 * @param start The index of the first character in the string
-	 * @param end The index of the character following the last character in the subsequence
-	 * @param font the font to use for rendering
-	 * @param dimensions The dimensions from calculateStringDimensions()
-	 */
-	void renderString(String s, int start, int end, ITextFont font, RenderingDimensions dimensions);
-	
-	/**
 	 * This adds the horizontal space of given size.
 	 * @param size the size of necessary horizontal space.
 	 */
@@ -72,7 +50,7 @@ public interface IBookPainter {
 	 * @param size font size
 	 * @return the allocated font object.
 	 */
-	ITextFont getFont(String name, int size);
+	IFont getFont(String name, int size);
 
 	/**
 	 * Returns current X coordinate.

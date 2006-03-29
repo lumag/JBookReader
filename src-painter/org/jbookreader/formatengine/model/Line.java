@@ -5,6 +5,8 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jbookreader.book.bom.INode;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.RenderingDimensions;
 
 /**
  * This class represents the main object of rendering engine &mdash; the line of text

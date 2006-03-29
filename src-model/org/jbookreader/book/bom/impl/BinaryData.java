@@ -33,16 +33,21 @@ class BinaryData implements IBinaryData {
 		this.myContentType = contentType;
 	}
 
-	private char getChar(long num) {
-		if (num < 0 || num > 63) {
-			throw new IllegalArgumentException("Bad character number during encoding: " + num);
-		} else if (num < 26) {
-			return (char) ('A' + num);
-		} else if (num < 52) {
-			return (char) ('a' + num - 26);
-		} else if (num < 62) {
-			return (char) ('0' + num - 52);
-		} else if (num == 62) {
+	/**
+	 * Returns base64-encoding fot <code>bits</code>
+	 * @param bits bits to get base64 for
+	 * @return base64-encoding fot <code>bits</code>
+	 */
+	private char getBase64Char(long bits) {
+		if (bits < 0 || bits > 63) {
+			throw new IllegalArgumentException("Bad character number during encoding: " + bits);
+		} else if (bits < 26) {
+			return (char) ('A' + bits);
+		} else if (bits < 52) {
+			return (char) ('a' + bits - 26);
+		} else if (bits < 62) {
+			return (char) ('0' + bits - 52);
+		} else if (bits == 62) {
 			return '+';
 		} else { // 63 
 			return '/' ;
@@ -57,14 +62,14 @@ class BinaryData implements IBinaryData {
 
 			switch (i%3) {
 				case 0:
-					result.append(getChar((bitbuffer >>> 2) & 0x3F));
+					result.append(getBase64Char((bitbuffer >>> 2) & 0x3F));
 					break;
 				case 1:
-					result.append(getChar((bitbuffer >>> 4) & 0x3F));
+					result.append(getBase64Char((bitbuffer >>> 4) & 0x3F));
 					break;
 				case 2:
-					result.append(getChar((bitbuffer >>> 6) & 0x3F));
-					result.append(getChar((bitbuffer >>> 0) & 0x3F));
+					result.append(getBase64Char((bitbuffer >>> 6) & 0x3F));
+					result.append(getBase64Char((bitbuffer >>> 0) & 0x3F));
 					break;
 
 			}
@@ -76,11 +81,11 @@ class BinaryData implements IBinaryData {
 
 		if (this.myContentsLength % 3 == 1) {
 			bitbuffer <<= 8;
-			result.append(getChar((bitbuffer >>> 4) & 0x3F));
+			result.append(getBase64Char((bitbuffer >>> 4) & 0x3F));
 			result.append("==");
 		} else if (this.myContentsLength % 3 == 2) {
 			bitbuffer <<= 8;
-			result.append(getChar((bitbuffer >>> 6) & 0x3F));
+			result.append(getBase64Char((bitbuffer >>> 6) & 0x3F));
 			result.append("=");
 		}
 

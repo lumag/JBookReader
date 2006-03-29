@@ -7,19 +7,41 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import org.jbookreader.formatengine.model.IRenderingObject;
-import org.jbookreader.formatengine.model.RenderingDimensions;
+import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.RenderingDimensions;
 
+/**
+ * This is a class representing Swing/ImageIO images for the FE.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 class ImageRenderingObject implements IRenderingObject {
+	/**
+	 * Corresponding painter.
+	 */
 	private final SwingBookPainter myPainter;
+	/**
+	 * Loaded image.
+	 */
 	private final BufferedImage myImage;
+	/**
+	 * Image dimensions
+	 */
 	private final RenderingDimensions myDimensions;
 
-	public ImageRenderingObject(SwingBookPainter painter, InputStream stream) throws IOException, ImageLoadingException {		
+	/**
+	 * This constructs the image for specified <code>painter</code> from
+	 * data in <code>stream</code>.
+	 * @param painter the painter to construct the image date.
+	 * @param stream the stream with image data
+	 * @throws IOException
+	 */
+	public ImageRenderingObject(SwingBookPainter painter, InputStream stream) throws IOException {		
 		this.myPainter = painter;
 		this.myImage = ImageIO.read(stream);
 		if (this.myImage == null) {
-			throw new ImageLoadingException();
+			throw new RuntimeException("Can't load image");
 		}
 		this.myDimensions = new RenderingDimensions(this.myImage.getHeight(), 0, this.myImage.getWidth());
 	}

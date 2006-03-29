@@ -51,6 +51,10 @@ public interface IBook {
 	 */
 	IBinaryData getBinaryData(String id);
 
+	/**
+	 * Returns an id-&gt;binary data mapping.
+	 * @return an id-&gt;binary data mapping.
+	 */
 	Map<String, ? extends IBinaryData> getBinaryMap();
 
 	/**
@@ -61,7 +65,6 @@ public interface IBook {
 	
 	/**
 	 * Don't use this for now.
-	 * TODO
 	 * @param stylesheet
 	 */
 	void setSystemStyleSheet(IStyleSheet stylesheet);

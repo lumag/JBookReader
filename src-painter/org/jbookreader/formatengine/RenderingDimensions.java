@@ -1,4 +1,4 @@
-package org.jbookreader.formatengine.model;
+package org.jbookreader.formatengine;
 
 /**
  * This class represents dimensions of the rendering object for precise positioning.
