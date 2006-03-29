@@ -233,6 +233,7 @@ public class FB2Parser {
 				// XXX: root node;
 			} else if (localName.equals("binary")) {
 				this.myBinaryData.setBase64Encoded(this.myText.toString().toCharArray());
+				this.myText.setLength(0);
 				this.myBinaryData = null;
 				this.myParseText = false;
 			} else {
