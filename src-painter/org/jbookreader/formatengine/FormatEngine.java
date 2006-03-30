@@ -406,6 +406,52 @@ public class FormatEngine {
 	}
 
 	/**
+	 * Scrolls text one page up.
+	 *
+	 */
+	public void scrollPageUp() {
+		double height = this.myPainter.getHeight();
+		double nextHeight = 0;
+
+		// will be restored during repaint
+		this.myNextPageLine = -1;
+		
+		if (this.myLines.isEmpty()) {
+			return;
+		}
+		
+		while (true) {
+			if (this.myStartLine == 0) {
+				if (formatPreviousNode()) {
+					return;
+				}
+			}
+
+			this.myStartLine --;
+			
+			Line line = this.myLines.get(this.myStartLine);
+			
+			double vstrut;
+			if (nextHeight + LINE_SKIP_LIMIT + line.getDepth() < BASE_LINE_SKIP) {
+				vstrut = BASE_LINE_SKIP;
+			} else {
+				vstrut = nextHeight + LINE_SKIP + line.getDepth();
+			}
+			
+			this.myPainter.addVerticalStrut(vstrut);
+			
+			height = height - vstrut;
+			nextHeight = line.getHeight();
+
+			if (height < 0) {
+				this.myStartLine ++;
+				return;
+			}
+
+		}
+	}
+
+	/**
 	 * Scrolls text one page down.
 	 *
 	 */
@@ -444,26 +490,41 @@ public class FormatEngine {
 		// will be restored during repaint
 		this.myNextPageLine = -1;
 		
+		if (this.myLines.isEmpty()) {
+			return;
+		}
+		
 		while (this.myStartLine < 0) {
-			// format previous paragraph
-			INode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
-			
-			if (node == null) {
+			if (formatPreviousNode()) {
 				this.myStartLine = 0;
-				return;
+				break;
 			}
-
-			List<Line> curParagraph = new ArrayList<Line>();
-			Line cur = new Line(true, node);
-			cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
-			cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
-			cur = formatNode(curParagraph, cur, node);
-			curParagraph.add(cur);
-			
-			this.myLines.addAll(0, curParagraph);
-			this.myStartLine += curParagraph.size();
 		}
 
+	}
+
+	/**
+	 * Format previous paragraph node.
+	 * @return where the start of the book was reached.
+	 */
+	private boolean formatPreviousNode() {
+		INode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
+		
+		if (node == null) {
+			return true;
+		}
+
+		List<Line> curParagraph = new ArrayList<Line>();
+		Line cur = new Line(true, node);
+		cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
+		cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
+		cur = formatNode(curParagraph, cur, node);
+		curParagraph.add(cur);
+		
+		this.myLines.addAll(0, curParagraph);
+		this.myStartLine += curParagraph.size();
+
+		return false;
 	}
 
 }

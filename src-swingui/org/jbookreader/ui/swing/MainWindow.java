@@ -25,6 +25,7 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.ui.swing.actions.OpenAction;
 import org.jbookreader.ui.swing.actions.PageDownAction;
+import org.jbookreader.ui.swing.actions.PageUpAction;
 import org.jbookreader.ui.swing.actions.QuitAction;
 import org.jbookreader.ui.swing.actions.ScrollDownAction;
 import org.jbookreader.ui.swing.actions.ScrollUpAction;
@@ -56,10 +57,10 @@ public class MainWindow {
 		this.myBookComponent = new JBookComponent();
 		
 		this.myBookComponent.setOpaque(true);
-		Dimension dim = new Dimension(200,100);
+//		Dimension dim = new Dimension(600,400);
 		pane.add(this.myBookComponent, BorderLayout.CENTER);	
-		pane.setMinimumSize(dim);
-		pane.setPreferredSize(dim);
+//		pane.setMinimumSize(dim);
+//		pane.setPreferredSize(dim);
 
 		return pane;
 	}
@@ -220,6 +221,13 @@ public class MainWindow {
 				PageDownAction.getAction());
 
 		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
+				KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_UP, 0),
+					PageUpAction.getAction().getValue(Action.NAME));
+		this.myFrame.getRootPane().getActionMap().put(
+				PageUpAction.getAction().getValue(Action.NAME),
+				PageUpAction.getAction());
+
+		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_DOWN, 0),
 					ScrollDownAction.getAction().getValue(Action.NAME));
 		this.myFrame.getRootPane().getActionMap().put(
@@ -233,6 +241,8 @@ public class MainWindow {
 				ScrollUpAction.getAction().getValue(Action.NAME),
 				ScrollUpAction.getAction());
 
+		Dimension dim = new Dimension(640,480);
+		this.myFrame.setPreferredSize(dim);
 		this.myFrame.pack();
 	}
 

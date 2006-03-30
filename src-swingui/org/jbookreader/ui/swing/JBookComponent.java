@@ -105,6 +105,15 @@ public class JBookComponent extends JComponent {
 	}
 
 	/**
+	 * Scrolls the display one page up
+	 *
+	 */
+	public void scrollPageUp() {
+		this.myEngine.scrollPageUp();
+		repaint();
+	}
+
+	/**
 	 * Scroll the display down by specified amount of lines
 	 * @param lines the amount of lines to scroll
 	 */
