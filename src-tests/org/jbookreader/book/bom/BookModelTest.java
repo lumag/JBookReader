@@ -1,11 +1,18 @@
 package org.jbookreader.book.bom;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 
 import junit.framework.TestCase;
 
+import org.jbookreader.TestConfig;
 import org.jbookreader.TestUtil;
 import org.jbookreader.book.bom.impl.Book;
+import org.jbookreader.util.ModelDumper;
 
 /**
  * A very simple demonstration for the book model.
@@ -170,7 +177,18 @@ public class BookModelTest extends TestCase {
 		assertNotNull(this.myBook);
 		assertNull(this.myContainer);
 		
-		TestUtil.compareBOM(this.myBook, TestUtil.getExpectedFile("BOM", "BOM.xml"));
+		File expected = TestUtil.getExpectedFile("BOM", "BOM.xml");
+		File tempFile = File.createTempFile(expected.getName() + '.', ".test", TestConfig.getTempDir());
+		
+		PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tempFile))));
+		
+		ModelDumper.dumpBOM(pwr, this.myBook);
+		
+		pwr.close();
+		
+		TestUtil.assertFileEqualsStream(expected, tempFile);
+		
+		tempFile.delete();
 	}
 	
 	/**

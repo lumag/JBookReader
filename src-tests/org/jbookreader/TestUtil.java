@@ -1,21 +1,14 @@
 package org.jbookreader;
 
-import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 import java.io.Reader;
 
 import junit.framework.Assert;
-
-import org.jbookreader.book.bom.IBook;
-import org.jbookreader.util.ModelDumper;
 
 /**
  * This class contains some utility functions for tests.
@@ -60,7 +53,7 @@ public class TestUtil {
 	 * @param expectedFile expected file
 	 * @param testingFile testing file
 	 */
-	private static void assertFileEqualsStream(File expectedFile, File testingFile) {
+	public static void assertFileEqualsStream(File expectedFile, File testingFile) {
 		try {
 			Reader r1 = new BufferedReader(new InputStreamReader(new FileInputStream(expectedFile), "UTF-8"));
 			Reader r2 = new BufferedReader(new InputStreamReader(new FileInputStream(testingFile), "UTF-8"));
@@ -74,26 +67,6 @@ public class TestUtil {
 		} catch (IOException ioe) {
 			throw new RuntimeException("Got IOException during file comparation", ioe);
 		}
-	}
-
-	/**
-	 * Compares BOM with representation in the file <code>expected</code>.
-	 * @param book the book to compare
-	 * @param expected expected dump file
-	 * @throws IOException in case of I/O error
-	 */
-	public static void compareBOM(IBook book, File expected) throws IOException {
-		File tempFile = File.createTempFile(expected.getName() + '.', ".test", TestConfig.getTempDir());
-		
-		PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tempFile))));
-		
-		ModelDumper.dumpBOM(pwr, book);
-		
-		pwr.close();
-		
-		assertFileEqualsStream(expected, tempFile);
-		
-		tempFile.delete();
 	}
 
 	/**
