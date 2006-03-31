@@ -1,4 +1,4 @@
-package org.jbookreader.ui.text;
+package org.jbookreader.util;
 
 import java.io.InputStream;
 import java.io.PrintWriter;

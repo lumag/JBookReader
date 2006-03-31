@@ -5,6 +5,7 @@ import java.io.PrintWriter;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.formatengine.FormatEngine;
+import org.jbookreader.util.TextPainter;
 
 /**
  * This class represents the simple text UI for book reading.
