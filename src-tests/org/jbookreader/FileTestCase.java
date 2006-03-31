@@ -44,7 +44,7 @@ public abstract class FileTestCase extends TestCase {
 	 */
 	public void testFile() throws Exception {
 		File expected =  TestUtil.getExpectedFile(this.myModule, this.myFile.getName());
-		File tempFile = File.createTempFile(expected.getName() + '.', ".test", TestConfig.getTempDir());
+		File tempFile = File.createTempFile(this.myModule + ".",  "." + expected.getName(), TestConfig.getTempDir());
 		
 		generateOutput(this.myFile, tempFile);
 		
