@@ -15,11 +15,23 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.formatengine.FormatEngine;
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.parser.FB2ParserTest.FB2ParserTestCase;
 import org.jbookreader.util.TextPainter;
 
+/**
+ * This class is a test case generator for the {@link org.jbookreader.formatengine.FormatEngine}.
+ * The engine is tested via formatting with {@link org.jbookreader.util.TextPainter}.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public class FormatEngineTest extends AbstractFileTestConstructor {
 	
+	/**
+	 * This is one {@link FormatEngine} <code>TestCase</code>.
+	 * 
+	 * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+	 *
+	 */
 	public static class FormatEngineTestCase extends FileTestCase {
 		@Override
 		protected void generateOutput(File inFile, File outFile)

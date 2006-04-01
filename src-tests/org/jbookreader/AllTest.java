@@ -4,7 +4,6 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.jbookreader.book.bom.BookModelTest;
-import org.jbookreader.formatengine.FormatEngine;
 import org.jbookreader.painter.FormatEngineTest;
 import org.jbookreader.parser.FB2ParserTest;
 

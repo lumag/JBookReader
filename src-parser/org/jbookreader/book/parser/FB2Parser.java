@@ -166,16 +166,6 @@ public class FB2Parser {
 		}
 
 		@Override
-		public void startDocument() {
-//			System.out.println("Started parsing of '" + this.myLocator.getSystemId() + "'");
-		}
-
-		@Override
-		public void endDocument() {
-//			System.out.println("Finished parsing of '" + this.myLocator.getSystemId() + "'");
-		}
-
-		@Override
 		public void characters(char[] ch, int start, int length) {
 			if (!this.parseXML)
 				return;
@@ -197,6 +187,7 @@ public class FB2Parser {
 				return;
 			
 			String string = trimStringBuilder(this.myText, this.hadOpenTag, hasCloseTag);
+//			String string = this.myText.toString();
 			this.myText.setLength(0);
 			
 			if (string.length() == 0) {
