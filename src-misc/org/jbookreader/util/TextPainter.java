@@ -94,6 +94,7 @@ public class TextPainter implements IBookPainter {
 					return new RenderingDimensions(1, 0,  end - start);
 				}
 
+				@SuppressWarnings("synthetic-access")
 				public void renderString(String s, int start, int end, RenderingDimensions dimensions) {
 					TextPainter.this.myOutput.append(s, start, end);
 				}
