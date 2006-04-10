@@ -10,10 +10,12 @@ import java.io.FilenameFilter;
  */
 public class FB2FilesFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
-		if (name.endsWith(".fb2"))
+		if (name.endsWith(".fb2")) {
 			return true;
-		if (name.endsWith(".xml"))
+		}
+		if (name.endsWith(".xml")) {
 			return true;
+		}
 		return false;
 	}
 	

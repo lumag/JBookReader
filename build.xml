@@ -62,6 +62,14 @@
             <classpath refid="tests.classpath"/>
         </java>
     </target>
+    <target name="jdepend" depends="build">
+    	<jdepend outputfile="jdepend-report.txt">
+		<exclude name="java.*" />
+		<exclude name="javax.*" />
+		<exclude name="org.xml.*" />
+		<classespath refid="project.classpath" />
+	</jdepend>
+    </target>
     <target name="AllTest" depends="build">
         <junit fork="yes" printsummary="withOutAndErr">
             <formatter type="plain"/>

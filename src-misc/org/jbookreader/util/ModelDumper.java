@@ -16,6 +16,8 @@ import org.jbookreader.book.bom.INode;
  *
  */
 public class ModelDumper {
+	private static final String TEXT_NODE_NAME = "#text"; //$NON-NLS-1$
+
 	/**
 	 * The recursive helper function for printing the tree node,
 	 * @param writer the stream to output nodes to
@@ -25,7 +27,7 @@ public class ModelDumper {
 		if (node == null)
 			return;
 		
-		if (node.getTagName().equals("#text")) {
+		if (node.getTagName().equals(TEXT_NODE_NAME)) {
 			writer.print(node.getText());
 			return;
 		}

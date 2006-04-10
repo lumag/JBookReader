@@ -66,8 +66,9 @@ public class FB2StyleSheet implements IStyleSheet {
 	}
 
 	public EDisplayType getNodeDisplayType(INode node) {
-		if (this.myDisplayTypes.containsKey(node.getTagName()))
+		if (this.myDisplayTypes.containsKey(node.getTagName())) {
 			return this.myDisplayTypes.get(node.getTagName());
+		}
 		
 		// special handling for images
 		if (node instanceof IImageNode) {

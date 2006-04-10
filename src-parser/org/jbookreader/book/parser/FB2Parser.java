@@ -167,8 +167,9 @@ public class FB2Parser {
 
 		@Override
 		public void characters(char[] ch, int start, int length) {
-			if (!this.parseXML)
+			if (!this.parseXML) {
 				return;
+			}
 			
 			if (!this.myParseText)
 				return;
@@ -216,8 +217,9 @@ public class FB2Parser {
 
 		@Override
 		public void endElement(String uri, String localName, String qName) {
-			if (!this.parseXML)
+			if (!this.parseXML) {
 				return;
+			}
 			
 			// System.out.println("</" + localName + ":" + ((this.myContainer!=null)?this.myContainer.getTagName():"null"));
 			if (localName.equals("FictionBook")) {
@@ -347,8 +349,9 @@ public class FB2Parser {
 					end--;
 				}
 			}
-			if (begin > end)
+			if (begin > end) {
 				return "";
+			}
 			return builder.substring(begin, end+1);
 		}
 		

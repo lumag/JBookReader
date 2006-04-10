@@ -70,8 +70,9 @@ class SwingFont implements IFont {
 
 	public void renderString(String s, int start, int end, RenderingDimensions dimensions) {
 		Graphics2D graphics = this.myPainter.getGraphics();
-		if (!graphics.getFont().equals(this.myFont))
+		if (!graphics.getFont().equals(this.myFont)) {
 			graphics.setFont(this.myFont);
+		}
 		graphics.setColor(Color.BLACK);
 		graphics.drawString(s.substring(start, end), (float)this.myPainter.getXCoordinate(), (float)this.myPainter.getYCoordinate());
 		this.myPainter.addHorizontalStrut(dimensions.width);
