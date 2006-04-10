@@ -65,11 +65,13 @@ public class Line {
 	public void addObject(IRenderingObject object) {
 		this.myRObjects.add(object);
 		RenderingDimensions roDimensions = object.getDimensions();
-		if (roDimensions.height > this.myHeight)
+		if (roDimensions.height > this.myHeight) {
 			this.myHeight = roDimensions.height;
+		}
 		
-		if (roDimensions.depth > this.myDepth)
+		if (roDimensions.depth > this.myDepth) {
 			this.myDepth = roDimensions.depth;
+		}
 		
 		this.myWidth += roDimensions.width;
 	}

@@ -25,13 +25,15 @@ public class GenericFileFilter extends FileFilter {
 
 	@Override
 	public boolean accept(File pathname) {
-		if (pathname.isDirectory())
+		if (pathname.isDirectory()) {
 			return true;
+		}
 		String name = pathname.getName();
 		int dotPosition = name.length();
 		while ((dotPosition = name.lastIndexOf(".", dotPosition-1)) > 0) { //$NON-NLS-1$
-			if (this.myExtension.contains(name.substring(dotPosition+1)))
+			if (this.myExtension.contains(name.substring(dotPosition+1))) {
 				return true;
+			}
 		}
 		if (this.myExtension.isEmpty()) {
 			return true;

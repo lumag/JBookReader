@@ -69,8 +69,9 @@ public class JBookComponent extends JComponent {
 		
 		g2d.setBackground(getBackground());
 		
-		if (this.myPainter.getWidth() != w)
+		if (this.myPainter.getWidth() != w) {
 			this.myReformatBook = true;
+		}
 
 		this.myPainter.setGraphics(g2d, w, h);
 		

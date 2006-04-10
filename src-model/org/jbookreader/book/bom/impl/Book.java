@@ -46,8 +46,9 @@ public class Book implements IBook {
 
 	public IContainerNode getMainBody() {
 		IContainerNode node = this.myBodies.get(null);
-		if (node == null)
+		if (node == null) {
 			throw new IllegalStateException("No main body provided");
+		}
 		return node;
 	}
 	

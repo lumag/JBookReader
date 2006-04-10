@@ -204,6 +204,7 @@ public class BookModelTest extends TestCase {
 	/**
 	 * This tests implementation of 'org.jbookreader.book.bom.IContainerNode.newTitle()'
 	 */
+	@SuppressWarnings("null")
 	public void testNewTitle() {
 		IContainerNode pnode = this.myBook.getMainBody();
 		

@@ -110,7 +110,8 @@ public class FormatEngine {
 			return currentLine;
 		}
 
-		int start = 0, end = 0;
+		int start = 0;
+		int end = 0;
 		// TODO: font!
 		IFont font = this.myPainter.getFont("default", 10);
 
@@ -329,10 +330,7 @@ public class FormatEngine {
 //				System.out.println("here" + lineNum + " : " + this.myLines.size());
 				INode node;
 				if (this.myLines.size() == 0) {
-					if (savedNode == null)
-						node = getFirstParagraphNodeDown(this.myBook.getMainBody());
-					else
-						node = savedNode;
+					node = (savedNode == null) ? getFirstParagraphNodeDown(this.myBook.getMainBody()) : savedNode;
 				} else {
 					INode lastNode = this.myLines.get(this.myLines.size()-1).getParagraphNode();
 					node = getNextParagraphNode(lastNode);
