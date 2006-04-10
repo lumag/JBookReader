@@ -1,0 +1,50 @@
+/*
+ * FIXME: a, span
+ * FIXME: table-related
+ * FIXME: margins, padding, etc
+ */
+
+/*
+ * A prototype for the fb2.1 stylesheet.
+ */
+
+FictionBook, body, title,
+epigraph, section, annotation,
+empty-line, poem, subtitle,
+stanza, text-author, date,
+p, v,		{ display: block; }
+
+strong, emphasis,
+style, strikethrough,
+sub, sup, code	{ display: inline; }
+
+stylesheet,
+description,
+binary		{ display: none; }
+
+
+/* simple images */
+image		{ display: block; }
+/* inlined images */
+p image		{ display: inline; }
+
+/* tables */
+table, tr	{ display: block; }
+th, td		{ display: inline; }
+/*
+table		{ display: table; }
+tr		{ display: table-row; }
+td, th		{ display: table-cell; }
+th		{ font-weight: bolder; text-align: center; }
+*/
+
+body		{ margin: 8px; }
+
+strong		{ font-weight: bolder; }
+emphasis	{ font-style: italic; }
+code		{ font-family: monospace; }
+strikethrough	{ text-decoration: line-through; }
+
+sub, sup	{ font-size: .83em; }
+sub             { vertical-align: sub; }
+sup             { vertical-align: super; }
