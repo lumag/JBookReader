@@ -11,7 +11,7 @@ import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.book.stylesheet.IStyleSheet;
-import org.jbookreader.book.stylesheet.impl.FB2StyleSheet;
+import org.jbookreader.book.stylesheet.fb2.FB2StyleSheet;
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.Locator;

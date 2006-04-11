@@ -4,14 +4,15 @@ import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.stylesheet.EDisplayType;
-import org.jbookreader.book.stylesheet.IStyleSheet;
+import org.jbookreader.book.stylesheet.IStyleStack;
+import org.jbookreader.book.stylesheet.properties.EDisplayType;
 import org.jbookreader.formatengine.model.HorizontalGlue;
 import org.jbookreader.formatengine.model.Line;
 import org.jbookreader.formatengine.model.MetaString;
@@ -69,20 +70,24 @@ public class FormatEngine {
 	/**
 	 * Formats a single paragraph node. Formatted lines are stored in the <code>result</code>
 	 * list.
+	 * FIXME: UGLY!!!
 	 * TODO: style stack
 	 * @param result the list with fully formatted lines
 	 * @param currentLine the current line which maybe already has some rendered objects
 	 * @param node the node to format
+	 * @param styleStack the stack of style information corresponding to the <code>node</code>
 	 * @return new partially-formatted line.
 	 */
-	private Line formatNode(List<Line> result, Line currentLine, INode node) {
+	private Line recursiveFormatNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack) {
 		if (node.isContainer()) {
 			IContainerNode cnode = (IContainerNode) node;
-			// TODO: apply styles
+
 			for (INode childNode: cnode.getChildNodes()) {
-				currentLine = formatNode(result, currentLine, childNode);
+				pushNode(styleStack, childNode);
+				currentLine = recursiveFormatNode(result, currentLine, childNode, styleStack);
+				styleStack.popTag();
 			}
-			
+
 			return currentLine;
 		} else if (node instanceof IImageNode) {
 			IRenderingObject robject;
@@ -95,7 +100,7 @@ public class FormatEngine {
 				RenderingDimensions dim = robject.getDimensions();
 				if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
 						    && !currentLine.getObjects().isEmpty()) {
-							currentLine = flushLine(result, currentLine);
+							currentLine = flushLine(result, currentLine, styleStack);
 						}
 						currentLine.addObject(robject);
 
@@ -110,11 +115,10 @@ public class FormatEngine {
 			return currentLine;
 		}
 
-		int start = 0;
-		int end = 0;
 		// TODO: font!
 		IFont font = this.myPainter.getFont("default", 10);
-
+		int start = 0;
+		int end = 0;
 		while (end < text.length()) {
 			int temp = consumeWhitespace(text, start);
 			if (temp > start) {
@@ -122,7 +126,7 @@ public class FormatEngine {
 				double strut = font.getSpaceWidth();
 
 				if (currentLine.getLeftMargin() + currentLine.getWidth() + strut + currentLine.getRightMargin()> this.myPainter.getWidth()) {
-					currentLine = flushLine(result, currentLine);
+					currentLine = flushLine(result, currentLine, styleStack);
 				} else {
 					currentLine.addObject(new HorizontalGlue(strut, this.myPainter));
 				}
@@ -136,20 +140,39 @@ public class FormatEngine {
 				end ++;
 			}
 			
-			RenderingDimensions dim = font.calculateStringDimensions(text, start, end);
-			
+			IRenderingObject string =  new MetaString(text, start, end, font);
+			RenderingDimensions dim = string.getDimensions();
+
 			// XXX: this is the main place for rendering decision
 			if (currentLine.getLeftMargin() + currentLine.getWidth() + dim.width + currentLine.getRightMargin() > this.myPainter.getWidth()
 			    && !currentLine.getObjects().isEmpty()) {
-				currentLine = flushLine(result, currentLine);
+				currentLine = flushLine(result, currentLine, styleStack);
 			}
-			currentLine.addObject(new MetaString(text, start, end, font));
+			currentLine.addObject(string);
 			start = end;
 		}
 
 		return currentLine;
 	}
 	
+	private void pushNode(IStyleStack styleStack, INode node) {
+		// TODO: support node class!
+		styleStack.pushTag(node.getTagName(), null, node.getID());
+	}
+	
+	private List<Line> formatNode(INode node, IStyleStack styleStack) {
+		List<Line> result = new ArrayList<Line>();
+
+		Line cur = new Line(true, node);
+		cur.setLeftMargin(styleStack.getMarginLeft()
+				+ styleStack.getTextIndent());
+		cur.setRightMargin(styleStack.getMarginRight());
+		cur = recursiveFormatNode(result, cur, node, styleStack);
+		result.add(cur);
+		
+		return result;
+	}
+
 	/**
 	 * Flushes and pushes the line into resulting lines list.
 	 * After that new line is creates and returned.
@@ -157,13 +180,13 @@ public class FormatEngine {
 	 * @param currentLine current line to flush
 	 * @return new line for current paragraph.
 	 */
-	private Line flushLine(List<Line> result, Line currentLine) {
+	private Line flushLine(List<Line> result, Line currentLine, IStyleStack styleStack) {
 		// XXX: adjust glue objects in the line
 		result.add(currentLine);
 		INode node = currentLine.getParagraphNode();
 		Line line = new Line(false, node);
-		line.setLeftMargin(this.myBook.getSystemStyleSheet().getLeftMargin(node));
-		line.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
+		line.setLeftMargin(styleStack.getMarginLeft());
+		line.setRightMargin(styleStack.getMarginRight());
 		return line;
 	}
 
@@ -184,9 +207,10 @@ public class FormatEngine {
 	/**
 	 * Returns the paragraph node to be formatted right after <code>node</code>
 	 * @param node current node
+	 * @param styleStack the stack of style information corresponding to the <code>node</code>
 	 * @return next paragraph node.
 	 */
-	private INode getNextParagraphNode(INode node) {
+	private INode getNextParagraphNode(INode node, IStyleStack styleStack) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
 
@@ -207,15 +231,16 @@ public class FormatEngine {
 			node = pnode;
 		}
 
-		return getFirstParagraphNodeDown(node);
+		return getFirstParagraphNodeDown(node, styleStack);
 	}
 
 	/**
 	 * Returns the paragraph node to be formatted right before <code>node</code>
 	 * @param node current node
+	 * @param styleStack the stack of style information corresponding to the <code>node</code>
 	 * @return previous paragraph node.
 	 */
-	private INode getPreviousParagraphNode(INode node) {
+	private INode getPreviousParagraphNode(INode node, IStyleStack styleStack) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
 
@@ -236,17 +261,16 @@ public class FormatEngine {
 			node = pnode;
 		}
 
-		return getLastParagraphNodeDown(node);
+		return getLastParagraphNodeDown(node, styleStack);
 	}
 	
 	/**
 	 * Returns the first paragraph node in the specified container node.
 	 * @param node the container node.
+	 * @param styleStack the stack of style information corresponding to the <code>node</code>
 	 * @return the first paragraph node in the specified container node.
 	 */
-	private INode getFirstParagraphNodeDown(INode node) {
-		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
-
+	private INode getFirstParagraphNodeDown(INode node, IStyleStack styleStack) {
 		while (true) {
 			if (!node.isContainer())
 				return node;
@@ -256,7 +280,9 @@ public class FormatEngine {
 				return node;
 			
 			INode child = children.get(0);
-			if  (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE) {
+			pushNode(styleStack, child);
+			if  (styleStack.getDisplay() == EDisplayType.INLINE) {
+				styleStack.popTag();
 				return node;
 			}
 			
@@ -267,11 +293,10 @@ public class FormatEngine {
 	/**
 	 * Returns the last paragraph node in the specified container node.
 	 * @param node the container node.
+	 * @param styleStack the stack of style information corresponding to the <code>node</code>
 	 * @return the last paragraph node in the specified container node.
 	 */
-	private INode getLastParagraphNodeDown(INode node) {
-		IStyleSheet ssheet = node.getBook().getSystemStyleSheet();
-
+	private INode getLastParagraphNodeDown(INode node, IStyleStack styleStack) {
 		while (true) {
 			if (!node.isContainer())
 				return node;
@@ -281,7 +306,9 @@ public class FormatEngine {
 				return node;
 			
 			INode child = children.get(children.size()-1);
-			if  (ssheet.getNodeDisplayType(child) == EDisplayType.INLINE) {
+			pushNode(styleStack, child);
+			if  (styleStack.getDisplay() == EDisplayType.INLINE) {
+				styleStack.popTag();
 				return node;
 			}
 			
@@ -309,33 +336,39 @@ public class FormatEngine {
 	 * @param reformat whether we could use cached preformatted lines from previous calls.
 	 */
 	public void renderPage(boolean reformat) {
-		INode savedNode = null;
+		INode node = null;
+		IStyleStack styleStack;
 		
 		this.myPainter.clear();
 
-		if (reformat) {
-			// FIXME: work with this case in more realistic maner
-			if (this.myStartLine < this.myLines.size()) {
-				savedNode = this.myLines.get(this.myStartLine).getParagraphNode();
+		if (this.myLines.size() != 0) {
+			if (reformat) {
+				node = this.myLines.get(this.myStartLine).getParagraphNode();
+				styleStack = replayStyleStack(node);
 				this.myStartLine = 0;
+
+				this.myLines.clear();
+			} else {
+				node = this.myLines.get(this.myLines.size()-1).getParagraphNode();
+				System.out.println("node:" + node);
+				styleStack = replayStyleStack(node);
+				node = getNextParagraphNode(node, styleStack);
 			}
-			this.myLines.clear();
+		} else {
+			node = this.myBook.getMainBody();
+			styleStack = replayStyleStack(node);
+			node = getFirstParagraphNodeDown(node, styleStack);
 		}
 		
+		renderPageFromNode(node, styleStack);
+	}
+		
+	public void renderPageFromNode(INode node, IStyleStack styleStack) {
 		int lineNum = this.myStartLine;
 		double previousDepth = 0;
 		
 		while (true) {
 			if (lineNum >= this.myLines.size()) {
-//				System.out.println("here" + lineNum + " : " + this.myLines.size());
-				INode node;
-				if (this.myLines.size() == 0) {
-					node = (savedNode == null) ? getFirstParagraphNodeDown(this.myBook.getMainBody()) : savedNode;
-				} else {
-					INode lastNode = this.myLines.get(this.myLines.size()-1).getParagraphNode();
-					node = getNextParagraphNode(lastNode);
-				}
-
 				if (node == null) {
 					// don't scroll the text completely out of screen
 					if (this.myStartLine >= this.myLines.size()) {
@@ -347,11 +380,8 @@ public class FormatEngine {
 					return;
 				}
 				
-				Line cur = new Line(true, node);
-				cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
-				cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
-				cur = formatNode(this.myLines, cur, node);
-				this.myLines.add(cur);
+				this.myLines.addAll(formatNode(node, styleStack));
+				node = getNextParagraphNode(node, styleStack);
 			}
 			
 			Line line = this.myLines.get(lineNum);
@@ -384,6 +414,24 @@ public class FormatEngine {
 			lineNum ++;
 		}
 		
+	}
+
+	private IStyleStack replayStyleStack(INode node) {
+		IStyleStack result = node.getBook().getSystemStyleSheet().newStyleStateStack();
+		
+		List<INode> backList = new ArrayList<INode>();
+
+		while (node != null) {
+			backList.add(node);
+			node = node.getParentNode();
+		}
+
+		for (ListIterator<INode> iterator = backList.listIterator(backList.size());
+			iterator.hasPrevious();) {
+			pushNode(result, iterator.previous());
+		}
+		
+		return result;
 	}
 
 	/**
@@ -506,18 +554,15 @@ public class FormatEngine {
 	 * @return where the start of the book was reached.
 	 */
 	private boolean formatPreviousNode() {
-		INode node = getPreviousParagraphNode(this.myLines.get(0).getParagraphNode());
+		INode node = this.myLines.get(0).getParagraphNode();
+		IStyleStack styleStack = replayStyleStack(node);
+		node = getPreviousParagraphNode(node, styleStack);
 		
 		if (node == null) {
 			return true;
 		}
 
-		List<Line> curParagraph = new ArrayList<Line>();
-		Line cur = new Line(true, node);
-		cur.setLeftMargin(this.myBook.getSystemStyleSheet().getFirstLineMargin(node));
-		cur.setRightMargin(this.myBook.getSystemStyleSheet().getRightMargin(node));
-		cur = formatNode(curParagraph, cur, node);
-		curParagraph.add(cur);
+		List<Line> curParagraph  = formatNode(node, styleStack);
 		
 		this.myLines.addAll(0, curParagraph);
 		this.myStartLine += curParagraph.size();
