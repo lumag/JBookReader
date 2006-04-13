@@ -9,10 +9,10 @@ package org.jbookreader.book.bom;
  */
 public interface INode {
 	/**
-	 * Returns true if the node contains other nodes. 
-	 * @return true if the node contains other nodes.
+	 * Returns the container part of this node or null if the node isn't a container.
+	 * @return the container part of this node.
 	 */
-	boolean isContainer();
+	IContainerNode getContainer();
 
 	/**
 	 * Returns the text contained in the node.

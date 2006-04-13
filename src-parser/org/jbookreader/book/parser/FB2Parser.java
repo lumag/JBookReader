@@ -305,8 +305,8 @@ public class FB2Parser {
 					node = this.myContainer.newContainerNode(localName);
 				}
 				
-				if (node.isContainer()) {
-					this.myContainer = (IContainerNode) node;
+				if (node.getContainer() != null) {
+					this.myContainer = node.getContainer();
 				}
 
 				{

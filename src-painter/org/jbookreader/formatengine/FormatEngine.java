@@ -79,8 +79,8 @@ public class FormatEngine {
 	 * @return new partially-formatted line.
 	 */
 	private Line recursiveFormatNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack) {
-		if (node.isContainer()) {
-			IContainerNode cnode = (IContainerNode) node;
+		IContainerNode cnode = node.getContainer();
+		if (cnode != null) {
 
 			for (INode childNode: cnode.getChildNodes()) {
 				pushNode(styleStack, childNode);
@@ -205,107 +205,58 @@ public class FormatEngine {
 	private int myNextPageLine = -1;
 	
 	/**
-	 * Returns the paragraph node to be formatted right after <code>node</code>
+	 * Returns the paragraph node to be formatted right before or after <code>node</code>
 	 * @param node current node
 	 * @param styleStack the stack of style information corresponding to the <code>node</code>
+	 * @param next whether to search next or previous node
 	 * @return next paragraph node.
 	 */
-	private INode getNextParagraphNode(INode node, IStyleStack styleStack) {
+	private INode getParagraphNode(INode node, IStyleStack styleStack, boolean next) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
 
 			// end of book
-			// XXX: maybe handle other bodies?
 			if (pnode == null) {
 				return null;
 			}
 
 			List<INode> children = pnode.getChildNodes();
 			int index = children.indexOf(node);
+			int nextindex = index +
+						((next)?(+1):(-1));
 			if (index == -1) {
 				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
-			} else if (index +1 < children.size()) {
-				node = children.get(index + 1);
+			} else if (nextindex < children.size()
+					&& nextindex >= 0) {
+				node = children.get(nextindex);
 				break;
 			}
 			node = pnode;
 		}
 
-		return getFirstParagraphNodeDown(node, styleStack);
-	}
-
-	/**
-	 * Returns the paragraph node to be formatted right before <code>node</code>
-	 * @param node current node
-	 * @param styleStack the stack of style information corresponding to the <code>node</code>
-	 * @return previous paragraph node.
-	 */
-	private INode getPreviousParagraphNode(INode node, IStyleStack styleStack) {
-		while (true) {
-			IContainerNode pnode = node.getParentNode();
-
-			// end of book
-			// XXX: maybe handle other bodies?
-			if (pnode == null) {
-				return null;
-			}
-
-			List<INode> children = pnode.getChildNodes();
-			int index = children.indexOf(node);
-			if (index == -1) {
-				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
-			} else if (index - 1 >= 0) {
-				node = children.get(index - 1);
-				break;
-			}
-			node = pnode;
-		}
-
-		return getLastParagraphNodeDown(node, styleStack);
+		return getParagraphNodeDown(node, styleStack, next);
 	}
 	
 	/**
-	 * Returns the first paragraph node in the specified container node.
+	 * Returns the first or the last paragraph node in the specified container node.
 	 * @param node the container node.
 	 * @param styleStack the stack of style information corresponding to the <code>node</code>
+	 * @param first whether to search first or last node
 	 * @return the first paragraph node in the specified container node.
 	 */
-	private INode getFirstParagraphNodeDown(INode node, IStyleStack styleStack) {
+	private INode getParagraphNodeDown(INode node, IStyleStack styleStack, boolean first) {
 		while (true) {
-			if (!node.isContainer())
+			IContainerNode cnode = node.getContainer();
+			if (cnode == null)
 				return node;
 
-			List<INode> children = ((IContainerNode) node).getChildNodes();
+			List<INode> children = cnode.getChildNodes();
 			if (children.isEmpty())
 				return node;
 			
-			INode child = children.get(0);
-			pushNode(styleStack, child);
-			if  (styleStack.getDisplay() == EDisplayType.INLINE) {
-				styleStack.popTag();
-				return node;
-			}
+			int number = (first)?0:(children.size()-1);
 			
-			node = child;
-		}
-	}
-
-	/**
-	 * Returns the last paragraph node in the specified container node.
-	 * @param node the container node.
-	 * @param styleStack the stack of style information corresponding to the <code>node</code>
-	 * @return the last paragraph node in the specified container node.
-	 */
-	private INode getLastParagraphNodeDown(INode node, IStyleStack styleStack) {
-		while (true) {
-			if (!node.isContainer())
-				return node;
-
-			List<INode> children = ((IContainerNode) node).getChildNodes();
-			if (children.isEmpty())
-				return node;
-			
-			INode child = children.get(children.size()-1);
+			INode child = children.get(number);
 			pushNode(styleStack, child);
 			if  (styleStack.getDisplay() == EDisplayType.INLINE) {
 				styleStack.popTag();
@@ -352,12 +303,12 @@ public class FormatEngine {
 				node = this.myLines.get(this.myLines.size()-1).getParagraphNode();
 				System.out.println("node:" + node);
 				styleStack = replayStyleStack(node);
-				node = getNextParagraphNode(node, styleStack);
+				node = getParagraphNode(node, styleStack, true);
 			}
 		} else {
 			node = this.myBook.getMainBody();
 			styleStack = replayStyleStack(node);
-			node = getFirstParagraphNodeDown(node, styleStack);
+			node = getParagraphNodeDown(node, styleStack, true);
 		}
 		
 		renderPageFromNode(node, styleStack);
@@ -381,7 +332,7 @@ public class FormatEngine {
 				}
 				
 				this.myLines.addAll(formatNode(node, styleStack));
-				node = getNextParagraphNode(node, styleStack);
+				node = getParagraphNode(node, styleStack, true);
 			}
 			
 			Line line = this.myLines.get(lineNum);
@@ -556,7 +507,7 @@ public class FormatEngine {
 	private boolean formatPreviousNode() {
 		INode node = this.myLines.get(0).getParagraphNode();
 		IStyleStack styleStack = replayStyleStack(node);
-		node = getPreviousParagraphNode(node, styleStack);
+		node = getParagraphNode(node, styleStack, false);
 		
 		if (node == null) {
 			return true;

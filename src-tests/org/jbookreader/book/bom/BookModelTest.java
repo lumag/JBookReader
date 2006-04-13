@@ -220,8 +220,8 @@ public class BookModelTest extends TestCase {
 		
 		assertNotNull("Can't find 'section' node", node);
 		
-		assertTrue(node.isContainer());
-		IContainerNode cnode = (IContainerNode)node;
+		IContainerNode cnode = node.getContainer();
+		assertNotNull(cnode);
 
 		assertNotNull(cnode.getTitle());
 		
@@ -240,15 +240,15 @@ public class BookModelTest extends TestCase {
 		
 		INode childnode = bnode.getChildNodes().iterator().next();
 		
-		assertTrue(childnode.isContainer());
-		IContainerNode pnode = (IContainerNode)childnode;
+		IContainerNode pnode = childnode.getContainer();
+		assertNotNull(pnode);
 
 		childnode = pnode.getChildNodes().iterator().next();
 		
 		assertEquals("p", childnode.getTagName());
 		
-		assertTrue(childnode.isContainer());
-//		IContainerNode node = (IContainerNode)childnode;
+		assertNotNull(childnode.getContainer());
+//		IContainerNode node = childnode.getContainer();
 		
 		assertEquals(this.myBook, childnode.getBook());
 		assertEquals(pnode, childnode.getParentNode());
@@ -262,16 +262,16 @@ public class BookModelTest extends TestCase {
 		
 		INode childnode = bnode.getChildNodes().iterator().next();
 		
-		IContainerNode pnode = (IContainerNode)childnode;
+		IContainerNode pnode = childnode.getContainer();
 
 		childnode = pnode.getChildNodes().iterator().next();
-		IContainerNode cnode = (IContainerNode)childnode;
+		IContainerNode cnode = childnode.getContainer();
 		
 		INode node = cnode.newTextNode("test text");
 		
 		assertTrue(cnode.getChildNodes().contains(node));
 		assertEquals("#text", node.getTagName());
-		assertFalse(node.isContainer());
+		assertNull(node.getContainer());
 		assertEquals("test text", node.getText());
 	}
 }

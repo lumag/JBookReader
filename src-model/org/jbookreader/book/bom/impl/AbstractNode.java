@@ -78,10 +78,6 @@ abstract class AbstractNode implements INode {
 		this.myParentNode = parentNode;
 	}
 
-	public boolean isContainer() {
-		return false;
-	}
-
 	public String getID() {
 		return this.myID;
 	}
@@ -89,6 +85,10 @@ abstract class AbstractNode implements INode {
 	public void setID(String id) {
 		this.myID = id;
 		this.myBook.mapIdNode(this);
+	}
+
+	public IContainerNode getContainer() {
+		return null;
 	}
 
 }

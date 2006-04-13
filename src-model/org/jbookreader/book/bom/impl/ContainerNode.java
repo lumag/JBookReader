@@ -26,11 +26,6 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 	 */
 	private IContainerNode myTitle;
 
-	@Override
-	public boolean isContainer() {
-		return true;
-	}
-
 	public List<INode> getChildNodes() {
 		return Collections.unmodifiableList(this.myChildNodes);
 	}
@@ -82,6 +77,11 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		node.setHyperRef(href);
 		this.addChildNode(node);
 		return node;
+	}
+
+	@Override
+	public IContainerNode getContainer() {
+		return this;
 	}
 
 }

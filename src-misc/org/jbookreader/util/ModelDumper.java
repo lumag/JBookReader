@@ -50,19 +50,14 @@ public class ModelDumper {
 				writer.format(" title=\"%s\"", image.getTitle());
 			}
 		}
+		
+		IContainerNode cnode = node.getContainer();
 
-		if (!node.isContainer()) {
+		if ((cnode == null) || cnode.getChildNodes().isEmpty()) {
 			writer.print(" />");
 			return;
 		}
 		
-		IContainerNode cnode = (IContainerNode)node;
-		if (cnode.getChildNodes().isEmpty()) {
-			writer.print(" />");
-			return;
-		}
-
-
 		writer.println('>');
 		
 		for (INode child : cnode.getChildNodes()) {
