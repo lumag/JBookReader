@@ -68,14 +68,16 @@ class SwingFont implements IFont {
 		return new RenderingDimensions(metrics.getAscent(), metrics.getDescent(), r2d.getMaxX() - r2d.getMinX());
 	}
 
-	public void renderString(String s, int start, int end, RenderingDimensions dimensions) {
+	public void renderString(String s, int start, int end) {
 		Graphics2D graphics = this.myPainter.getGraphics();
 		if (!graphics.getFont().equals(this.myFont)) {
 			graphics.setFont(this.myFont);
 		}
 		graphics.setColor(Color.BLACK);
 		graphics.drawString(s.substring(start, end), (float)this.myPainter.getXCoordinate(), (float)this.myPainter.getYCoordinate());
-		this.myPainter.addHorizontalStrut(dimensions.width);
+		FontRenderContext frc = this.myPainter.getGraphics().getFontRenderContext();
+		Rectangle2D r2d = this.myFont.getStringBounds(s, start, end, frc);
+		this.myPainter.addHorizontalStrut(r2d.getMaxX() - r2d.getMinX());
 	}
 
 }

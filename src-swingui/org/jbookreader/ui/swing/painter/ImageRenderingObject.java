@@ -7,8 +7,8 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 
-import org.jbookreader.formatengine.IRenderingObject;
-import org.jbookreader.formatengine.RenderingDimensions;
+import org.jbookreader.book.bom.INode;
+import org.jbookreader.formatengine.AbstractRenderingObject;
 
 /**
  * This is a class representing Swing/ImageIO images for the FE.
@@ -16,48 +16,37 @@ import org.jbookreader.formatengine.RenderingDimensions;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-class ImageRenderingObject implements IRenderingObject {
-	/**
-	 * Corresponding painter.
-	 */
-	private final SwingBookPainter myPainter;
+class ImageRenderingObject extends AbstractRenderingObject {
 	/**
 	 * Loaded image.
 	 */
 	private final BufferedImage myImage;
-	/**
-	 * Image dimensions
-	 */
-	private final RenderingDimensions myDimensions;
 
 	/**
 	 * This constructs the image for specified <code>painter</code> from
 	 * data in <code>stream</code>.
 	 * @param painter the painter to construct the image date.
+	 * @param node TODO
 	 * @param stream the stream with image data
 	 * @throws IOException
 	 */
-	public ImageRenderingObject(SwingBookPainter painter, InputStream stream) throws IOException {		
-		this.myPainter = painter;
+	public ImageRenderingObject(SwingBookPainter painter, INode node, InputStream stream) throws IOException {
+		super(painter, node);
 		this.myImage = ImageIO.read(stream);
 		if (this.myImage == null) {
 			throw new RuntimeException("Can't load image");
 		}
-		this.myDimensions = new RenderingDimensions(this.myImage.getHeight(), 0, this.myImage.getWidth());
-	}
-
-	public RenderingDimensions getDimensions() {
-		return this.myDimensions;
-	}
-
-	public boolean isGlue() {
-		return false;
+		setHeight(this.myImage.getHeight());
+		setWidth(this.myImage.getWidth());
 	}
 
 	public void render() {
-		this.myPainter.getGraphics().drawImage(
+		SwingBookPainter painter = (SwingBookPainter) this.getPainter();
+		painter.getGraphics().drawImage(
 				this.myImage,
-				new AffineTransform(1f, 0f, 0f, 1f, this.myPainter.getXCoordinate(), this.myPainter.getYCoordinate() - this.myDimensions.height),
+				new AffineTransform(1f, 0f, 0f, 1f,
+					this.getPainter().getXCoordinate(),
+					this.getPainter().getYCoordinate() - this.getHeight()),
 				null);
 	}
 	

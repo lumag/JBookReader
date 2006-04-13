@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.io.InputStream;
 
+import org.jbookreader.book.bom.INode;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.IFont;
@@ -78,7 +79,7 @@ public class SwingBookPainter implements IBookPainter {
 		this.myCurrentY += size;
 	}
 
-	public void flushString() {
+	public void flushLine() {
 		this.myCurrentX = 0;
 	}
 
@@ -94,9 +95,9 @@ public class SwingBookPainter implements IBookPainter {
 		return this.myCurrentY;
 	}
 
-	public IRenderingObject getImage(String contentType, InputStream stream) {
+	public IRenderingObject getImage(INode node, String contentType, InputStream stream) {
 		try {
-			return new ImageRenderingObject(this, stream);
+			return new ImageRenderingObject(this, node, stream);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

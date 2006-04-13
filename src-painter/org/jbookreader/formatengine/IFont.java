@@ -28,6 +28,6 @@ public interface IFont {
 	 * @param end The index of the character following the last character in the subsequence
 	 * @param dimensions The dimensions from calculateStringDimensions()
 	 */
-	void renderString(String s, int start, int end, RenderingDimensions dimensions);
+	void renderString(String s, int start, int end);
 	
 }

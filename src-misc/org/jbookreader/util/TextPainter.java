@@ -3,6 +3,7 @@ package org.jbookreader.util;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
+import org.jbookreader.book.bom.INode;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.IFont;
@@ -66,7 +67,7 @@ public class TextPainter implements IBookPainter {
 		// ignored
 	}
 
-	public void flushString() {
+	public void flushLine() {
 		this.myX = 0;
 		this.myOutput.println();
 	}
@@ -95,7 +96,7 @@ public class TextPainter implements IBookPainter {
 				}
 
 				@SuppressWarnings("synthetic-access")
-				public void renderString(String s, int start, int end, RenderingDimensions dimensions) {
+				public void renderString(String s, int start, int end) {
 					TextPainter.this.myOutput.append(s, start, end);
 				}
 
@@ -112,7 +113,7 @@ public class TextPainter implements IBookPainter {
 		return 0;
 	}
 
-	public IRenderingObject getImage(String contentType, InputStream stream) {
+	public IRenderingObject getImage(INode node, String contentType, InputStream stream) {
 		// allways null: we can't render images.
 		return null;
 	}
