@@ -1,6 +1,5 @@
 package org.jbookreader.ui.swing.painter;
 
-import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.font.FontRenderContext;
@@ -73,11 +72,12 @@ class SwingFont implements IFont {
 		if (!graphics.getFont().equals(this.myFont)) {
 			graphics.setFont(this.myFont);
 		}
-		graphics.setColor(Color.BLACK);
-		graphics.drawString(s.substring(start, end), (float)this.myPainter.getXCoordinate(), (float)this.myPainter.getYCoordinate());
-		FontRenderContext frc = this.myPainter.getGraphics().getFontRenderContext();
-		Rectangle2D r2d = this.myFont.getStringBounds(s, start, end, frc);
-		this.myPainter.addHorizontalStrut(r2d.getMaxX() - r2d.getMinX());
+
+		RenderingDimensions dim = calculateStringDimensions(s, start, end);
+		graphics.drawString(s.substring(start, end),
+				(float)this.myPainter.getXCoordinate(),
+				(float)(this.myPainter.getYCoordinate() + dim.ascent) );
+		this.myPainter.addHorizontalStrut(dim.width);
 	}
 
 }

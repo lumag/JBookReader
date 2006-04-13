@@ -46,8 +46,9 @@ class ImageRenderingObject extends AbstractRenderingObject {
 				this.myImage,
 				new AffineTransform(1f, 0f, 0f, 1f,
 					this.getPainter().getXCoordinate(),
-					this.getPainter().getYCoordinate() - this.getHeight()),
+					this.getPainter().getYCoordinate()),
 				null);
+		this.getPainter().addHorizontalStrut(this.getWidth());
 	}
 	
 }

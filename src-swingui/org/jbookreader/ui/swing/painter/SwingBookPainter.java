@@ -80,7 +80,7 @@ public class SwingBookPainter implements IBookPainter {
 	}
 
 	public void flushLine() {
-		this.myCurrentX = 0;
+//		this.myCurrentX = 0;
 	}
 
 	public IFont getFont(String name, int size) {

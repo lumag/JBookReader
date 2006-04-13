@@ -13,7 +13,7 @@ public class RenderingDimensions {
 	/**
 	 * The height of the string over the baseline.
 	 */
-	public final double height;
+	public final double ascent;
 	/**
 	 * The height of the string below the baseline.
 	 */
@@ -25,12 +25,12 @@ public class RenderingDimensions {
 
 	/**
 	 * Constructs new dimensions object from specified numbers.
-	 * @param height the height of the string over the baseline.
+	 * @param ascent the height of the string over the baseline.
 	 * @param depth the height of the string below the baseline.
 	 * @param width the width of the string.
 	 */
-	public RenderingDimensions(double height, double depth, double width) {
-		this.height = height;
+	public RenderingDimensions(double ascent, double depth, double width) {
+		this.ascent = ascent;
 		this.depth = depth;
 		this.width = width;
 	}

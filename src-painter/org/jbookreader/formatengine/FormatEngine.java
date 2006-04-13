@@ -2,7 +2,6 @@ package org.jbookreader.formatengine;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -16,6 +15,7 @@ import org.jbookreader.book.stylesheet.properties.EDisplayType;
 import org.jbookreader.formatengine.model.HorizontalGlue;
 import org.jbookreader.formatengine.model.Line;
 import org.jbookreader.formatengine.model.MetaString;
+import org.jbookreader.formatengine.model.VerticalGlue;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -71,27 +71,18 @@ public class FormatEngine {
 			start ++;
 		return start;
 	}
-
-	/**
-	 * Formats a single paragraph node. Formatted lines are stored in the <code>result</code>
-	 * list.
-	 * FIXME: UGLY!!!
-	 * TODO: style stack
-	 * 
-	 * @param result the list with fully formatted lines
-	 * @param currentLine the current line which maybe already has some rendered
-	 * objects
-	 * @param node the node to format
-	 * @param styleStack the stack of style information corresponding to the
-	 * <code>node</code>
-	 * @return new partially-formatted line.
-	 */
+	
+	// FIXME: remove!!!
 	private Line recursiveFormatNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack, double width) {
+		if (true) {
+//			throw new RuntimeException("Shouldn't use this");
+		}
+
 		IContainerNode cnode = node.getContainer();
 		if (cnode != null) {
 
 			for (INode childNode : cnode.getChildNodes()) {
-				pushNode(styleStack, childNode);
+				styleStack.pushTag(childNode.getTagName(), null, childNode.getID());
 				currentLine = recursiveFormatNode(result, currentLine, childNode, styleStack, width);
 				styleStack.popTag();
 			}
@@ -145,7 +136,7 @@ public class FormatEngine {
 				end ++;
 			}
 
-			IRenderingObject string = new MetaString(this.myPainter, node, text, start, end, font);
+			IRenderingObject string = new MetaString(this.myPainter, node, styleStack, text, start, end, font);
 
 			// XXX: this is the main place for rendering decision
 			if (currentLine.getWidth() + string.getWidth() > width && !currentLine.getObjects().isEmpty()) {
@@ -158,17 +149,17 @@ public class FormatEngine {
 		return currentLine;
 	}
 
-	private void pushNode(IStyleStack styleStack, INode node) {
-		// TODO: support node class!
-		styleStack.pushTag(node.getTagName(), null, node.getID());
-	}
-
 	private List<Line> formatNode(INode node, IStyleStack styleStack, double width) {
 		List<Line> result = new ArrayList<Line>();
 
 		Line cur = new Line(this.myPainter, node);
 		cur.addObject(new HorizontalGlue(this.myPainter, node, styleStack.getTextIndent()));
 		cur = recursiveFormatNode(result, cur, node, styleStack, width);
+
+		if (cur.getHeight() == 0
+			&& cur.getWidth() != 0) {
+			cur.addObject(new VerticalGlue(this.myPainter, cur.getNode(), styleStack.getLineHeight()));
+		}
 		result.add(cur);
 
 		return result;
@@ -263,7 +254,7 @@ public class FormatEngine {
 			int number = (first) ? 0 : (children.size() - 1);
 
 			INode child = children.get(number);
-			pushNode(styleStack, child);
+			styleStack.pushTag(child.getTagName(), null, child.getID());
 			if (styleStack.getDisplay() == EDisplayType.INLINE) {
 				styleStack.popTag();
 				return node;
@@ -272,23 +263,6 @@ public class FormatEngine {
 			node = child;
 		}
 	}
-
-	// FIXME: move to stylesheet!
-	// FIXME: make them font-size-dependant!
-	/**
-	 * The basic distance between lines
-	 */
-	private static final double BASE_LINE_SKIP = 12.0;
-
-	/**
-	 * The minimal distance between lines
-	 */
-	private static final double LINE_SKIP_LIMIT = 1.0;
-
-	/**
-	 * The default distance between lines.
-	 */
-	private static final double LINE_SKIP = 1.0;
 
 	/**
 	 * Renders a page of text.
@@ -326,8 +300,8 @@ public class FormatEngine {
 
 	public void renderPageFromNode(INode node, IStyleStack styleStack) {
 		int lineNum = this.myStartLine;
-		double previousDepth = 0;
 
+//		System.out.println("<" + lineNum);
 		while (true) {
 			if (lineNum >= this.myLines.size()) {
 				if (node == null) {
@@ -348,28 +322,15 @@ public class FormatEngine {
 			}
 
 			Line line = this.myLines.get(lineNum);
-
-			double vstrut;
-			if (previousDepth + LINE_SKIP_LIMIT + line.getHeight() < BASE_LINE_SKIP) {
-				vstrut = BASE_LINE_SKIP;
-			} else {
-				vstrut = previousDepth + LINE_SKIP + line.getHeight();
-			}
-
-			this.myPainter.addVerticalStrut(vstrut);
-
-			for (Iterator<IRenderingObject> it = line.getObjects().iterator(); it.hasNext();) {
-				IRenderingObject ro = it.next();
-				ro.render();
-			}
-			this.myPainter.flushLine();
+			line.render();
+			this.myPainter.addVerticalStrut(line.getHeight());
+			this.myPainter.addHorizontalStrut(-line.getWidth());
 
 			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
+//				System.out.println(">" + lineNum);
 				this.myNextPageLine = lineNum;
 				return;
 			}
-
-			previousDepth = line.getDepth();
 
 			lineNum ++;
 		}
@@ -387,7 +348,8 @@ public class FormatEngine {
 		}
 
 		for (ListIterator<INode> iterator = backList.listIterator(backList.size()); iterator.hasPrevious();) {
-			pushNode(result, iterator.previous());
+			INode current = iterator.previous();
+			result.pushTag(current.getTagName(), null, current.getID());
 		}
 
 		return result;
@@ -419,7 +381,6 @@ public class FormatEngine {
 	 */
 	public void scrollPageUp() {
 		double height = this.myPainter.getHeight();
-		double nextHeight = 0;
 
 		// FIXME: maybe remove lines after this.myStartLine ?
 		// will be restored during repaint
@@ -436,27 +397,15 @@ public class FormatEngine {
 				}
 			}
 
-			this.myStartLine --;
-
 			Line line = this.myLines.get(this.myStartLine);
 
-			double vstrut;
-			if (nextHeight + LINE_SKIP_LIMIT + line.getDepth() < BASE_LINE_SKIP) {
-				vstrut = BASE_LINE_SKIP;
-			} else {
-				vstrut = nextHeight + LINE_SKIP + line.getDepth();
-			}
+			height = height - line.getHeight();
 
-			this.myPainter.addVerticalStrut(vstrut);
-
-			height = height - vstrut;
-			nextHeight = line.getHeight();
-
-			if (height < 0) {
-				this.myStartLine ++;
+			if (height <= 0) {
 				return;
 			}
 
+			this.myStartLine --;
 		}
 	}
 

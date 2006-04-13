@@ -29,27 +29,41 @@ public class Line extends AbstractRenderingObject {
 
 	/**
 	 * Adds a rendering object to the line.
+	 * TODO: Vertical align support 
 	 * 
 	 * @param object the object to add
 	 */
 	public void addObject(IRenderingObject object) {
+		double oldOver = this.getHeight() - this.getDepth();
+		double newOver = object.getHeight() - object.getDepth();
+		
 		this.myRObjects.add(object);
-		if (object.getHeight() > getHeight()) {
-			setHeight(object.getHeight());
-		}
-
+		
 		if (object.getDepth() > this.getDepth()) {
 			setDepth(object.getDepth());
 		}
+		
+		if (newOver > oldOver) {
+			setHeight(newOver + getDepth());
+		}
 
 		setWidth(getWidth() + object.getWidth());
-
 	}
 
 	public void render() {
+		double over = getHeight() - getDepth();
 		for (IRenderingObject robject : this.myRObjects) {
+			if (robject.getHeight() != 0) {
+				double newOver = robject.getHeight() - robject.getDepth();
+				double vstrut = over - newOver;
+				if (vstrut != 0) {
+					this.getPainter().addVerticalStrut(vstrut);
+					over = newOver;
+				}
+			}
 			robject.render();
 		}
+		this.getPainter().addVerticalStrut(over - (getHeight() - getDepth()));
 	}
 
 	public List<IRenderingObject> getObjects() {

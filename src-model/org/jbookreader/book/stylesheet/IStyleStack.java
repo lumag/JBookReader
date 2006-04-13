@@ -32,4 +32,5 @@ public interface IStyleStack {
 	 * @return the indentation for the first line of the node.
 	 */
 	double getTextIndent();
+	double getLineHeight();
 }

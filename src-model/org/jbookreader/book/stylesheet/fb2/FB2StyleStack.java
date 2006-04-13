@@ -63,4 +63,8 @@ class FB2StyleStack implements IStyleStack {
 		return 5;
 	}
 
+	public double getLineHeight() {
+		return 12;
+	}
+
 }
