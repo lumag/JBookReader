@@ -82,6 +82,7 @@ public class DirectoryLoader extends ClassLoader {
 	 * @return the contents of the file.
 	 * @throws IOException in case of I/O problem.
 	 */
+	@SuppressWarnings("synthetic-access")
 	private byte[] readFile(File file) throws IOException {
 		InputStream input = new BufferedInputStream(new FileInputStream(file));
 
@@ -119,6 +120,7 @@ public class DirectoryLoader extends ClassLoader {
 	 * @return an array with loaded classes.
 	 * @throws IOException in case of I/O error.
 	 */
+	@SuppressWarnings("synthetic-access")
 	public Class<?>[] loadClasses(File directory) throws IOException {
 		File[] classFiles = directory.listFiles(new ClassNameFilter());
 		Class<?>[] classes = new Class<?>[classFiles.length];
