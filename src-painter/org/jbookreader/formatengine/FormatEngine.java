@@ -74,9 +74,9 @@ public class FormatEngine {
 	
 	// FIXME: remove!!!
 	private Line recursiveFormatNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack, double width) {
-		if (true) {
+//		if (true) {
 //			throw new RuntimeException("Shouldn't use this");
-		}
+//		}
 
 		IContainerNode cnode = node.getContainer();
 		if (cnode != null) {
@@ -88,20 +88,15 @@ public class FormatEngine {
 			}
 
 			return currentLine;
-		} else if (node instanceof IImageNode) {
-			IRenderingObject robject;
+		}
+
+		if (node instanceof IImageNode) {
 			IImageNode image = (IImageNode) node;
 			// XXX: correct work with url's.
 			IBinaryData blob = this.myBook.getBinaryData(image.getHyperRef().substring(1));
-			robject = this.myPainter.getImage(null, blob.getContentType(), new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
-			if (robject != null) {
-				if (currentLine.getWidth() + robject.getWidth() > width && !currentLine.getObjects().isEmpty()) {
-					currentLine = flushLine(result, currentLine, styleStack);
-				}
-				currentLine.addObject(robject);
-
-				return currentLine;
-			}
+			IRenderingObject robject = this.myPainter.getImage(null, blob.getContentType(), new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
+			return appendRobject(result, currentLine, width, 0, robject);
+			
 		}
 
 		String text = node.getText();
@@ -116,18 +111,13 @@ public class FormatEngine {
 		int start = 0;
 		int end = 0;
 		while (end < text.length()) {
-			int temp = consumeWhitespace(text, start);
-			if (temp > start) {
+			int newWord = consumeWhitespace(text, start);
+			double strut = 0;
+			if (newWord > start) {
 				// XXX: calculate more correct space size?
-				double strut = font.getSpaceWidth();
-
-				if (currentLine.getWidth() + strut > width) {
-					currentLine = flushLine(result, currentLine, styleStack);
-				} else {
-					currentLine.addObject(new HorizontalGlue(this.myPainter, node, strut));
-				}
+				strut = font.getSpaceWidth();
 			}
-			end = start = temp;
+			end = start = newWord;
 
 			if (end >= text.length())
 				break;
@@ -137,15 +127,24 @@ public class FormatEngine {
 			}
 
 			IRenderingObject string = new MetaString(this.myPainter, node, styleStack, text, start, end, font);
+			currentLine = appendRobject(result, currentLine, width, strut, string);
 
-			// XXX: this is the main place for rendering decision
-			if (currentLine.getWidth() + string.getWidth() > width && !currentLine.getObjects().isEmpty()) {
-				currentLine = flushLine(result, currentLine, styleStack);
-			}
-			currentLine.addObject(string);
 			start = end;
 		}
 
+		return currentLine;
+	}
+	
+	private Line appendRobject (List<Line> result, Line currentLine, double width, double strut, IRenderingObject object) {
+		// XXX: this is the main place for rendering decision
+		if (currentLine.getWidth() + strut + object.getWidth() > width && !currentLine.getObjects().isEmpty()) {
+			// XXX: adjust glue objects in the line
+			result.add(currentLine);
+			currentLine = new Line(this.myPainter, currentLine.getNode());
+		} else {
+			currentLine.addObject(new HorizontalGlue(this.myPainter, object.getNode(), strut));
+		}
+		currentLine.addObject(object);
 		return currentLine;
 	}
 
@@ -163,22 +162,6 @@ public class FormatEngine {
 		result.add(cur);
 
 		return result;
-	}
-
-	/**
-	 * Flushes and pushes the line into resulting lines list. After that new
-	 * line is creates and returned.
-	 * 
-	 * @param result resulting lines list
-	 * @param currentLine current line to flush
-	 * @return new line for current paragraph.
-	 */
-	private Line flushLine(List<Line> result, Line currentLine, IStyleStack styleStack) {
-		// XXX: adjust glue objects in the line
-		result.add(currentLine);
-		INode node = currentLine.getNode();
-		Line line = new Line(this.myPainter, node);
-		return line;
 	}
 
 	/**
