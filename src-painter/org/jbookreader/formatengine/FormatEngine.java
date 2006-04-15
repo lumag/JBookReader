@@ -95,8 +95,9 @@ public class FormatEngine {
 			// XXX: correct work with url's.
 			IBinaryData blob = this.myBook.getBinaryData(image.getHyperRef().substring(1));
 			IRenderingObject robject = this.myPainter.getImage(null, blob.getContentType(), new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
-			return appendRobject(result, currentLine, width, 0, robject);
-			
+			if (robject != null) {
+				return appendRobject(result, currentLine, width, 0, robject);
+			}
 		}
 
 		String text = node.getText();
