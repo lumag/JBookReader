@@ -3,6 +3,7 @@ package org.jbookreader.ui.swing;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Insets;
+import java.awt.RenderingHints;
 
 import javax.swing.JComponent;
 
@@ -71,6 +72,11 @@ public class JBookComponent extends JComponent {
 		
 		if (this.myPainter.getWidth() != w) {
 			this.myReformatBook = true;
+		}
+
+		if (true) { // XXX: provide a user-configurable value!
+			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}
 
 		this.myPainter.setGraphics(g2d, w, h);
