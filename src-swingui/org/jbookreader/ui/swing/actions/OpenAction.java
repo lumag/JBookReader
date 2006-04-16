@@ -1,6 +1,7 @@
 package org.jbookreader.ui.swing.actions;
 
 import java.awt.event.ActionEvent;
+import java.io.File;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -29,15 +30,24 @@ public class OpenAction extends AbstractAction {
 		return ourAction;
 	}
 
+	private File lastDirectory = null;
+
 	public void actionPerformed(ActionEvent e) {
+
 		JFileChooser chooser = new JFileChooser();
+
 		GenericFileFilter filter = new GenericFileFilter();
 		filter.addExtension("fb2"); //$NON-NLS-1$
 		filter.addExtension("fb2.zip"); //$NON-NLS-1$
 		filter.setDescription(Messages.getString("FB2Description")); //$NON-NLS-1$
 		chooser.setFileFilter(filter);
+
+		chooser.setCurrentDirectory(lastDirectory);
 		
 		int returnValue = chooser.showOpenDialog(MainWindow.getMainWindow().getFrame());
+
+		lastDirectory = chooser.getCurrentDirectory();
+
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			MainWindow.getMainWindow().openBook(chooser.getSelectedFile());
 		}
