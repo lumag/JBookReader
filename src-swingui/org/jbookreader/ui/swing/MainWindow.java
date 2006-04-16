@@ -3,7 +3,10 @@ package org.jbookreader.ui.swing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileInputStream;
@@ -202,6 +205,7 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		this.myFrame = new JFrame();
+		this.myFrame.addComponentListener(new MainWindowComponentListener());
 		this.myFrame.setTitle("JBookReader"); //$NON-NLS-1$
 		this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
@@ -241,7 +245,15 @@ public class MainWindow {
 				ScrollUpAction.getAction().getValue(Action.NAME),
 				ScrollUpAction.getAction());
 
-		Dimension dim = new Dimension(640,480);
+		this.myFrame.setLocation(
+				Config.getConfig().getIntValue("main_x"),
+				Config.getConfig().getIntValue("main_y")
+				);
+
+		Dimension dim = new Dimension(
+				Config.getConfig().getIntValue("main_width"),
+				Config.getConfig().getIntValue("main_height")
+				);
 		this.myFrame.setPreferredSize(dim);
 		this.myFrame.pack();
 	}
@@ -308,5 +320,20 @@ public class MainWindow {
 	 */
 	public JBookComponent getBookComponent() {
 		return this.myBookComponent;
+	}
+
+	private static class MainWindowComponentListener extends ComponentAdapter {
+		@Override
+		public void componentMoved(ComponentEvent e) {
+			Point point = MainWindow.getMainWindow().getFrame().getLocation();
+			Config.getConfig().setIntValue("main_x", point.x);
+			Config.getConfig().setIntValue("main_y", point.y);
+		}
+
+		public void componentResized(ComponentEvent e) {
+			Dimension dim = MainWindow.getMainWindow().getFrame().getSize();
+			Config.getConfig().setIntValue("main_width", dim.width);
+			Config.getConfig().setIntValue("main_height", dim.height);
+		}
 	}
 }
