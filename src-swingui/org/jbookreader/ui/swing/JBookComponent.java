@@ -74,7 +74,9 @@ public class JBookComponent extends JComponent {
 			this.myReformatBook = true;
 		}
 
-		if (true) { // XXX: provide a user-configurable value!
+		if (Config.getConfig().getBooleanValue("antialias")) {
+			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+					RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 					RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		}

@@ -61,7 +61,7 @@ public class Configuration {
 			}
 		}
 
-		this.myProperties.list(System.out);
+//		this.myProperties.list(System.out);
 	}
 
 	public void save() throws IOException {
@@ -105,5 +105,23 @@ public class Configuration {
 
 	public void setIntValue(String key, int value) {
 		setStringValue(key, Integer.toString(value));
+	}
+
+	public boolean getBooleanValue(String key) {
+		String value = getStringValue(key);
+
+		if (value == null) {
+			return false;
+		}
+
+		if (value.equals("true") || value.equals("True") || value.equals("on") || value.equals("On") || value.equals("1")) {
+			return true;
+		}
+
+		return false;
+	}
+
+	public void setBooleanValue(String key, boolean value) {
+		setStringValue(key, Boolean.toString(value));
 	}
 }
