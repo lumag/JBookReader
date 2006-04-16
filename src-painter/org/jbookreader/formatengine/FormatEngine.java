@@ -365,6 +365,11 @@ public class FormatEngine {
 			
 			this.myPainter.addVerticalStrut(vstrut);
 
+			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
+				this.myNextPageLine = lineNum;
+				return;
+			}
+			
 			this.myPainter.addHorizontalStrut(line.getLeftMargin());
 			for (Iterator<IRenderingObject> it = line.getObjects().iterator(); it.hasNext(); ) {
 				IRenderingObject ro = it.next();
@@ -373,11 +378,6 @@ public class FormatEngine {
 				ro.render();
 			}
 			this.myPainter.flushString();
-			
-			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
-				this.myNextPageLine = lineNum;
-				return;
-			}
 			
 			previousDepth = line.getDepth();
 
