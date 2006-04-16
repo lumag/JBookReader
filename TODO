@@ -8,6 +8,7 @@ High priority:
 - make the JBR restore 'last reading position' for some last books.
 - detect the current position in the book and display it somehow
 - support links and footnotes
+- Create 'Command's and make Actions adapters for commands???
 
 Medium priority:
 - Table Of Contents
@@ -16,7 +17,7 @@ Medium priority:
 - make keybindings configurable
 - Searching in the book
 - multiple css.
-- mouse wheel support.
+= mouse wheel support (Done: 16.04.2006, trunk.
 - 'metadata' loading.
 
 Low priority:

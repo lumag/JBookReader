@@ -8,6 +8,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -205,6 +207,7 @@ public class MainWindow {
 	 */
 	public MainWindow() {
 		this.myFrame = new JFrame();
+
 		this.myFrame.addComponentListener(new MainWindowComponentListener());
 		this.myFrame.setTitle("JBookReader"); //$NON-NLS-1$
 		this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -216,6 +219,8 @@ public class MainWindow {
 		JComponent component = createContents();
 		component.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
 		contentPane.add(component, BorderLayout.CENTER);
+
+		this.myFrame.addMouseWheelListener(new MainWindowMouseWheelListener());
 		
 		this.myFrame.getRootPane().getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW).put(
 				KeyStroke.getKeyStroke(KeyEvent.VK_PAGE_DOWN, 0),
@@ -334,6 +339,33 @@ public class MainWindow {
 			Dimension dim = MainWindow.getMainWindow().getFrame().getSize();
 			Config.getConfig().setIntValue("main_width", dim.width);
 			Config.getConfig().setIntValue("main_height", dim.height);
+		}
+	}
+
+	private static class MainWindowMouseWheelListener implements MouseWheelListener {
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			if (e.getScrollType() == MouseWheelEvent.WHEEL_BLOCK_SCROLL) {
+				System.out.println("block scroll " + e.getWheelRotation());
+				if (e.getWheelRotation() > 0) {
+					PageUpAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
+				} else {
+					PageDownAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
+				}
+			} else {
+				int units = e.getUnitsToScroll();
+				System.out.println("unit scroll " + units);
+				if (units > 0) {
+					while (units > 0) {
+						ScrollDownAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
+						units --;
+					}
+				} else {
+					while (units < 0) {
+						ScrollUpAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
+						units ++;
+					}
+				}
+			}
 		}
 	}
 }
