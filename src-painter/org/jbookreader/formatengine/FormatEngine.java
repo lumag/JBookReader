@@ -306,15 +306,16 @@ public class FormatEngine {
 			}
 
 			Line line = this.myLines.get(lineNum);
-			line.render();
-			this.myPainter.addVerticalStrut(line.getHeight());
-			this.myPainter.addHorizontalStrut(-line.getWidth());
 
-			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
+			if (this.myPainter.getYCoordinate() + line.getHeight() > this.myPainter.getHeight()) {
 //				System.out.println(">" + lineNum);
 				this.myNextPageLine = lineNum;
 				return;
 			}
+			
+			line.render();
+			this.myPainter.addVerticalStrut(line.getHeight());
+			this.myPainter.addHorizontalStrut(-line.getWidth());
 
 			lineNum ++;
 		}

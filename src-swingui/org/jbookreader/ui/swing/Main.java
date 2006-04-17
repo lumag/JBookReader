@@ -3,6 +3,7 @@ package org.jbookreader.ui.swing;
 import java.io.File;
 
 import javax.swing.JFrame;
+import javax.swing.JDialog;
 
 /**
  * This is a main class for the Swing UI.
@@ -16,8 +17,10 @@ public class Main {
 	 *
 	 */
 	public static void createAndShowGUI() {
-        		//Make sure we have nice window decorations.
-		JFrame.setDefaultLookAndFeelDecorated(true);
+		if (Config.getConfig().getBooleanValue("windows_decorated")) {
+			JFrame.setDefaultLookAndFeelDecorated(true);
+			JDialog.setDefaultLookAndFeelDecorated(true);
+		}
 
 		MainWindow main = MainWindow.getMainWindow();
 		main.getFrame().setVisible(true);

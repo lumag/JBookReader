@@ -1,0 +1,29 @@
+High priority:
+
++ antialiasing (Done: 15.04.2005: 0.1, trunk).
++ configurable priorities (Done: 16.04.2006: trunk).
+- make font and fontsize configurable.
+= finish new rendering engine: margins, centering, justification etc.
+  (Work happening in the 'css' brahch).
+- make the JBR restore 'last reading position' for some last books.
+- detect the current position in the book and display it somehow
+- support links and footnotes
+- Create 'Command's and make Actions adapters for commands???
+
+Medium priority:
+- Table Of Contents
+- bookmarks
+- the 'go back' feature
+- make keybindings configurable
+- Searching in the book
+- multiple css.
+= mouse wheel support (Done: 16.04.2006, trunk.
+- 'metadata' loading.
+
+Low priority:
+- Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about
+  possibility for DOC, PDF, M$Lit.
+- Write text and SWT ui. Also think about GTK-java, QT-java.
+- Smooth scrolling support.
+- Support for making small corrections.
+- support metadata organisation in to some type of DB.
