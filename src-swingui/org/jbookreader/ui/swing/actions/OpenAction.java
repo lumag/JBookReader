@@ -30,7 +30,7 @@ public class OpenAction extends AbstractAction {
 		return ourAction;
 	}
 
-	private File lastDirectory = null;
+	private File myLastDirectory = null;
 
 	public void actionPerformed(ActionEvent e) {
 
@@ -42,11 +42,11 @@ public class OpenAction extends AbstractAction {
 		filter.setDescription(Messages.getString("FB2Description")); //$NON-NLS-1$
 		chooser.setFileFilter(filter);
 
-		chooser.setCurrentDirectory(lastDirectory);
+		chooser.setCurrentDirectory(this.myLastDirectory);
 		
 		int returnValue = chooser.showOpenDialog(MainWindow.getMainWindow().getFrame());
 
-		lastDirectory = chooser.getCurrentDirectory();
+		this.myLastDirectory = chooser.getCurrentDirectory();
 
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			MainWindow.getMainWindow().openBook(chooser.getSelectedFile());
