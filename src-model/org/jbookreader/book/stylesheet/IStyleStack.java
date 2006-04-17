@@ -16,13 +16,13 @@ public interface IStyleStack {
 	
 	/**
 	 * Returns the left margin for the node.
-	 * @param node the node to get syuling information for
+	 * @param node the node to get styling information for
 	 * @return the left margin for the node.
 	 */
 	double getMarginLeft();
 	/**
 	 * Returns the right margin for the node.
-	 * @param node the node to get syuling information for
+	 * @param node the node to get styling information for
 	 * @return the right margin for the node.
 	 */
 	double getMarginRight();
@@ -33,4 +33,7 @@ public interface IStyleStack {
 	 */
 	double getTextIndent();
 	double getLineHeight();
+	String getFontFamily();
+	int getFontSize();
+
 }

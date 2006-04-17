@@ -32,6 +32,8 @@ public class TextPainter implements IBookPainter {
 	 */
 	private double myWidth;
 
+	private double myRealX;
+
 	/**
 	 * This constructs new <code>TextPainter</code> with specified
 	 * <code>PrintWriter</code> as the output device.
@@ -45,6 +47,7 @@ public class TextPainter implements IBookPainter {
 
 	public void clear() {
 		this.myX = 0;
+		this.myRealX = 0;
 	}
 
 	public double getWidth() {
@@ -56,20 +59,22 @@ public class TextPainter implements IBookPainter {
 	}
 	
 	public void addHorizontalStrut(double size) {
-		while (size >= 0.5) {
-			this.myOutput.append(' ');
-			this.myX ++;
-			size -= 1;
+//		new Throwable(this.myRealX + ":" + this.myX + ":" + size).printStackTrace(this.myOutput);
+		this.myRealX += size;
+		if (size < 0) {
+			this.myX += Math.round(size);
+			return;
 		}
 	}
 
 	public void addVerticalStrut(double size) {
-		// ignored
-	}
-
-	public void flushLine() {
-		this.myX = 0;
-		this.myOutput.println();
+		while (size >= 6) {
+			size -= 1;
+			this.myOutput.println();
+			for (int i = 0; i < this.myX; i++) {
+				this.myOutput.append(' ');
+			}
+		}
 	}
 
 	/**
@@ -95,14 +100,23 @@ public class TextPainter implements IBookPainter {
 					return new RenderingDimensions(1, 0,  end - start);
 				}
 
-				@SuppressWarnings("synthetic-access")
 				public void renderString(String s, int start, int end) {
-					TextPainter.this.myOutput.append(s, start, end);
+					TextPainter.this.renderString(s, start, end);
 				}
 
 			};
 		}
 		return this.myFont;
+	}
+
+	void renderString(String s, int start, int end) {
+		while (this.myX < this.myRealX -0.5) {
+			this.myOutput.append(' ');
+			this.myX ++;
+		}
+		this.myOutput.append(s, start, end);
+		this.myX += end - start;
+		this.myRealX += end - start;
 	}
 
 	public double getXCoordinate() {

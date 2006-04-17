@@ -73,10 +73,10 @@ class SwingFont implements IFont {
 			graphics.setFont(this.myFont);
 		}
 
-		RenderingDimensions dim = calculateStringDimensions(s, start, end);
 		graphics.drawString(s.substring(start, end),
 				(float)this.myPainter.getXCoordinate(),
-				(float)(this.myPainter.getYCoordinate() + dim.ascent) );
+				(float)this.myPainter.getYCoordinate());
+		RenderingDimensions dim = calculateStringDimensions(s, start, end);
 		this.myPainter.addHorizontalStrut(dim.width);
 	}
 

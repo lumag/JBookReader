@@ -18,6 +18,8 @@ public class OpenAction extends AbstractAction {
 		putValue(NAME, Messages.getString("OpenAction.Name")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, Integer.valueOf(Messages.getString("OpenAction.Mnemonic").charAt(0))); //$NON-NLS-1$
 		putValue(SHORT_DESCRIPTION, Messages.getString("OpenAction.Description")); //$NON-NLS-1$
+		
+		this.myLastDirectory = new File(System.getProperty("user.dir"));
 	}
 
 	private static Action ourAction;

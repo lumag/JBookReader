@@ -21,6 +21,8 @@ public class Line extends AbstractRenderingObject {
 	 * The list of contained rendered objects.
 	 */
 	private final List<IRenderingObject> myRObjects = new LinkedList<IRenderingObject>();
+	
+	private double myLeftMargin;
 
 
 	public Line(IBookPainter painter, INode node) {
@@ -51,23 +53,21 @@ public class Line extends AbstractRenderingObject {
 	}
 
 	public void render() {
-		double over = getHeight() - getDepth();
 		for (IRenderingObject robject : this.myRObjects) {
-			if (robject.getHeight() != 0) {
-				double newOver = robject.getHeight() - robject.getDepth();
-				double vstrut = over - newOver;
-				if (vstrut != 0) {
-					this.getPainter().addVerticalStrut(vstrut);
-					over = newOver;
-				}
-			}
 			robject.render();
 		}
-		this.getPainter().addVerticalStrut(over - (getHeight() - getDepth()));
 	}
 
 	public List<IRenderingObject> getObjects() {
 		return Collections.unmodifiableList(this.myRObjects);
+	}
+
+	public double getLeftMargin() {
+		return this.myLeftMargin;
+	}
+
+	public void setLeftMargin(double leftMargin) {
+		this.myLeftMargin = leftMargin;
 	}
 
 }

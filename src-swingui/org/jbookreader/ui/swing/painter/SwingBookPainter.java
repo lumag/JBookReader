@@ -79,10 +79,6 @@ public class SwingBookPainter implements IBookPainter {
 		this.myCurrentY += size;
 	}
 
-	public void flushLine() {
-//		this.myCurrentX = 0;
-	}
-
 	public IFont getFont(String name, int size) {
 		return new SwingFont(this, name, size);
 	}

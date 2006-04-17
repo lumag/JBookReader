@@ -46,11 +46,6 @@ public interface IBookPainter {
 	void addVerticalStrut(double size);
 
 	/**
-	 * Moves the cursor to the start of the string..
-	 */
-	void flushLine();
-
-	/**
 	 * Allocates and returns specified font.
 	 * 
 	 * @param name the name of the font
@@ -76,7 +71,7 @@ public interface IBookPainter {
 	/**
 	 * Returns a rendering object for the image or <code>null</code> if
 	 * the image can't be rendered.
-	 * @param node TODO
+	 * @param node the node representing the image
 	 * @param contentType the content type of the image
 	 * @param stream the stream with the image
 	 * 

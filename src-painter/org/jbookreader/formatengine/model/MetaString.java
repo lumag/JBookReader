@@ -64,9 +64,7 @@ public class MetaString extends AbstractRenderingObject {
 	}
 
 	public void render() {
-		this.getPainter().addVerticalStrut(this.myHalfLeading);
 		this.myFont.renderString(this.myText, this.myStart, this.myEnd);
-		this.getPainter().addVerticalStrut(-this.myHalfLeading);
 	}
 
 }

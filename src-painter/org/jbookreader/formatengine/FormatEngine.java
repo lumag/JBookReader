@@ -82,7 +82,7 @@ public class FormatEngine {
 		if (cnode != null) {
 
 			for (INode childNode : cnode.getChildNodes()) {
-				styleStack.pushTag(childNode.getTagName(), null, childNode.getID());
+				styleStack.pushTag(childNode.getTagName(), childNode.getNodeClass(), childNode.getID());
 				currentLine = recursiveFormatNode(result, currentLine, childNode, styleStack, width);
 				styleStack.popTag();
 			}
@@ -96,27 +96,28 @@ public class FormatEngine {
 			IBinaryData blob = this.myBook.getBinaryData(image.getHyperRef().substring(1));
 			IRenderingObject robject = this.myPainter.getImage(null, blob.getContentType(), new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
 			if (robject != null) {
-				return appendRobject(result, currentLine, width, 0, robject);
+				return appendRobject(result, currentLine, width, robject);
 			}
 		}
 
 		String text = node.getText();
 
 		if (text == null) {
-			System.err.println("WARNING: node " + node.getTagName() + " doesn't has text");
+			System.err.println("WARNING: node '" + node.getTagName() + "' doesn't has text");
 			return currentLine;
 		}
 
-		// TODO: font!
-		IFont font = this.myPainter.getFont("default", 10);
+		IFont font = this.myPainter.getFont(styleStack.getFontFamily(), styleStack.getFontSize());
 		int start = 0;
 		int end = 0;
 		while (end < text.length()) {
 			int newWord = consumeWhitespace(text, start);
-			double strut = 0;
 			if (newWord > start) {
 				// XXX: calculate more correct space size?
-				strut = font.getSpaceWidth();
+				double strut = font.getSpaceWidth();
+				if (strut + currentLine.getWidth() <= width) {
+					currentLine.addObject(new HorizontalGlue(this.myPainter, node, strut));
+				}
 			}
 			end = start = newWord;
 
@@ -128,7 +129,7 @@ public class FormatEngine {
 			}
 
 			IRenderingObject string = new MetaString(this.myPainter, node, styleStack, text, start, end, font);
-			currentLine = appendRobject(result, currentLine, width, strut, string);
+			currentLine = appendRobject(result, currentLine, width, string);
 
 			start = end;
 		}
@@ -136,14 +137,14 @@ public class FormatEngine {
 		return currentLine;
 	}
 	
-	private Line appendRobject (List<Line> result, Line currentLine, double width, double strut, IRenderingObject object) {
+	private Line appendRobject (List<Line> result, Line currentLine, double width, IRenderingObject object) {
 		// XXX: this is the main place for rendering decision
-		if (currentLine.getWidth() + strut + object.getWidth() > width && !currentLine.getObjects().isEmpty()) {
+		if (currentLine.getWidth() + object.getWidth() > width && !currentLine.getObjects().isEmpty()) {
 			// XXX: adjust glue objects in the line
 			result.add(currentLine);
+			double leftMargin = currentLine.getLeftMargin();
 			currentLine = new Line(this.myPainter, currentLine.getNode());
-		} else {
-			currentLine.addObject(new HorizontalGlue(this.myPainter, object.getNode(), strut));
+			currentLine.setLeftMargin(leftMargin);
 		}
 		currentLine.addObject(object);
 		return currentLine;
@@ -153,6 +154,7 @@ public class FormatEngine {
 		List<Line> result = new ArrayList<Line>();
 
 		Line cur = new Line(this.myPainter, node);
+		cur.setLeftMargin(styleStack.getMarginLeft());
 		cur.addObject(new HorizontalGlue(this.myPainter, node, styleStack.getTextIndent()));
 		cur = recursiveFormatNode(result, cur, node, styleStack, width);
 
@@ -238,7 +240,7 @@ public class FormatEngine {
 			int number = (first) ? 0 : (children.size() - 1);
 
 			INode child = children.get(number);
-			styleStack.pushTag(child.getTagName(), null, child.getID());
+			styleStack.pushTag(child.getTagName(), child.getNodeClass(), child.getID());
 			if (styleStack.getDisplay() == EDisplayType.INLINE) {
 				styleStack.popTag();
 				return node;
@@ -297,7 +299,6 @@ public class FormatEngine {
 					}
 
 					this.myNextPageLine = this.myStartLine;
-					// FIXME: maybe remove lines after the page?
 					return;
 				}
 
@@ -310,12 +311,15 @@ public class FormatEngine {
 			if (this.myPainter.getYCoordinate() + line.getHeight() > this.myPainter.getHeight()) {
 //				System.out.println(">" + lineNum);
 				this.myNextPageLine = lineNum;
+				cleanEndLines();
 				return;
 			}
 			
+			this.myPainter.addVerticalStrut(line.getHeight()-line.getDepth());
+			this.myPainter.addHorizontalStrut(line.getLeftMargin());
 			line.render();
-			this.myPainter.addVerticalStrut(line.getHeight());
-			this.myPainter.addHorizontalStrut(-line.getWidth());
+			this.myPainter.addHorizontalStrut(-line.getWidth() - line.getLeftMargin());
+			this.myPainter.addVerticalStrut(line.getDepth());
 
 			lineNum ++;
 		}
@@ -334,7 +338,7 @@ public class FormatEngine {
 
 		for (ListIterator<INode> iterator = backList.listIterator(backList.size()); iterator.hasPrevious();) {
 			INode current = iterator.previous();
-			result.pushTag(current.getTagName(), null, current.getID());
+			result.pushTag(current.getTagName(), current.getNodeClass(), current.getID());
 		}
 
 		return result;
@@ -342,22 +346,55 @@ public class FormatEngine {
 
 	/**
 	 * Removes unused cached lines from the start.
-	 * FIXME: find the real first line! and rewrite
 	 * 
 	 */
 	private void cleanStartLines() {
-		/*
-		 int line = this.myStartLine;
-		 
-		 while (!this.myLines.get(line).isFirstLine())
-			 line--
+		int line = this.myStartLine;
 
-		 for (int i = 0; i < line; i++)
-		 	this.myLines.remove(0);
-		 
-		 this.myStartLine -= line;
-		 this.myNextPageLine -= line;
-		 */
+		if (line == 0) {
+			return;
+		}
+
+		ListIterator<Line> iterator = this.myLines.listIterator(line);
+		INode node = this.myLines.get(this.myStartLine).getNode();
+
+		while (iterator.hasPrevious()) {
+			if (!node.equals(iterator.previous().getNode())) {
+				iterator.next();
+				break;
+			}
+		}
+
+		while (iterator.hasPrevious()) {
+			iterator.previous();
+			this.myStartLine --;
+			iterator.remove();
+		}
+
+	}
+
+	private void cleanEndLines() {
+		int line = this.myNextPageLine;
+
+		if (line == -1) {
+			return;
+		}
+
+		ListIterator<Line> iterator = this.myLines.listIterator(line);
+		INode node = this.myLines.get(this.myNextPageLine).getNode();
+
+		while (iterator.hasNext()) {
+			if (!node.equals(iterator.next().getNode())) {
+				iterator.previous();
+				break;
+			}
+		}
+
+		while (iterator.hasNext()) {
+			iterator.next();
+			iterator.remove();
+		}
+
 	}
 
 	/**
@@ -420,9 +457,7 @@ public class FormatEngine {
 		if (this.myStartLine >= this.myLines.size())
 			return;
 
-		// FIXME!
-		// if (this.myLines.get(this.myStartLine).isFirstLine())
-		// cleanStartLines();
+		cleanStartLines();
 
 	}
 

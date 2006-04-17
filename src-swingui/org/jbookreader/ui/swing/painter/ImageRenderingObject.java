@@ -32,6 +32,7 @@ class ImageRenderingObject extends AbstractRenderingObject {
 	 */
 	public ImageRenderingObject(SwingBookPainter painter, INode node, InputStream stream) throws IOException {
 		super(painter, node);
+//		this.myImage = null;
 		this.myImage = ImageIO.read(stream);
 		if (this.myImage == null) {
 			throw new RuntimeException("Can't load image");
@@ -46,7 +47,7 @@ class ImageRenderingObject extends AbstractRenderingObject {
 				this.myImage,
 				new AffineTransform(1f, 0f, 0f, 1f,
 					this.getPainter().getXCoordinate(),
-					this.getPainter().getYCoordinate()),
+					this.getPainter().getYCoordinate() - this.myImage.getHeight()),
 				null);
 		this.getPainter().addHorizontalStrut(this.getWidth());
 	}
