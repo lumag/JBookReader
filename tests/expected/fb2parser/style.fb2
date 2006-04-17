@@ -1,0 +1,23 @@
+<FictionBook xmlns="http://www.gribuser.ru/xml/fictionbook/2.0" xmlns:xlink="http://www.w3.org/1999/xlink">
+<body>
+<title>
+<p>
+Title
+</p>
+</title><section>
+<title>
+<p>
+Section title.
+</p>
+</title><p>
+Section text <emphasis>
+in italic
+</emphasis>.
+</p><p style="first">
+Styled text. <style name="other">
+Other styled text.
+</style>
+</p>
+</section>
+</body>
+</FictionBook>

@@ -22,6 +22,11 @@ abstract class AbstractNode implements INode {
 	 * The ID of the node
 	 */
 	private String myID;
+	
+	/**
+	 * The class of the node
+	 */
+	private String myNodeClass;
 
 	/**
 	 * The parent of this node.
@@ -89,6 +94,14 @@ abstract class AbstractNode implements INode {
 
 	public IContainerNode getContainer() {
 		return null;
+	}
+
+	public String getNodeClass() {
+		return this.myNodeClass;
+	}
+
+	public void setNodeClass(String nodeClass) {
+		this.myNodeClass = nodeClass;
 	}
 
 }

@@ -27,6 +27,18 @@ public interface INode {
 	String getTagName();
 	
 	/**
+	 * Returns the class of the node.
+	 * @return the class of the node.
+	 */
+	String getNodeClass();
+	
+	/**
+	 * Sets the class of the node.
+	 * @param nodeClass the class of the node
+	 */
+	void setNodeClass(String nodeClass);
+	
+	/**
 	 * Returns the parent node (the node, containing this one).
 	 * @return the parent node.
 	 */

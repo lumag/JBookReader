@@ -305,6 +305,17 @@ public class FB2Parser {
 					node = this.myContainer.newContainerNode(localName);
 				}
 				
+				String classAttribute;
+				
+				if (localName.equals("p")) {
+					classAttribute = "style";
+				} else if (localName.equals("style")) {
+					classAttribute = "name";
+				} else {
+					classAttribute = "class";
+				}
+				node.setNodeClass(attributes.getValue(classAttribute));
+				
 				if (node.getContainer() != null) {
 					this.myContainer = node.getContainer();
 				}

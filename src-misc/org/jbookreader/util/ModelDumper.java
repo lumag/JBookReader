@@ -51,6 +51,18 @@ public class ModelDumper {
 			}
 		}
 		
+		if (node.getNodeClass() != null) {
+			String nodeClass = node.getNodeClass();
+			String tag = node.getTagName();
+			String classAttribute = "class";
+			if (tag.equals("p")) {
+				classAttribute = "style";
+			} else if (tag.equals("style")) {
+				classAttribute = "name";
+			}
+			writer.format(" %s=\"%s\"", classAttribute, nodeClass);
+		}
+		
 		IContainerNode cnode = node.getContainer();
 
 		if ((cnode == null) || cnode.getChildNodes().isEmpty()) {
