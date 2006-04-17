@@ -365,7 +365,7 @@ public class FormatEngine {
 			
 			this.myPainter.addVerticalStrut(vstrut);
 
-			if (this.myPainter.getYCoordinate() > this.myPainter.getHeight()) {
+			if (this.myPainter.getYCoordinate() + line.getHeight() > this.myPainter.getHeight()) {
 				this.myNextPageLine = lineNum;
 				return;
 			}
