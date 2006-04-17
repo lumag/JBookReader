@@ -3,13 +3,8 @@ package org.jbookreader.ui.swing;
 import java.awt.BorderLayout;
 import java.awt.Container;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.event.ActionEvent;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
-import java.awt.event.MouseWheelEvent;
-import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -325,47 +320,5 @@ public class MainWindow {
 	 */
 	public JBookComponent getBookComponent() {
 		return this.myBookComponent;
-	}
-
-	private static class MainWindowComponentListener extends ComponentAdapter {
-		@Override
-		public void componentMoved(ComponentEvent e) {
-			Point point = MainWindow.getMainWindow().getFrame().getLocation();
-			Config.getConfig().setIntValue("main_x", point.x);
-			Config.getConfig().setIntValue("main_y", point.y);
-		}
-
-		public void componentResized(ComponentEvent e) {
-			Dimension dim = MainWindow.getMainWindow().getFrame().getSize();
-			Config.getConfig().setIntValue("main_width", dim.width);
-			Config.getConfig().setIntValue("main_height", dim.height);
-		}
-	}
-
-	private static class MainWindowMouseWheelListener implements MouseWheelListener {
-		public void mouseWheelMoved(MouseWheelEvent e) {
-			if (e.getScrollType() == MouseWheelEvent.WHEEL_BLOCK_SCROLL) {
-				System.out.println("block scroll " + e.getWheelRotation());
-				if (e.getWheelRotation() > 0) {
-					PageUpAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
-				} else {
-					PageDownAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
-				}
-			} else {
-				int units = e.getUnitsToScroll();
-				System.out.println("unit scroll " + units);
-				if (units > 0) {
-					while (units > 0) {
-						ScrollDownAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
-						units --;
-					}
-				} else {
-					while (units < 0) {
-						ScrollUpAction.getAction().actionPerformed(null); // FIXME: provide cleaner way to do this!;
-						units ++;
-					}
-				}
-			}
-		}
 	}
 }
