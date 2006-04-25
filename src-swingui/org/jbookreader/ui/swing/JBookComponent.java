@@ -8,7 +8,7 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 
 import org.jbookreader.book.bom.IBook;
-import org.jbookreader.formatengine.FormatEngine;
+import org.jbookreader.renderingengine.RenderingEngine;
 import org.jbookreader.ui.swing.painter.SwingBookPainter;
 
 /**
@@ -29,7 +29,7 @@ public class JBookComponent extends JComponent {
 	/**
 	 * The instance of the formatting engine that is used for formatting.
 	 */
-	private final FormatEngine myEngine;
+	private final RenderingEngine myEngine;
 	/**
 	 * The book that is displayed.
 	 */
@@ -44,7 +44,7 @@ public class JBookComponent extends JComponent {
 	 *
 	 */
 	public JBookComponent () {
-		this.myEngine = new FormatEngine();
+		this.myEngine = new RenderingEngine();
 		this.myPainter  = new SwingBookPainter();
 		this.myEngine.setPainter(this.myPainter);
 	}

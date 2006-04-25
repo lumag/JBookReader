@@ -1,4 +1,4 @@
-package org.jbookreader.formatengine.model;
+package org.jbookreader.formatengine.objects;
 
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;

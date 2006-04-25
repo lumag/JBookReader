@@ -15,6 +15,7 @@ import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.formatengine.FormatEngine;
 import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.renderingengine.RenderingEngine;
 import org.jbookreader.util.TextPainter;
 
 /**
@@ -41,7 +42,7 @@ public class FormatEngineTest extends AbstractFileTestConstructor {
 			
 			IBookPainter painter = new TextPainter(pwr, 80);
 			
-			FormatEngine engine = new FormatEngine();
+			RenderingEngine engine = new RenderingEngine();
 
 			engine.setBook(book);
 			engine.setPainter(painter);

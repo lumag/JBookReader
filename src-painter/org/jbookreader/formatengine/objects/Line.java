@@ -1,4 +1,4 @@
-package org.jbookreader.formatengine.model;
+package org.jbookreader.formatengine.objects;
 
 import java.util.Collections;
 import java.util.LinkedList;
