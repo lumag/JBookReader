@@ -64,7 +64,7 @@ class FB2StyleStack implements IStyleStack {
 	}
 
 	public double getLineHeight() {
-		return getFontSize() * 1.2;
+		return 1.2;
 	}
 	
 	public String getFontFamily() {

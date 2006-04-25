@@ -15,7 +15,6 @@ import org.jbookreader.book.stylesheet.properties.EDisplayType;
 import org.jbookreader.formatengine.model.HorizontalGlue;
 import org.jbookreader.formatengine.model.Line;
 import org.jbookreader.formatengine.model.MetaString;
-import org.jbookreader.formatengine.model.VerticalGlue;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -160,7 +159,7 @@ public class FormatEngine {
 
 		if (cur.getHeight() == 0
 			&& cur.getWidth() != 0) {
-			cur.addObject(new VerticalGlue(this.myPainter, cur.getNode(), styleStack.getLineHeight()));
+			cur.addObject(new HorizontalGlue(this.myPainter, cur.getNode(), 0, styleStack.getLineHeight() * styleStack.getFontSize()));
 		}
 		result.add(cur);
 

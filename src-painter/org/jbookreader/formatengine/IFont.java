@@ -7,6 +7,8 @@ package org.jbookreader.formatengine;
  *
  */
 public interface IFont {
+	String getFontName();
+	double getFontSize();
 	/**
 	 * Returns the width of space in this font.
 	 * @return the width of space in this font.

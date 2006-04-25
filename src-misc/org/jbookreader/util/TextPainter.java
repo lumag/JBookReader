@@ -17,6 +17,10 @@ import org.jbookreader.formatengine.RenderingDimensions;
  */
 public class TextPainter implements IBookPainter {
 	
+	private static final double EMULATED_FONT_SIZE = 12.0;
+
+	private static final double EMULATED_LINE_SKIP = 0.2 * EMULATED_FONT_SIZE;
+	
 	/**
 	 * Output device.
 	 */
@@ -33,6 +37,7 @@ public class TextPainter implements IBookPainter {
 	private double myWidth;
 
 	private double myRealX;
+	private double myRealY;
 
 	/**
 	 * This constructs new <code>TextPainter</code> with specified
@@ -61,19 +66,15 @@ public class TextPainter implements IBookPainter {
 	public void addHorizontalStrut(double size) {
 //		new Throwable(this.myRealX + ":" + this.myX + ":" + size).printStackTrace(this.myOutput);
 		this.myRealX += size;
-		if (size < 0) {
-			this.myX += Math.round(size);
-			return;
-		}
 	}
 
 	public void addVerticalStrut(double size) {
-		while (size >= 6) {
-			size -= 1;
+//		new Throwable(this.myRealY + ":" + size).printStackTrace(this.myOutput);
+		this.myRealY += size;
+		while (this.myRealY >= (0.5 * (EMULATED_LINE_SKIP + EMULATED_FONT_SIZE))) {
+			this.myRealY -= EMULATED_FONT_SIZE + EMULATED_LINE_SKIP;
 			this.myOutput.println();
-			for (int i = 0; i < this.myX; i++) {
-				this.myOutput.append(' ');
-			}
+			this.myX = 0;
 		}
 	}
 
@@ -97,11 +98,19 @@ public class TextPainter implements IBookPainter {
 				}
 
 				public RenderingDimensions calculateStringDimensions(String s, int start, int end) {
-					return new RenderingDimensions(1, 0,  end - start);
+					return new RenderingDimensions(EMULATED_FONT_SIZE, 0,  end - start);
 				}
 
 				public void renderString(String s, int start, int end) {
 					TextPainter.this.renderString(s, start, end);
+				}
+
+				public String getFontName() {
+					return "default";
+				}
+
+				public double getFontSize() {
+					return EMULATED_FONT_SIZE;
 				}
 
 			};
@@ -123,8 +132,7 @@ public class TextPainter implements IBookPainter {
 		return this.myX;
 	}
 	public double getYCoordinate() {
-		// allways 0, as we don't count vertical size
-		return 0;
+		return this.myRealY;
 	}
 
 	public IRenderingObject getImage(INode node, String contentType, InputStream stream) {

@@ -55,7 +55,7 @@ public class MetaString extends AbstractRenderingObject {
 		RenderingDimensions dim = font.calculateStringDimensions(this.myText,
 				start, end);
 		
-		double height = styleStack.getLineHeight();
+		double height = styleStack.getLineHeight() * this.myFont.getFontSize();
 		
 		this.myHalfLeading = (height - dim.ascent)/2;
 		setHeight(height);
