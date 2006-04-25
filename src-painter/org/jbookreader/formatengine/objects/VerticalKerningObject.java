@@ -10,9 +10,9 @@ import org.jbookreader.formatengine.IBookPainter;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class VerticalGlue extends AbstractRenderingObject {
+public class VerticalKerningObject extends AbstractRenderingObject {
 	
-	public VerticalGlue(IBookPainter painter, INode node, double strut) {
+	public VerticalKerningObject(IBookPainter painter, INode node, double strut) {
 		super(painter, node);
 		if (strut > 0) {
 			setHeight(strut);
