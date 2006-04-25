@@ -35,8 +35,9 @@ public class FormatEngine implements IFormatEngine {
 	 * @return the index of first non-whitespace character.
 	 */
 	private int consumeWhitespace(String text, int start) {
-		while ((start < text.length()) && (text.charAt(start) <= '\u0020'))
+		while ((start < text.length()) && (text.charAt(start) <= '\u0020')) {
 			start ++;
+		}
 		return start;
 	}
 	
@@ -94,8 +95,9 @@ public class FormatEngine implements IFormatEngine {
 			}
 			end = start = newWord;
 
-			if (end >= text.length())
+			if (end >= text.length()) {
 				break;
+			}
 
 			while ((end < text.length()) && (text.charAt(end) > '\u0020')) {
 				end ++;

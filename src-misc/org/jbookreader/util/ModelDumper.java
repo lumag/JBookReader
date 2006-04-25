@@ -24,8 +24,9 @@ public class ModelDumper {
 	 * @param node the node to print
 	 */
 	private static void printNode(PrintWriter writer, INode node) {
-		if (node == null)
+		if (node == null) {
 			return;
+		}
 		
 		if (node.getTagName().equals(TEXT_NODE_NAME)) {
 			writer.print(node.getText());
@@ -93,8 +94,9 @@ public class ModelDumper {
 	 */
 	public static void dumpBOM(PrintWriter writer, IBook book) {
 		writer.println("<FictionBook xmlns=\"http://www.gribuser.ru/xml/fictionbook/2.0\" xmlns:xlink=\"http://www.w3.org/1999/xlink\">");
-		for (IContainerNode node: book.getBodies())
+		for (IContainerNode node: book.getBodies()) {
 			ModelDumper.printNode(writer, node);
+		}
 		writer.println();
 		for (Map.Entry<String, ? extends IBinaryData> binaryEntry: book.getBinaryMap().entrySet()) {
 			writer.format("<binary id=\"%s\" content-type=\"%s\">%n", binaryEntry.getKey(), binaryEntry.getValue().getContentType());

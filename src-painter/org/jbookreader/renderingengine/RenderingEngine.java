@@ -125,8 +125,9 @@ public class RenderingEngine {
 			IContainerNode cnode = (IContainerNode)node;
 
 			List<INode> children = cnode.getChildNodes();
-			if (children.isEmpty())
+			if (children.isEmpty()) {
 				return node;
+			}
 
 			int number = (first) ? 0 : (children.size() - 1);
 
@@ -336,8 +337,9 @@ public class RenderingEngine {
 	 * 
 	 */
 	public void scrollPageDown() {
-		if (this.myNextPageLine < 0)
+		if (this.myNextPageLine < 0) {
 			return;
+		}
 		this.myStartLine = this.myNextPageLine;
 
 		cleanStartLines();
@@ -354,8 +356,9 @@ public class RenderingEngine {
 		// will be restored during repaint
 		this.myNextPageLine = -1;
 
-		if (this.myStartLine >= this.myLines.size())
+		if (this.myStartLine >= this.myLines.size()) {
 			return;
+		}
 
 		cleanStartLines();
 

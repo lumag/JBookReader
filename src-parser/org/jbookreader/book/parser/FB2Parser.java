@@ -171,8 +171,9 @@ public class FB2Parser {
 				return;
 			}
 			
-			if (!this.myParseText)
+			if (!this.myParseText) {
 				return;
+			}
 			
 			this.myText.append(ch, start, length);
 		}
@@ -184,8 +185,9 @@ public class FB2Parser {
 		 * @see FB2ContentsHandler#myText
 		 */
 		private void processTextNode(boolean hasCloseTag) {
-			if (!this.myParseText)
+			if (!this.myParseText) {
 				return;
+			}
 			
 			String string = trimStringBuilder(this.myText, this.hadOpenTag, hasCloseTag);
 //			String string = this.myText.toString();
@@ -209,8 +211,9 @@ public class FB2Parser {
 			if (tagName.equals("p")
 			 || tagName.equals("subtitle")
 			 || tagName.equals("text-author")
-			 || tagName.equals("v"))
+			 || tagName.equals("v")) {
 				return true;
+			}
 			
 			return false;
 		}

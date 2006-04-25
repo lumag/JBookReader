@@ -27,8 +27,9 @@ class FB2StyleStack implements IStyleStack {
 		if (node.name.equals("image")) {
 			while (iterator.hasPrevious()) {
 				SimpleNode cnode = iterator.previous();
-				if (FB2StyleSheet.getDisplay(cnode.name) == EDisplayType.INLINE)
+				if (FB2StyleSheet.getDisplay(cnode.name) == EDisplayType.INLINE) {
 					return EDisplayType.INLINE;
+				}
 				if (cnode.name.equals("p") ||
 				    cnode.name.equals("v") ||
 				    cnode.name.equals("subtitle") ||

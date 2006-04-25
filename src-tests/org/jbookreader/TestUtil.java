@@ -33,14 +33,17 @@ public class TestUtil {
 			String s1 = lr1.readLine();
 			String s2 = lr2.readLine();
 			
-			if (s1 == null && s2 == null)
+			if (s1 == null && s2 == null) {
 				return null;
+			}
 			
-			if (s1 == null)
+			if (s1 == null) {
 				return "Expected EOF, but got " + s2;
+			}
 			
-			if (s2 == null)
+			if (s2 == null) {
 				return "Expected '" + s1 + "' but got EOF";
+			}
 			
 			if (!s1.equals(s2)) {
 				return "Expected '" + s1 + "' but got '" + s2 + "'"; 
@@ -62,8 +65,9 @@ public class TestUtil {
 			r1.close();
 			r2.close();
 		
-			if (s != null)
+			if (s != null) {
 				Assert.fail(s);
+			}
 		} catch (IOException ioe) {
 			throw new RuntimeException("Got IOException during file comparation", ioe);
 		}

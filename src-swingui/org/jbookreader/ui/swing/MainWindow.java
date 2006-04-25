@@ -37,7 +37,7 @@ import org.xml.sax.SAXException;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-@SuppressWarnings("serial") //$NON-NLS-1$
+@SuppressWarnings("serial") 
 public class MainWindow {
 	/**
 	 * This is the heart of the application &mdash; the book component

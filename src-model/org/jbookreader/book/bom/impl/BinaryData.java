@@ -103,8 +103,7 @@ class BinaryData implements IBinaryData {
 		int bitBufferBytes = 0;
 		int byteBufferPad = 0;
 
-		for (int i = 0; i < base64Encoded.length; i++) {
-			char curch = base64Encoded[i]; 
+		for (char curch : base64Encoded) {
 			if (curch == '\n' || curch == '\r' || curch == ' ' || curch == '\t') {
 				continue;
 			}

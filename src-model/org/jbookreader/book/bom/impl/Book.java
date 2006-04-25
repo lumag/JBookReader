@@ -89,8 +89,9 @@ public class Book implements IBook {
 	 */
 	void mapIdNode(INode node) {
 		String id = node.getID();
-		if (id != null)
+		if (id != null) {
 			this.myIDmap.put(id, node);
+		}
 	}
 
 }

@@ -14,7 +14,7 @@ import org.jbookreader.ui.swing.Messages;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  * 
  */
-@SuppressWarnings("serial") //$NON-NLS-1$
+@SuppressWarnings("serial") 
 public class ScrollUpAction extends AbstractAction {
 	
 	private ScrollUpAction() {
