@@ -79,9 +79,4 @@ class ContainerNode extends AbstractNode implements IContainerNode {
 		return node;
 	}
 
-	@Override
-	public IContainerNode getContainer() {
-		return this;
-	}
-
 }

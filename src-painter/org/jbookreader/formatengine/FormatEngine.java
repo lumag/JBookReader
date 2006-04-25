@@ -78,8 +78,8 @@ public class FormatEngine {
 //			throw new RuntimeException("Shouldn't use this");
 //		}
 
-		IContainerNode cnode = node.getContainer();
-		if (cnode != null) {
+		if (node instanceof IContainerNode) {
+			IContainerNode cnode = (IContainerNode) node;
 
 			for (INode childNode : cnode.getChildNodes()) {
 				styleStack.pushTag(childNode.getTagName(), childNode.getNodeClass(), childNode.getID());
@@ -229,9 +229,10 @@ public class FormatEngine {
 	 */
 	private INode getParagraphNodeDown(INode node, IStyleStack styleStack, boolean first) {
 		while (true) {
-			IContainerNode cnode = node.getContainer();
-			if (cnode == null)
+			if (! (node instanceof IContainerNode)) {
 				return node;
+			}
+			IContainerNode cnode = (IContainerNode)node;
 
 			List<INode> children = cnode.getChildNodes();
 			if (children.isEmpty())

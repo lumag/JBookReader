@@ -63,7 +63,10 @@ public class ModelDumper {
 			writer.format(" %s=\"%s\"", classAttribute, nodeClass);
 		}
 		
-		IContainerNode cnode = node.getContainer();
+		IContainerNode cnode = null;
+		if (node instanceof IContainerNode) {
+			cnode = (IContainerNode)node;
+		}
 
 		if ((cnode == null) || cnode.getChildNodes().isEmpty()) {
 			writer.print(" />");

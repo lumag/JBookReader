@@ -316,8 +316,8 @@ public class FB2Parser {
 				}
 				node.setNodeClass(attributes.getValue(classAttribute));
 				
-				if (node.getContainer() != null) {
-					this.myContainer = node.getContainer();
+				if (node instanceof IContainerNode) {
+					this.myContainer = (IContainerNode)node;
 				}
 
 				{

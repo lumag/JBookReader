@@ -8,11 +8,6 @@ package org.jbookreader.book.bom;
  * @see org.jbookreader.book.bom.IContainerNode
  */
 public interface INode {
-	/**
-	 * Returns the container part of this node or null if the node isn't a container.
-	 * @return the container part of this node.
-	 */
-	IContainerNode getContainer();
 
 	/**
 	 * Returns the text contained in the node.

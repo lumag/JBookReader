@@ -92,10 +92,6 @@ abstract class AbstractNode implements INode {
 		this.myBook.mapIdNode(this);
 	}
 
-	public IContainerNode getContainer() {
-		return null;
-	}
-
 	public String getNodeClass() {
 		return this.myNodeClass;
 	}
