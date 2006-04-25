@@ -80,7 +80,7 @@ class SwingFont implements IFont {
 		this.myPainter.addHorizontalStrut(dim.width);
 	}
 
-	public String getFontName() {
+	public String getFontFamily() {
 		return this.myFont.getFamily();
 	}
 

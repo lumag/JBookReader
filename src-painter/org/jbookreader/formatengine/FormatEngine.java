@@ -101,7 +101,7 @@ public class FormatEngine implements IFormatEngine {
 				end ++;
 			}
 
-			IRenderingObject string = new MetaString(currentLine.getPainter(), node, styleStack, text, start, end, font);
+			IRenderingObject string = new MetaString(currentLine.getPainter(), node, styleStack.getLineHeight(), text, start, end, font);
 			currentLine = appendRobject(result, currentLine, width, string);
 
 			start = end;
@@ -112,7 +112,7 @@ public class FormatEngine implements IFormatEngine {
 	
 	private Line appendRobject (List<Line> result, Line currentLine, double width, IRenderingObject object) {
 		// XXX: this is the main place for rendering decision
-		if (currentLine.getWidth() + object.getWidth() > width && !currentLine.getObjects().isEmpty()) {
+		if (currentLine.getWidth() + object.getWidth() > width) {
 			// XXX: adjust glue objects in the line
 			result.add(currentLine);
 			double leftMargin = currentLine.getLeftMargin();
@@ -123,9 +123,6 @@ public class FormatEngine implements IFormatEngine {
 		return currentLine;
 	}
 
-	/* (non-Javadoc)
-	 * @see org.jbookreader.formatengine.IFormatEngine#formatParagraphNode(org.jbookreader.formatengine.IBookPainter, org.jbookreader.book.bom.INode, org.jbookreader.book.stylesheet.IStyleStack, double)
-	 */
 	public List<Line> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
 		List<Line> result = new ArrayList<Line>();
 

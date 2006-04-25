@@ -1,9 +1,9 @@
 package org.jbookreader.book.stylesheet.fb2;
 
-public class SimpleNode {
-	public final String name;
-	public final String klass;
-	public final String id;
+class SimpleNode {
+	final String name;
+	final String klass;
+	final String id;
 
 	SimpleNode(final String name, final String klass, final String id) {
 		this.name = name;

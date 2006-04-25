@@ -9,6 +9,12 @@ import org.jbookreader.ui.swing.MainWindow;
 import org.jbookreader.ui.swing.Messages;
 
 
+/**
+ * This class represents an application quit action.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ * 
+ */
 @SuppressWarnings("serial")
 public class QuitAction extends AbstractAction {
 	
@@ -20,6 +26,10 @@ public class QuitAction extends AbstractAction {
 
 	private static Action ourAction;
 
+	/**
+	 * Returns the instance of this action type.
+	 * @return the instance of this action type.
+	 */
 	public static Action getAction() {
 		if (ourAction == null) {
 			ourAction = new QuitAction();

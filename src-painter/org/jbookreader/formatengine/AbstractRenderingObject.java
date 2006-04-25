@@ -2,6 +2,12 @@ package org.jbookreader.formatengine;
 
 import org.jbookreader.book.bom.INode;
 
+/**
+ * This class represents an abstract rendering object.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public abstract class AbstractRenderingObject implements IRenderingObject {
 	/**
 	 * The height of the rendering object above the baseline.

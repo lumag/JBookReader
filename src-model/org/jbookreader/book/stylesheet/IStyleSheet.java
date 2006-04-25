@@ -7,5 +7,9 @@ package org.jbookreader.book.stylesheet;
  *
  */
 public interface IStyleSheet {
+	/**
+	 * Returns new style stack.
+	 * @return new style stack.
+	 */
 	IStyleStack newStyleStateStack();
 }

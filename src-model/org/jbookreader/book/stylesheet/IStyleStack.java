@@ -2,38 +2,64 @@ package org.jbookreader.book.stylesheet;
 
 import org.jbookreader.book.stylesheet.properties.EDisplayType;
 
+/**
+ * This interface represents a style stack &mdash; a model
+ * of cascading styling information.
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public interface IStyleStack {
+	/**
+	 * Pushes new tag into the style stack.
+	 * 
+	 * @param name the name of the tag
+	 * @param klass the class of the tag
+	 * @param id the id of the tag
+	 */
 	void pushTag(String name, String klass, String id);
+
+	/**
+	 * Pops last tag from the style stack.
+	 *
+	 */
 	void popTag();
 
 
 	/**
 	 * Returns the 'display' property of the node
-	 * @param node the node to check
 	 * @return display type of the node.
 	 */
 	EDisplayType getDisplay();
 	
 	/**
 	 * Returns the left margin for the node.
-	 * @param node the node to get styling information for
 	 * @return the left margin for the node.
 	 */
 	double getMarginLeft();
 	/**
 	 * Returns the right margin for the node.
-	 * @param node the node to get styling information for
 	 * @return the right margin for the node.
 	 */
 	double getMarginRight();
 	/**
 	 * Returns the indentation for the first line of the node.
-	 * @param node the node to get syuling information for
 	 * @return the indentation for the first line of the node.
 	 */
 	double getTextIndent();
+	/**
+	 * Returns the relative line height.
+	 * @return the relative line height.
+	 */
 	double getLineHeight();
+	/**
+	 * Returns font family.
+	 * @return font family.
+	 */
 	String getFontFamily();
+	/**
+	 * Returns font size.
+	 * @return font size.
+	 */
 	int getFontSize();
 
 }

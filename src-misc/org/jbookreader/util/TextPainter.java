@@ -105,7 +105,7 @@ public class TextPainter implements IBookPainter {
 					TextPainter.this.renderString(s, start, end);
 				}
 
-				public String getFontName() {
+				public String getFontFamily() {
 					return "default";
 				}
 

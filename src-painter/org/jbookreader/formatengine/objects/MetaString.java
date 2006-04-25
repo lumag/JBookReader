@@ -1,7 +1,6 @@
 package org.jbookreader.formatengine.objects;
 
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.book.stylesheet.IStyleStack;
 import org.jbookreader.formatengine.AbstractRenderingObject;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IFont;
@@ -38,13 +37,15 @@ public class MetaString extends AbstractRenderingObject {
 
 	/**
 	 * This constructs new metastring.
-	 * @param styleStack TODO
+	 * @param painter the painter for this object
+	 * @param node the node corresponding to this string
+	 * @param lineHeight the relative line height
 	 * @param text the string, containing text of the object
 	 * @param start the index of starting symbol
 	 * @param end the index of the symbol next to the string
 	 * @param font the font to render the string
 	 */
-	public MetaString(IBookPainter painter, INode node, IStyleStack styleStack, String text, int start, int end, IFont font) {
+	public MetaString(IBookPainter painter, INode node, double lineHeight, String text, int start, int end, IFont font) {
 		super(painter, node);
 
 		this.myText = text;
@@ -55,7 +56,7 @@ public class MetaString extends AbstractRenderingObject {
 		RenderingDimensions dim = font.calculateStringDimensions(this.myText,
 				start, end);
 		
-		double height = styleStack.getLineHeight() * this.myFont.getFontSize();
+		double height = lineHeight * this.myFont.getFontSize();
 		
 		this.myHalfLeading = (height - dim.ascent)/2;
 		setHeight(height);

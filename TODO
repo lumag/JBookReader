@@ -9,6 +9,7 @@ High priority:
 - detect the current position in the book and display it somehow
 - support links and footnotes
 - Create 'Command's and make Actions adapters for commands???
+- rewrite Line's caching!
 
 Medium priority:
 - Table Of Contents
@@ -19,6 +20,9 @@ Medium priority:
 - multiple css.
 + mouse wheel support (Done: 16.04.2006, trunk).
 - 'metadata' loading.
+- maybe remove direct link FormatEngine->BookPainter and dependency of
+  all rendering objects to the painter by providing adaptor
+  rendering objects factory?
 
 Low priority:
 - Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about

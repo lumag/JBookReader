@@ -1,6 +1,5 @@
 package org.jbookreader.formatengine.objects;
 
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,8 +9,7 @@ import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IRenderingObject;
 
 /**
- * This class represents the main object of rendering engine &mdash; the line of
- * text.
+ * This class represents the main object of rendering engine &mdash; a sibgle line.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  * 
@@ -24,7 +22,11 @@ public class Line extends AbstractRenderingObject {
 	
 	private double myLeftMargin;
 
-
+	/**
+	 * This constructs new line for specified painter.
+	 * @param painter the painter on which this line will be rendered
+	 * @param node the paragraph node to which the line corresponds
+	 */
 	public Line(IBookPainter painter, INode node) {
 		super(painter, node);
 	}
@@ -58,14 +60,19 @@ public class Line extends AbstractRenderingObject {
 		}
 	}
 
-	public List<IRenderingObject> getObjects() {
-		return Collections.unmodifiableList(this.myRObjects);
-	}
-
+	/**
+	 * Returns the left margin of the line.
+	 * @return the left margin of the line.
+	 */
 	public double getLeftMargin() {
 		return this.myLeftMargin;
 	}
 
+	/**
+	 * Sets the left margin of the line.
+	 *
+	 * @param leftMargin new left margin value.
+	 */
 	public void setLeftMargin(double leftMargin) {
 		this.myLeftMargin = leftMargin;
 	}

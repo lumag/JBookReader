@@ -175,6 +175,11 @@ public class RenderingEngine {
 		renderPageFromNode(node, styleStack);
 	}
 
+	/**
+	 * Renders a page from specified node.
+	 * @param node the node to start from
+	 * @param styleStack the corresponding style stack.
+	 */
 	public void renderPageFromNode(INode node, IStyleStack styleStack) {
 		int lineNum = this.myStartLine;
 
@@ -264,6 +269,10 @@ public class RenderingEngine {
 
 	}
 
+	/**
+	 * Removes unused cached lines from the end.
+	 * 
+	 */
 	private void cleanEndLines() {
 		int line = this.myNextPageLine;
 

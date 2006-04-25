@@ -8,6 +8,12 @@ import javax.swing.Action;
 import org.jbookreader.ui.swing.MainWindow;
 import org.jbookreader.ui.swing.Messages;
 
+/**
+ * This class represents a small scroll up action.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ * 
+ */
 @SuppressWarnings("serial") //$NON-NLS-1$
 public class ScrollUpAction extends AbstractAction {
 	
@@ -18,6 +24,10 @@ public class ScrollUpAction extends AbstractAction {
 
 	private static Action ourAction;
 
+	/**
+	 * Returns the instance of this action type.
+	 * @return the instance of this action type.
+	 */
 	public static Action getAction() {
 		if (ourAction == null) {
 			ourAction = new ScrollUpAction();

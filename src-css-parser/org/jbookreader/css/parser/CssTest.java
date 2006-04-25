@@ -3,7 +3,20 @@ package org.jbookreader.css.parser;
 import org.w3c.css.sac.*;
 import org.w3c.css.sac.helpers.ParserFactory;
 
+/**
+ * The demostration for the SAC api:
+ * parse and dump css files.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
 public class CssTest {
+	/**
+	 * The 'main' method of the demostration.
+	 * 
+	 * @param args the list with CSS file names.
+	 * @throws Exception because it's a demo, we don't handle exceptions.
+	 */
 	public static void main(String[] args) throws Exception {
 		if (System.getProperty("org.w3c.css.sac.parser") == null) {
 			System.setProperty("org.w3c.css.sac.parser", "org.w3c.flute.parser.Parser");
@@ -12,7 +25,7 @@ public class CssTest {
 		Parser cssParser = new ParserFactory().makeParser();
 
 		cssParser.setErrorHandler(new CssErrorHandler());
-		cssParser.setDocumentHandler(new CssHandler());
+		cssParser.setDocumentHandler(new CssDemoHandler());
 
 		System.out.println("Parser version: " + cssParser.getParserVersion());
 

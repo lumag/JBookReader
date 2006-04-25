@@ -17,11 +17,20 @@ public class HorizontalGlue extends AbstractRenderingObject {
 	 * 
 	 * @param strut the size of glue object
 	 * @param painter the painter for this object
+	 * @param node the node corresponding to this glue object
 	 */
 	public HorizontalGlue(IBookPainter painter, INode node, double strut) {
 		this(painter, node, strut, 0);
 	}
 
+	/**
+	 * This constructs new horizontal glue with specified parameters.
+	 * 
+	 * @param strut the size of glue object
+	 * @param painter the painter for this object
+	 * @param node the node corresponding to this glue object
+	 * @param height the height of the glue object
+	 */
 	public HorizontalGlue(IBookPainter painter, INode node, double strut, double height) {
 		super(painter, node);
 		setWidth(strut);

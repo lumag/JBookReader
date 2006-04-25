@@ -5,7 +5,13 @@ import static org.w3c.css.sac.LexicalUnit.*;
 import static org.w3c.css.sac.Selector.*;
 import static org.w3c.css.sac.Condition.*;
 
-public class CssHandler implements DocumentHandler {
+/**
+ * A demonstration handler for CSS documents.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ *
+ */
+public class CssDemoHandler implements DocumentHandler {
 	public void startDocument(InputSource source) throws CSSException {
 //		System.err.println("$called startDocument");
 	}

@@ -11,6 +11,12 @@ import org.jbookreader.ui.swing.GenericFileFilter;
 import org.jbookreader.ui.swing.MainWindow;
 import org.jbookreader.ui.swing.Messages;
 
+/**
+ * This class represents an open file action.
+ * 
+ * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
+ * 
+ */
 @SuppressWarnings("serial")
 public class OpenAction extends AbstractAction {
 	
@@ -24,6 +30,10 @@ public class OpenAction extends AbstractAction {
 
 	private static Action ourAction;
 
+	/**
+	 * Returns the instance of this action type.
+	 * @return the instance of this action type.
+	 */
 	public static Action getAction() {
 		if (ourAction == null) {
 			ourAction = new OpenAction();
