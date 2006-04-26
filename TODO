@@ -2,32 +2,36 @@ High priority:
 
 + antialiasing (Done: 15.04.2005: 0.1, trunk).
 + configurable priorities (Done: 16.04.2006: trunk).
-- make font and fontsize configurable.
-= finish new rendering engine: margins, centering, justification etc.
+H- make font and fontsize configurable.
+H= finish new rendering engine: margins, centering, justification etc.
   (Work happening in the 'css' brahch).
 - make the JBR restore 'last reading position' for some last books.
-- detect the current position in the book and display it somehow
-- support links and footnotes
+H-- save/restore 'last reading position'
+M-- recent books list
+M- detect the current position in the book and display it somehow
+M-- 'global' navigation (go to ~50% position)
+M- support links and footnotes
 - Create 'Command's and make Actions adapters for commands???
 - rewrite Line's caching!
+M/H- hyphenations
 
 Medium priority:
-- Table Of Contents
-- bookmarks
-- the 'go back' feature
-- make keybindings configurable
-- Searching in the book
+H- Table Of Contents
+M- bookmarks
+H- the 'go back' feature
+M- make keybindings configurable
+M- Searching in the book
 - multiple css.
 + mouse wheel support (Done: 16.04.2006, trunk).
-- 'metadata' loading.
+L- 'metadata' loading.
 - maybe remove direct link FormatEngine->BookPainter and dependency of
   all rendering objects to the painter by providing adaptor
   rendering objects factory?
 
 Low priority:
-- Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about
+VL- Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about
   possibility for DOC, PDF, M$Lit.
-- Write text and SWT? ui. Also think about GTK-java, QT-java.
-- Smooth scrolling support.
-- Support for making small corrections.
+VL- Write text and SWT? ui. Also think about GTK-java, QT-java.
+L- Smooth scrolling support.
+L- Support for making small corrections.
 - support metadata organisation in to some type of DB.
