@@ -6,6 +6,7 @@ H- make font and fontsize configurable.
 H= finish new rendering engine: margins, centering, justification etc.
   (Work happening in the 'css' brahch).
 - make the JBR restore 'last reading position' for some last books.
+H-- reopen last book
 H-- save/restore 'last reading position'
 M-- recent books list
 M- detect the current position in the book and display it somehow
