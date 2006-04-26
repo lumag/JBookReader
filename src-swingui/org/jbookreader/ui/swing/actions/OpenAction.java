@@ -7,6 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JFileChooser;
 
+import org.jbookreader.ui.swing.Config;
 import org.jbookreader.ui.swing.GenericFileFilter;
 import org.jbookreader.ui.swing.MainWindow;
 import org.jbookreader.ui.swing.Messages;
@@ -20,12 +21,19 @@ import org.jbookreader.ui.swing.Messages;
 @SuppressWarnings("serial")
 public class OpenAction extends AbstractAction {
 	
+	private File myLastDirectory = null;
+
 	private OpenAction() {
 		putValue(NAME, Messages.getString("OpenAction.Name")); //$NON-NLS-1$
 		putValue(MNEMONIC_KEY, Integer.valueOf(Messages.getString("OpenAction.Mnemonic").charAt(0))); //$NON-NLS-1$
 		putValue(SHORT_DESCRIPTION, Messages.getString("OpenAction.Description")); //$NON-NLS-1$
 		
-		this.myLastDirectory = new File(System.getProperty("user.dir"));
+		String dir = Config.getConfig().getStringValue("lastdir");
+		
+		if (dir == null) {
+			dir = System.getProperty("user.dir");
+		}
+		this.myLastDirectory = new File(dir);
 	}
 
 	private static Action ourAction;
@@ -42,8 +50,6 @@ public class OpenAction extends AbstractAction {
 		return ourAction;
 	}
 
-	private File myLastDirectory = null;
-
 	public void actionPerformed(ActionEvent e) {
 
 		JFileChooser chooser = new JFileChooser();
@@ -59,6 +65,7 @@ public class OpenAction extends AbstractAction {
 		int returnValue = chooser.showOpenDialog(MainWindow.getMainWindow().getFrame());
 
 		this.myLastDirectory = chooser.getCurrentDirectory();
+		Config.getConfig().setStringValue("lastdir", this.myLastDirectory.getAbsolutePath());
 
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			MainWindow.getMainWindow().openBook(chooser.getSelectedFile());
