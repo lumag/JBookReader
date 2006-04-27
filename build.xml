@@ -32,11 +32,6 @@
 	    <fileset dir="src" includes="**/*.properties" />
 	</copy>
         <javac debug="${build.debug}" destdir="bin-tests">
-            <src path="src-misc"/>
-            <src path="src-ui"/>
-            <classpath refid="project.classpath"/>
-        </javac>
-        <javac debug="${build.debug}" destdir="bin-tests">
             <src path="src-tests"/>
             <classpath refid="tests.classpath"/>
         </javac>
@@ -50,6 +45,11 @@
         <java classname="org.jbookreader.ui.text.TextUI" failonerror="true" fork="yes">
             <classpath refid="tests.classpath"/>
         </java>
+    </target>
+    <target name="javadoc" depends="init">
+    	<javadoc destdir="doc/api" version="true" use="true" author="true">
+		<fileset dir="src"/>
+	</javadoc>
     </target>
     <target name="jdepend" depends="build">
     	<jdepend outputfile="jdepend-report.txt">
@@ -76,8 +76,7 @@
     </target>
     <target name="srczip" >
     	<zip destfile="jbookreader-${project.version}-src.zip" >
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-model/**,src-parser/**,src-painter/**,src-swingui/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-misc/**,src-ui/**"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-tests/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="build.*"/>

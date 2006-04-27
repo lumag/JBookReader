@@ -33,7 +33,7 @@ public interface IBinaryData {
 	/**
 	 * Sets the contents of the blob by providing base64-encoding
 	 * representation of data.
-	 * @param base64Encoded
+	 * @param base64Encoded the base64-encoded representation of data
 	 */
 	void setBase64Encoded(char[] base64Encoded);
 

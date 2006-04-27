@@ -12,7 +12,7 @@ import org.jbookreader.formatengine.IFont;
 /**
  * This is swing-based implementation of the {@link org.jbookreader.formatengine.IBookPainter}.
  * Currently it calls all {@link org.jbookreader.formatengine.FormatEngine} from Swing tread.
- * @todo TODO move calling to other tread, make engine paint over buffering image, etc.
+ * @TODO move calling to other tread, make engine paint over buffering image, etc.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
