@@ -16,33 +16,22 @@
 
     <target name="init">
         <mkdir dir="bin"/>
-        <mkdir dir="bin-misc"/>
         <mkdir dir="bin-tests"/>
 	<mkdir dir="tests/temp"/>
     </target>
     <target name="clean">
         <delete dir="bin"/>
-        <delete dir="bin-misc"/>
         <delete dir="bin-tests"/>
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="${build.debug}" destdir="bin">
-            <src path="src-model"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-parser"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-painter"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-swingui"/>
+            <src path="src"/>
         </javac>
 	<copy todir="bin">
-	    <fileset dir="src-swingui" includes="**/*.properties" />
+	    <fileset dir="src" includes="**/*.properties" />
 	</copy>
-        <javac debug="${build.debug}" destdir="bin-misc">
+        <javac debug="${build.debug}" destdir="bin-tests">
             <src path="src-misc"/>
             <src path="src-ui"/>
             <classpath refid="project.classpath"/>
