@@ -1,4 +1,4 @@
-package org.jbookreader;
+package org.jbookreader.util;
 
 import java.io.File;
 import java.io.FileInputStream;

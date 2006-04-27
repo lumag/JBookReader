@@ -1,6 +1,6 @@
 package org.jbookreader.ui.swing;
 
-import org.jbookreader.Configuration;
+import org.jbookreader.util.Configuration;
 
 /**
  * This is the configuration for the SwingUI JBR.
