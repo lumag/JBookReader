@@ -22,6 +22,7 @@
     <target name="clean">
         <delete dir="bin"/>
         <delete dir="bin-tests"/>
+	<delete dir="docs/api" />
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -47,7 +48,7 @@
         </java>
     </target>
     <target name="javadoc" depends="init">
-    	<javadoc destdir="doc/api" version="true" use="true" author="true">
+    	<javadoc destdir="docs/api" version="true" use="true" author="true">
 		<fileset dir="src"/>
 	</javadoc>
     </target>
@@ -79,6 +80,7 @@
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-tests/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="docs/**" excludes="docs/api/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="build.*"/>
 	</zip>
     </target>
