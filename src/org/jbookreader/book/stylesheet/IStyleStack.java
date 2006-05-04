@@ -62,4 +62,18 @@ public interface IStyleStack {
 	 */
 	int getFontSize();
 
+	/**
+	 * Sets default font family.
+	 * 
+	 * @param fontFamily default font family
+	 */
+	void setDefaultFontFamily(String fontFamily);
+	
+	/**
+	 * Sets default font size.
+	 * 
+	 * @param size default font size
+	 */
+	void setDefaultFontSize(int size);
+	
 }

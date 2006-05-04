@@ -1,6 +1,8 @@
-package org.jbookreader.formatengine;
+package org.jbookreader.formatengine.objects;
 
 import org.jbookreader.book.bom.INode;
+import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.IRenderingObject;
 
 /**
  * This class represents an abstract rendering object.
@@ -61,7 +63,7 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 		return this.myNode;
 	}
 
-	protected IBookPainter getPainter() {
+	public IBookPainter getPainter() {
 		return this.myPainter;
 	}
 

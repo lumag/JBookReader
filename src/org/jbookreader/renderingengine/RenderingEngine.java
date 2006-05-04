@@ -9,7 +9,6 @@ import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;
 import org.jbookreader.book.stylesheet.properties.EDisplayType;
-import org.jbookreader.formatengine.FormatEngine;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.objects.Line;
 
@@ -34,8 +33,16 @@ public class RenderingEngine {
 	 */
 	private IBook myBook;
 	
-	// FIXME: remove direct dependancy
-	private IFormatEngine myFormatEngine = new FormatEngine();
+	private final IFormatEngine myFormatEngine;
+
+	/**
+	 * This constructs new Rendering engine for the given format engine.
+	 * @param formatEngine the format engine to use for formatting
+	 */
+	public RenderingEngine(IFormatEngine formatEngine) {
+		this.myFormatEngine = formatEngine;
+	}
+
 
 	/**
 	 * Sets <code>painter</code> as a new output device.
@@ -45,6 +52,7 @@ public class RenderingEngine {
 	public void setPainter(IBookPainter painter) {
 		this.myPainter = painter;
 	}
+	
 
 	/**
 	 * Sets the new book to be output.
@@ -72,6 +80,10 @@ public class RenderingEngine {
 	 * this line isn't calculated yet.
 	 */
 	private int myNextPageLine = -1;
+
+	private String myFontFamily;
+
+	private int myFontSize;
 
 	/**
 	 * Returns the paragraph node to be formatted right before or after
@@ -225,6 +237,12 @@ public class RenderingEngine {
 
 	private IStyleStack replayStyleStack(INode node) {
 		IStyleStack result = node.getBook().getSystemStyleSheet().newStyleStateStack();
+		if (this.myFontFamily != null) {
+			result.setDefaultFontFamily(this.myFontFamily);
+		}
+		if (this.myFontSize != 0) {
+			result.setDefaultFontSize(this.myFontSize);
+		}
 
 		List<INode> backList = new ArrayList<INode>();
 
@@ -407,6 +425,16 @@ public class RenderingEngine {
 		this.myStartLine += curParagraph.size();
 
 		return false;
+	}
+
+	/**
+	 * Sets default font to be used for rendering.
+	 * @param family the family of the font
+	 * @param size font size
+	 */
+	public void setDefaultFont(String family, int size) {
+		this.myFontFamily = family;
+		this.myFontSize = size;
 	}
 
 }

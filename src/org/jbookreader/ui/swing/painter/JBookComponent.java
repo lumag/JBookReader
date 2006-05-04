@@ -1,4 +1,4 @@
-package org.jbookreader.ui.swing;
+package org.jbookreader.ui.swing.painter;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -8,8 +8,8 @@ import java.awt.RenderingHints;
 import javax.swing.JComponent;
 
 import org.jbookreader.book.bom.IBook;
+import org.jbookreader.formatengine.impl.FormatEngine;
 import org.jbookreader.renderingengine.RenderingEngine;
-import org.jbookreader.ui.swing.painter.SwingBookPainter;
 
 /**
  * This class represents a book-viewing component.
@@ -38,13 +38,14 @@ public class JBookComponent extends JComponent {
 	 * Wether the diplayed part of the book should be reformatted. 
 	 */
 	private boolean myReformatBook;
+	private boolean myAntialias;
 	
 	/**
 	 * This constructs new Book displaying component.
 	 *
 	 */
 	public JBookComponent () {
-		this.myEngine = new RenderingEngine();
+		this.myEngine = new RenderingEngine(new FormatEngine());
 		this.myPainter  = new SwingBookPainter();
 		this.myEngine.setPainter(this.myPainter);
 	}
@@ -74,7 +75,7 @@ public class JBookComponent extends JComponent {
 			this.myReformatBook = true;
 		}
 
-		if (Config.getConfig().getBooleanValue("antialias")) {
+		if (this.myAntialias) {
 			g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 					RenderingHints.VALUE_ANTIALIAS_ON);
 			g2d.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
@@ -138,6 +139,31 @@ public class JBookComponent extends JComponent {
 	public void scrollUp(int lines) {
 		this.myEngine.scrollUp(lines);
 		repaint();
+	}
+	
+	/**
+	 * Sets default font to be used for rendering.
+	 * @param family the family of the font
+	 * @param size font size
+	 */
+	public void setDefaultFont(String family, int size) {
+		this.myEngine.setDefaultFont(family, size);
+	}
+
+	/**
+	 * Whether to antialias rendered parts.
+	 * @return whether to antialias rendered parts.
+	 */
+	public boolean isAntialias() {
+		return this.myAntialias;
+	}
+
+	/**
+	 * Sets whether to antialias rendered parts.
+	 * @param antialias whether to antialias rendered parts.
+	 */
+	public void setAntialias(boolean antialias) {
+		this.myAntialias = antialias;
 	}
 
 }

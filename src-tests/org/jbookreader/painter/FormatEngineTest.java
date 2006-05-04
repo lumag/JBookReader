@@ -13,13 +13,13 @@ import org.jbookreader.FB2FilesFilter;
 import org.jbookreader.FileTestCase;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
-import org.jbookreader.formatengine.FormatEngine;
 import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.impl.FormatEngine;
 import org.jbookreader.renderingengine.RenderingEngine;
 import org.jbookreader.util.TextPainter;
 
 /**
- * This class is a test case generator for the {@link org.jbookreader.formatengine.FormatEngine}.
+ * This class is a test case generator for the {@link org.jbookreader.formatengine.impl.FormatEngine}.
  * The engine is tested via formatting with {@link org.jbookreader.util.TextPainter}.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
@@ -42,7 +42,7 @@ public class FormatEngineTest extends AbstractFileTestConstructor {
 			
 			IBookPainter painter = new TextPainter(pwr, 80);
 			
-			RenderingEngine engine = new RenderingEngine();
+			RenderingEngine engine = new RenderingEngine(new FormatEngine());
 
 			engine.setBook(book);
 			engine.setPainter(painter);

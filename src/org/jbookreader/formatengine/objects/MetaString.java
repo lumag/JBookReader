@@ -1,7 +1,6 @@
 package org.jbookreader.formatengine.objects;
 
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.formatengine.AbstractRenderingObject;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IFont;
 import org.jbookreader.formatengine.RenderingDimensions;

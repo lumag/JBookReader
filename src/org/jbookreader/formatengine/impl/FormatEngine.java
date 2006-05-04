@@ -1,4 +1,4 @@
-package org.jbookreader.formatengine;
+package org.jbookreader.formatengine.impl;
 
 import java.io.ByteArrayInputStream;
 import java.util.ArrayList;
@@ -9,6 +9,9 @@ import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.IImageNode;
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;
+import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.IFont;
+import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.objects.HorizontalGlue;
 import org.jbookreader.formatengine.objects.Line;
 import org.jbookreader.formatengine.objects.MetaString;

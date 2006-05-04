@@ -29,6 +29,7 @@ import org.jbookreader.ui.swing.actions.PageUpAction;
 import org.jbookreader.ui.swing.actions.QuitAction;
 import org.jbookreader.ui.swing.actions.ScrollDownAction;
 import org.jbookreader.ui.swing.actions.ScrollUpAction;
+import org.jbookreader.ui.swing.painter.JBookComponent;
 import org.xml.sax.SAXException;
 
 /**

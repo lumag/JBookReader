@@ -15,7 +15,6 @@ public class Config extends Configuration {
 	
 	private Config() {
 		super("JBookReader", "swingui", DEFAULT_RESOURCE);
-		setAutoSaved(true);
 	}
 
 	/**

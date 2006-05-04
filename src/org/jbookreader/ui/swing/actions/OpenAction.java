@@ -2,6 +2,7 @@ package org.jbookreader.ui.swing.actions;
 
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -66,6 +67,11 @@ public class OpenAction extends AbstractAction {
 
 		this.myLastDirectory = chooser.getCurrentDirectory();
 		Config.getConfig().setStringValue("lastdir", this.myLastDirectory.getAbsolutePath());
+		try {
+			Config.getConfig().save();
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
 
 		if (returnValue == JFileChooser.APPROVE_OPTION) {
 			MainWindow.getMainWindow().openBook(chooser.getSelectedFile());

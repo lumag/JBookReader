@@ -23,6 +23,12 @@ public class Main {
 		}
 
 		MainWindow main = MainWindow.getMainWindow();
+		
+		main.getBookComponent().setAntialias(Config.getConfig().getBooleanValue("antialias"));
+		main.getBookComponent().setDefaultFont(
+				Config.getConfig().getStringValue("fontfamily"),
+				Config.getConfig().getIntValue("fontsize"));
+		
 		main.getFrame().setVisible(true);
 	}
 

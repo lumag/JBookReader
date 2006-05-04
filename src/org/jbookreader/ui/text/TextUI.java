@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
+import org.jbookreader.formatengine.impl.FormatEngine;
 import org.jbookreader.renderingengine.RenderingEngine;
 import org.jbookreader.util.TextPainter;
 
@@ -25,7 +26,7 @@ public class TextUI {
 		PrintWriter wr = new PrintWriter(System.out);
 		TextPainter painter = new TextPainter(wr, args.length > 1?Integer.parseInt(args[1]): 80);
 
-		RenderingEngine engine = new RenderingEngine();
+		RenderingEngine engine = new RenderingEngine(new FormatEngine());
 		engine.setBook(book);
 		engine.setPainter(painter);
 		

@@ -8,7 +8,7 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.formatengine.AbstractRenderingObject;
+import org.jbookreader.formatengine.objects.AbstractRenderingObject;
 
 /**
  * This is a class representing Swing/ImageIO images for the FE.

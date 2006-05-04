@@ -4,7 +4,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.jbookreader.book.bom.INode;
-import org.jbookreader.formatengine.AbstractRenderingObject;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IRenderingObject;
 

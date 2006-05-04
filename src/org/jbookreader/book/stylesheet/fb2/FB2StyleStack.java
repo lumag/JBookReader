@@ -8,6 +8,10 @@ import org.jbookreader.book.stylesheet.IStyleStack;
 import org.jbookreader.book.stylesheet.properties.EDisplayType;
 
 class FB2StyleStack implements IStyleStack {
+	
+	private String myFontFamily = "Serif";
+	private int myFontSize = 12;
+	
 	private List<SimpleNode> myNodesList = new ArrayList<SimpleNode>();
 	
 	public void pushTag(String name, String klass, String id) {
@@ -69,11 +73,19 @@ class FB2StyleStack implements IStyleStack {
 	}
 	
 	public String getFontFamily() {
-		return "Serif";
+		return this.myFontFamily;
 	}
 	
 	public int getFontSize() {
-		return 12;
+		return this.myFontSize;
+	}
+
+	public void setDefaultFontFamily(String fontFamily) {
+		this.myFontFamily = fontFamily;
+	}
+
+	public void setDefaultFontSize(int size) {
+		this.myFontSize = size;
 	}
 
 }
