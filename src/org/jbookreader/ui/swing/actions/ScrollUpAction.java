@@ -38,7 +38,7 @@ public class ScrollUpAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		// XXX: change to system property
-		MainWindow.getMainWindow().getBookComponent().scrollUp(1);
+		MainWindow.getMainWindow().getBookComponent().scrollUp(12);
 	}
 
 }

@@ -46,7 +46,7 @@ public class FormatEngineTest extends AbstractFileTestConstructor {
 
 			engine.setBook(book);
 			engine.setPainter(painter);
-			engine.renderPage(true);
+			engine.renderPage();
 			
 			pwr.close();
 		}

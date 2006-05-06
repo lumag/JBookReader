@@ -3,14 +3,17 @@ package org.jbookreader.renderingengine;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.bom.IContainerNode;
 import org.jbookreader.book.bom.INode;
+import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleStack;
-import org.jbookreader.book.stylesheet.properties.EDisplayType;
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.objects.Line;
+import org.jbookreader.formatengine.IFormatEngine;
+import org.jbookreader.formatengine.IRenderingObject;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -35,6 +38,16 @@ public class RenderingEngine {
 	
 	private final IFormatEngine myFormatEngine;
 
+	private String myFontFamily;
+
+	private int myFontSize;
+	
+	private INode myStartNode;
+	private double myStartY;
+	private double myPageHeight;
+	
+	private Map<INode, IRenderingObject> myFormattedNodes = new WeakHashMap<INode, IRenderingObject>();
+	
 	/**
 	 * This constructs new Rendering engine for the given format engine.
 	 * @param formatEngine the format engine to use for formatting
@@ -51,6 +64,7 @@ public class RenderingEngine {
 	 */
 	public void setPainter(IBookPainter painter) {
 		this.myPainter = painter;
+		this.myPageHeight = painter.getHeight();
 	}
 	
 
@@ -61,29 +75,12 @@ public class RenderingEngine {
 	 */
 	public void setBook(IBook book) {
 		this.myBook = book;
-		this.myStartLine = 0;
-		this.myLines.clear();
+		INode node = this.myBook.getMainBody();
+		IStyleStack styleStack = replayStyleStack(node);
+		this.myStartNode = getParagraphNodeDown(node, styleStack, true);
+
+		flush();
 	}
-
-	/**
-	 * The list with formatted lines.
-	 */
-	private List<Line> myLines = new ArrayList<Line>();
-
-	/**
-	 * The index of the line at the top of the displaying screen.
-	 */
-	private int myStartLine;
-
-	/**
-	 * The index of the line that shold start next page. Or <code>-1</code> if
-	 * this line isn't calculated yet.
-	 */
-	private int myNextPageLine = -1;
-
-	private String myFontFamily;
-
-	private int myFontSize;
 
 	/**
 	 * Returns the paragraph node to be formatted right before or after
@@ -153,84 +150,88 @@ public class RenderingEngine {
 			node = child;
 		}
 	}
+	
+//	private int access;
+//	private int misses;
+//	
+	private IRenderingObject getFormattedNode(INode node, IStyleStack styleStack, double width) {
+		IRenderingObject robject = this.myFormattedNodes.get(node);
+//		this.access ++;
+		if ((robject == null)/* || (robject.getWidth() != width)*/) {
+			robject = this.myFormatEngine.formatParagraphNode(this.myPainter, node, styleStack, width);
+			this.myFormattedNodes.put(node, robject);
+//			this.misses ++;
+		}
+		
+		return robject;
+	}
 
 	/**
 	 * Renders a page of text.
-	 * 
-	 * @param reformat whether we could use cached preformatted lines from
-	 * previous calls.
 	 */
-	public void renderPage(boolean reformat) {
+	public void renderPage() {
 		INode node = null;
 		IStyleStack styleStack;
 
 		this.myPainter.clear();
 
-		if (this.myLines.size() != 0) {
-			if (reformat) {
-				node = this.myLines.get(this.myStartLine).getNode();
-				styleStack = replayStyleStack(node);
-				this.myStartLine = 0;
+		this.myPageHeight = this.myPainter.getHeight();
 
-				this.myLines.clear();
-			} else {
-				node = this.myLines.get(this.myLines.size() - 1).getNode();
-				// System.out.println("node:" + node);
-				styleStack = replayStyleStack(node);
+		node = this.myStartNode;
+		if (node == null) {
+			return;
+		}
+		
+		styleStack = replayStyleStack(node);
+		
+		if (this.myStartY < 0) {
+			while (true) {
+				IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+				if (this.myStartY + paragraph.getHeight() >= 0) {
+					break;
+				}
 				node = getParagraphNode(node, styleStack, true);
+				if (node == null) {
+					node = this.myStartNode;
+					styleStack = replayStyleStack(node);
+					this.myStartY = 0;
+					break;
+				}
+				this.myStartY += paragraph.getHeight();
+				this.myStartNode = node;
 			}
 		} else {
-			node = this.myBook.getMainBody();
-			styleStack = replayStyleStack(node);
-			node = getParagraphNodeDown(node, styleStack, true);
+			while (true) {
+				node = getParagraphNode(node, styleStack, false);
+				if (node == null) {
+					node = this.myStartNode;
+					styleStack = replayStyleStack(node);
+					this.myStartY = 0;
+					break;
+				}
+				IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+				this.myStartY -= paragraph.getHeight();
+				this.myStartNode = node;
+				if (this.myStartY <= 0) {
+					break;
+				}
+			}
 		}
 
-		renderPageFromNode(node, styleStack);
-	}
-
-	/**
-	 * Renders a page from specified node.
-	 * @param node the node to start from
-	 * @param styleStack the corresponding style stack.
-	 */
-	public void renderPageFromNode(INode node, IStyleStack styleStack) {
-		int lineNum = this.myStartLine;
-
-//		System.out.println("<" + lineNum);
-		while (true) {
-			if (lineNum >= this.myLines.size()) {
-				if (node == null) {
-					// don't scroll the text completely out
-					// of screen
-					if (this.myStartLine >= this.myLines.size()) {
-						lineNum = this.myStartLine = this.myLines.size() - 1;
-						continue;
-					}
-
-					this.myNextPageLine = this.myStartLine;
-					return;
-				}
-
-				this.myLines.addAll(this.myFormatEngine.formatParagraphNode(this.myPainter, node, styleStack, this.myPainter.getWidth() - styleStack.getMarginLeft() - styleStack.getMarginRight()));
-				node = getParagraphNode(node, styleStack, true);
-			}
-
-			Line line = this.myLines.get(lineNum);
-
-			if (this.myPainter.getYCoordinate() + line.getHeight() > this.myPainter.getHeight()) {
-//				System.out.println(">" + lineNum);
-				this.myNextPageLine = lineNum;
-				cleanEndLines();
+		this.myPainter.addVerticalStrut(this.myStartY);
+		
+		while (node != null) {
+			double currentY = this.myPainter.getYCoordinate();
+			if (currentY >= this.myPageHeight) {
+//				System.out.println((1.0*this.misses)/this.access);
 				return;
 			}
-			
-			this.myPainter.addVerticalStrut(line.getHeight()-line.getDepth());
-			this.myPainter.addHorizontalStrut(line.getLeftMargin());
-			line.render();
-			this.myPainter.addHorizontalStrut(-line.getWidth() - line.getLeftMargin());
-			this.myPainter.addVerticalStrut(line.getDepth());
 
-			lineNum ++;
+			IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+			
+			paragraph.render();
+
+			node = getParagraphNode(node, styleStack, true);
 		}
 
 	}
@@ -260,171 +261,12 @@ public class RenderingEngine {
 	}
 
 	/**
-	 * Removes unused cached lines from the start.
+	 * Scrolls text down by specified number of pixels
 	 * 
+	 * @param pixels the amount of lines to scroll
 	 */
-	private void cleanStartLines() {
-		int line = this.myStartLine;
-
-		if (line == 0) {
-			return;
-		}
-
-		ListIterator<Line> iterator = this.myLines.listIterator(line);
-		INode node = this.myLines.get(this.myStartLine).getNode();
-
-		while (iterator.hasPrevious()) {
-			if (!node.equals(iterator.previous().getNode())) {
-				iterator.next();
-				break;
-			}
-		}
-
-		while (iterator.hasPrevious()) {
-			iterator.previous();
-			this.myStartLine --;
-			iterator.remove();
-		}
-
-	}
-
-	/**
-	 * Removes unused cached lines from the end.
-	 * 
-	 */
-	private void cleanEndLines() {
-		int line = this.myNextPageLine;
-
-		if (line == -1) {
-			return;
-		}
-
-		ListIterator<Line> iterator = this.myLines.listIterator(line);
-		INode node = this.myLines.get(this.myNextPageLine).getNode();
-
-		while (iterator.hasNext()) {
-			if (!node.equals(iterator.next().getNode())) {
-				iterator.previous();
-				break;
-			}
-		}
-
-		while (iterator.hasNext()) {
-			iterator.next();
-			iterator.remove();
-		}
-
-	}
-
-	/**
-	 * Scrolls text one page up.
-	 * 
-	 */
-	public void scrollPageUp() {
-		double height = this.myPainter.getHeight();
-
-		// FIXME: maybe remove lines after this.myStartLine ?
-		// will be restored during repaint
-		this.myNextPageLine = -1;
-
-		if (this.myLines.isEmpty()) {
-			return;
-		}
-
-		while (true) {
-			if (this.myStartLine == 0) {
-				if (formatPreviousNode()) {
-					return;
-				}
-			}
-
-			Line line = this.myLines.get(this.myStartLine);
-
-			height = height - line.getHeight();
-
-			if (height <= 0) {
-				return;
-			}
-
-			this.myStartLine --;
-		}
-	}
-
-	/**
-	 * Scrolls text one page down.
-	 * 
-	 */
-	public void scrollPageDown() {
-		if (this.myNextPageLine < 0) {
-			return;
-		}
-		this.myStartLine = this.myNextPageLine;
-
-		cleanStartLines();
-	}
-
-	/**
-	 * Scrolls text down by specified number of lines
-	 * 
-	 * @param lines the number of lines to scroll
-	 */
-	public void scrollDown(int lines) {
-		this.myStartLine += lines;
-
-		// will be restored during repaint
-		this.myNextPageLine = -1;
-
-		if (this.myStartLine >= this.myLines.size()) {
-			return;
-		}
-
-		cleanStartLines();
-
-	}
-
-	/**
-	 * Scrolls text up by specified number of lines
-	 * 
-	 * @param lines the number of lines to scroll
-	 */
-	public void scrollUp(int lines) {
-		this.myStartLine -= lines;
-		// will be restored during repaint
-		this.myNextPageLine = -1;
-
-		if (this.myLines.isEmpty()) {
-			return;
-		}
-
-		while (this.myStartLine < 0) {
-			if (formatPreviousNode()) {
-				this.myStartLine = 0;
-				break;
-			}
-		}
-
-	}
-
-	/**
-	 * Format previous paragraph node.
-	 * 
-	 * @return where the start of the book was reached.
-	 */
-	private boolean formatPreviousNode() {
-		INode node = this.myLines.get(0).getNode();
-		IStyleStack styleStack = replayStyleStack(node);
-		node = getParagraphNode(node, styleStack, false);
-
-		if (node == null) {
-			return true;
-		}
-
-		List<Line> curParagraph = this.myFormatEngine.formatParagraphNode(this.myPainter, node, styleStack, this.myPainter.getWidth() - styleStack.getMarginLeft() - styleStack.getMarginRight());
-
-		this.myLines.addAll(0, curParagraph);
-		this.myStartLine += curParagraph.size();
-
-		return false;
+	public void scroll(int pixels) {
+		this.myStartY -= pixels;
 	}
 
 	/**
@@ -435,6 +277,14 @@ public class RenderingEngine {
 	public void setDefaultFont(String family, int size) {
 		this.myFontFamily = family;
 		this.myFontSize = size;
+	}
+
+	/**
+	 * Flush all internal caches, etc.
+	 */
+	public void flush() {
+		this.myFormattedNodes.clear();
+		this.myStartY = 0;
 	}
 
 }

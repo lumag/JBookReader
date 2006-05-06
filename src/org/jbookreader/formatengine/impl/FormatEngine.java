@@ -1,8 +1,6 @@
 package org.jbookreader.formatengine.impl;
 
 import java.io.ByteArrayInputStream;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IContainerNode;
@@ -11,11 +9,13 @@ import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.IFont;
+import org.jbookreader.formatengine.IFormatEngine;
+import org.jbookreader.formatengine.IInlineRenderingObject;
 import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.objects.HorizontalGlue;
 import org.jbookreader.formatengine.objects.Line;
 import org.jbookreader.formatengine.objects.MetaString;
-import org.jbookreader.renderingengine.IFormatEngine;
+import org.jbookreader.formatengine.objects.VerticalIROStack;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -28,6 +28,10 @@ import org.jbookreader.renderingengine.IFormatEngine;
  * 
  */
 public class FormatEngine implements IFormatEngine {
+
+	private IRenderingObject myResult;
+	private VerticalIROStack myCurrentParagraph;
+	private Line myCurrentLine;
 
 	/**
 	 * Skip all whitespace in the provided string and return the the index of
@@ -44,47 +48,76 @@ public class FormatEngine implements IFormatEngine {
 		return start;
 	}
 	
-	private Line formatNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack, double width) {
+	private void formatNode(INode node, IStyleStack styleStack, double width) {
 		if (node instanceof IContainerNode) {
-			return formatContainerNode(result, currentLine, (IContainerNode) node, styleStack, width);
+			formatContainerNode((IContainerNode) node, styleStack, width);
 		} else if (node instanceof IImageNode) {
-			return formatImageNode(result, currentLine, (IImageNode) node, styleStack, width);
+			formatInlineImageNode((IImageNode) node, styleStack, width);
 		} else {
-			return formatTextNode(result, currentLine, node, styleStack, width);
+			formatTextNode(node, styleStack, width);
 		}
 	}
 	
-	private Line formatContainerNode(List<Line> result, Line currentLine, IContainerNode cnode, IStyleStack styleStack, double width) {
+	private void formatContainerNode(IContainerNode cnode, IStyleStack styleStack, double width) {
 		for (INode childNode : cnode.getChildNodes()) {
 			styleStack.pushTag(childNode.getTagName(), childNode.getNodeClass(), childNode.getID());
-			currentLine = formatNode(result, currentLine, childNode, styleStack, width);
+			formatNode(childNode, styleStack, width);
 			styleStack.popTag();
 		}
-
-		return currentLine;
 	}
-
-	private Line formatImageNode(List<Line> result, Line currentLine, IImageNode image, IStyleStack styleStack, double width) {
+	
+	private IInlineRenderingObject getImageObject(IBookPainter painter, IImageNode image) {
 		// XXX: correct work with url's.
 		IBinaryData blob = image.getBook().getBinaryData(image.getHyperRef().substring(1));
-		IRenderingObject robject = currentLine.getPainter().getImage(null, blob.getContentType(), new ByteArrayInputStream(blob.getContentsArray(), 0, blob.getContentsLength()));
-
-		if (robject == null) {
-			return formatTextNode(result, currentLine, image, styleStack, width);
-		}
-
-		return appendRobject(result, currentLine, width, robject);
+		IInlineRenderingObject robject = painter.getImage(
+				null,
+				blob.getContentType(),
+				new ByteArrayInputStream(
+						blob.getContentsArray(),
+						0,
+						blob.getContentsLength()
+						)
+				);
+		
+		return robject;
 	}
 
-	private Line formatTextNode(List<Line> result, Line currentLine, INode node, IStyleStack styleStack, double width) {
+	private void formatInlineImageNode(IImageNode image, IStyleStack styleStack, double width) {
+		
+		IInlineRenderingObject robject = getImageObject(this.myCurrentLine.getPainter(), image);
+
+		if (robject == null) {
+			formatTextNode(image, styleStack, width);
+		} else {
+			appendRobject(width, robject);
+		}
+	}
+
+	private void formatImageNode(IBookPainter painter, IImageNode image, IStyleStack styleStack, double width) {
+		IRenderingObject robject = getImageObject(painter, image);
+
+		if (robject == null) {
+			newParagraph(painter, image, styleStack);
+			width -= styleStack.getMarginLeft() + styleStack.getMarginRight();
+
+			formatTextNode(image, styleStack, width);
+
+			this.myCurrentParagraph.addObject(this.myCurrentLine);
+			this.myCurrentLine = null;
+		} else {
+			this.myResult = robject;
+		}
+	}
+
+	private void formatTextNode(INode node, IStyleStack styleStack, double width) {
 		String text = node.getText();
 
 		if (text == null) {
 			System.err.println("WARNING: node '" + node.getTagName() + "' doesn't has text");
-			return currentLine;
+			return;
 		}
 
-		IFont font = currentLine.getPainter().getFont(styleStack.getFontFamily(), styleStack.getFontSize());
+		IFont font = this.myCurrentLine.getPainter().getFont(styleStack.getFontFamily(), styleStack.getFontSize());
 		int start = 0;
 		int end = 0;
 		while (end < text.length()) {
@@ -92,8 +125,8 @@ public class FormatEngine implements IFormatEngine {
 			if (newWord > start) {
 				// XXX: calculate more correct space size?
 				double strut = font.getSpaceWidth();
-				if (strut + currentLine.getWidth() <= width) {
-					currentLine.addObject(new HorizontalGlue(currentLine.getPainter(), node, strut));
+				if (strut + this.myCurrentLine.getWidth() <= width) {
+					this.myCurrentLine.addObject(new HorizontalGlue(this.myCurrentLine.getPainter(), node, strut));
 				}
 			}
 			end = start = newWord;
@@ -106,43 +139,67 @@ public class FormatEngine implements IFormatEngine {
 				end ++;
 			}
 
-			IRenderingObject string = new MetaString(currentLine.getPainter(), node, styleStack.getLineHeight(), text, start, end, font);
-			currentLine = appendRobject(result, currentLine, width, string);
+			IInlineRenderingObject string = new MetaString(this.myCurrentLine.getPainter(), node, styleStack.getLineHeight(), text, start, end, font);
+			appendRobject(width, string);
 
 			start = end;
 		}
-
-		return currentLine;
 	}
 	
-	private Line appendRobject (List<Line> result, Line currentLine, double width, IRenderingObject object) {
+	private void appendRobject (double width, IInlineRenderingObject object) {
 		// XXX: this is the main place for rendering decision
-		if (currentLine.getWidth() + object.getWidth() > width) {
+		if (this.myCurrentLine.getWidth() + object.getWidth() > width) {
 			// XXX: adjust glue objects in the line
-			result.add(currentLine);
-			double leftMargin = currentLine.getLeftMargin();
-			currentLine = new Line(currentLine.getPainter(), currentLine.getNode());
-			currentLine.setLeftMargin(leftMargin);
+			this.myCurrentParagraph.addObject(this.myCurrentLine);
+			this.myCurrentLine = new Line(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode());
 		}
-		currentLine.addObject(object);
-		return currentLine;
+		this.myCurrentLine.addObject(object);
+	}
+	
+	private void newParagraph(IBookPainter painter, INode node, IStyleStack styleStack) {
+		this.myResult = this.myCurrentParagraph = new VerticalIROStack(painter, node);
+
+		this.myCurrentParagraph.setMargins(
+				styleStack.getMarginTop(),
+				styleStack.getMarginRight(),
+				styleStack.getMarginBottom(),
+				styleStack.getMarginLeft()
+				);
+		
+		this.myCurrentLine = new Line(painter, node);
+		this.myCurrentLine.addObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
 	}
 
-	public List<Line> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
-		List<Line> result = new ArrayList<Line>();
+	private void formatStyledText(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
+		newParagraph(painter, node, styleStack);
+		width -= styleStack.getMarginLeft() + styleStack.getMarginRight();
 
-		Line cur = new Line(painter, node);
-		cur.setLeftMargin(styleStack.getMarginLeft());
-		cur.addObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
-		cur = formatNode(result, cur, node, styleStack, width);
+		formatNode(node, styleStack, width);
 
-		if (cur.getHeight() == 0
-			&& cur.getWidth() != 0) {
-			cur.addObject(new HorizontalGlue(painter, cur.getNode(), 0, styleStack.getLineHeight() * styleStack.getFontSize()));
+		if (this.myCurrentLine.getHeight() == 0
+			&& this.myCurrentLine.getWidth() != 0) {
+			this.myCurrentLine.addObject(
+					new HorizontalGlue(
+							painter,
+							this.myCurrentLine.getNode(),
+							0,
+							styleStack.getLineHeight() * styleStack.getFontSize()
+							)
+					);
 		}
-		result.add(cur);
+		this.myCurrentParagraph.addObject(this.myCurrentLine);
+		this.myCurrentLine = null;
+	}
 
-		return result;
+	public IRenderingObject formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
+		
+		if (node instanceof IImageNode) {
+			formatImageNode(painter, (IImageNode) node, styleStack, width);
+		} else {
+			formatStyledText(painter, node, styleStack, width);
+		}
+
+		return this.myResult;
 	}
 
 }

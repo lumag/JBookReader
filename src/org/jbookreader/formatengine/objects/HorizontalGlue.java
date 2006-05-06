@@ -9,7 +9,7 @@ import org.jbookreader.formatengine.IBookPainter;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  * 
  */
-public class HorizontalGlue extends AbstractRenderingObject {
+public class HorizontalGlue extends AbstractInlineRenderingObject {
 
 	/**
 	 * This constructs new horizontal glue with specified parameters.
@@ -36,7 +36,7 @@ public class HorizontalGlue extends AbstractRenderingObject {
 		setHeight(height);
 	}
 
-	public void render() {
+	public void renderInline() {
 		this.getPainter().addHorizontalStrut(this.getWidth());
 	}
 

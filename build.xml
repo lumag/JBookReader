@@ -57,6 +57,7 @@
 		<exclude name="java.*" />
 		<exclude name="javax.*" />
 		<exclude name="org.xml.*" />
+		<exclude name="org.w3c.*" />
 		<classespath refid="project.classpath" />
 	</jdepend>
     </target>

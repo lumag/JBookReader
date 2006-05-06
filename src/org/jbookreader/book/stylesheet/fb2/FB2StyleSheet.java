@@ -3,9 +3,9 @@ package org.jbookreader.book.stylesheet.fb2;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleSheet;
 import org.jbookreader.book.stylesheet.IStyleStack;
-import org.jbookreader.book.stylesheet.properties.EDisplayType;
 
 /**
  * This is temporary class for returning statndard FB2 information.
@@ -32,6 +32,7 @@ public class FB2StyleSheet implements IStyleSheet {
 		"p", "v",
 		"empty-line",
 		"abstract",
+		"stanza",
 		"epigraph"
 		};
 	

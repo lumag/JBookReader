@@ -1,6 +1,5 @@
 package org.jbookreader.book.stylesheet;
 
-import org.jbookreader.book.stylesheet.properties.EDisplayType;
 
 /**
  * This interface represents a style stack &mdash; a model
@@ -42,6 +41,17 @@ public interface IStyleStack {
 	 */
 	double getMarginRight();
 	/**
+	 * Returns the top margin for the node.
+	 * @return the top margin for the node.
+	 */
+	double getMarginTop();
+	/**
+	 * Returns the bottom margin for the node.
+	 * @return the bottom margin for the node.
+	 */
+	double getMarginBottom();
+	
+	/**
 	 * Returns the indentation for the first line of the node.
 	 * @return the indentation for the first line of the node.
 	 */
@@ -75,5 +85,5 @@ public interface IStyleStack {
 	 * @param size default font size
 	 */
 	void setDefaultFontSize(int size);
-	
+
 }

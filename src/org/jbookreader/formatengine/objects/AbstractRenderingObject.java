@@ -17,14 +17,11 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 	private double myHeight;
 
 	/**
-	 * The depth of the rendering object below the baseline.
-	 */
-	private double myDepth;
-
-	/**
 	 * The width of the rendering object
 	 */
 	private double myWidth;
+
+	private double[] myMargins = new double[4];
 
 	private INode myNode;
 
@@ -35,20 +32,12 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 		this.myNode = node;
 	}
 
-	public double getDepth() {
-		return this.myDepth;
-	}
-
 	public double getHeight() {
 		return this.myHeight;
 	}
 
 	public double getWidth() {
 		return this.myWidth;
-	}
-
-	protected void setDepth(double depth) {
-		this.myDepth = depth;
 	}
 
 	protected void setHeight(double height) {
@@ -65,6 +54,21 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 
 	public IBookPainter getPainter() {
 		return this.myPainter;
+	}
+	
+	public final void render() {
+		this.getPainter().addHorizontalStrut(this.myMargins[BoxSides.LEFT]);
+		renderContents();
+		this.getPainter().addHorizontalStrut( - this.myMargins[BoxSides.LEFT]);
+	}
+
+	public abstract void renderContents();
+
+	public void setMargins(double top, double right, double bottom, double left) {
+		this.myMargins[BoxSides.TOP] = top;
+		this.myMargins[BoxSides.RIGHT] = right;
+		this.myMargins[BoxSides.BOTTOM] = bottom;
+		this.myMargins[BoxSides.LEFT] = left;
 	}
 
 }

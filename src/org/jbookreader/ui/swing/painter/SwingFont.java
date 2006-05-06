@@ -34,7 +34,7 @@ class SwingFont implements IFont {
 	 * This constructs the class representing the font with given name and size
 	 * @param name the name of the font
 	 * @param size the size of the font
-	 * @param painter TODO
+	 * @param painter the painter containing this font
 	 */
 	public SwingFont(SwingBookPainter painter, String name, int size) {
 		this.myPainter = painter;

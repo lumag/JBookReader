@@ -1,11 +1,8 @@
-package org.jbookreader.renderingengine;
+package org.jbookreader.formatengine;
 
-import java.util.List;
 
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;
-import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.objects.Line;
 
 /**
  * This interface specifies the formatting engine objects.
@@ -21,8 +18,8 @@ public interface IFormatEngine {
 	 * @param node the node to format
 	 * @param styleStack the correspondig style stack
 	 * @param width the width for the formatted paragraph
-	 * @return the list of lines which contain formmated node. 
+	 * @return formmated paragraph node. 
 	 */
-	List<Line> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width);
+	IRenderingObject formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width);
 
 }

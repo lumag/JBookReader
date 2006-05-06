@@ -34,10 +34,6 @@ public class JBookComponent extends JComponent {
 	 * The book that is displayed.
 	 */
 	private IBook myBook;
-	/**
-	 * Wether the diplayed part of the book should be reformatted. 
-	 */
-	private boolean myReformatBook;
 	private boolean myAntialias;
 	
 	/**
@@ -54,6 +50,11 @@ public class JBookComponent extends JComponent {
 	public boolean isOpaque() {
 		return true;
 	}
+	
+	private int getPageHeight() {
+		Insets insets = getInsets();
+		return getHeight() - insets.top - insets.bottom;
+	}
 
 	@Override
 	protected void paintComponent(Graphics g) {
@@ -64,7 +65,7 @@ public class JBookComponent extends JComponent {
 
 		Insets insets = getInsets();
 		int w = getWidth() - insets.left - insets.right;
-		int h = getHeight() - insets.top - insets.bottom;
+		int h = getPageHeight();
 //		System.out.println(w + "x" + h);
 
 		Graphics2D g2d = (Graphics2D) g.create(insets.left, insets.top, w, h); // copy g
@@ -72,7 +73,7 @@ public class JBookComponent extends JComponent {
 		g2d.setBackground(getBackground());
 		
 		if (this.myPainter.getWidth() != w) {
-			this.myReformatBook = true;
+			this.myEngine.flush();
 		}
 
 		if (this.myAntialias) {
@@ -86,8 +87,7 @@ public class JBookComponent extends JComponent {
 		
 		if (this.myBook != null) {
 			// FIXME: move to separate thread, add buffer, etc.!
-			this.myEngine.renderPage(this.myReformatBook);
-			this.myReformatBook = false;
+			this.myEngine.renderPage();
 		}
 
 		g2d.dispose();
@@ -101,7 +101,6 @@ public class JBookComponent extends JComponent {
 	public void setBook(IBook book) {
 		this.myBook = book;
 		this.myEngine.setBook(this.myBook);
-		this.myReformatBook = true;
 		repaint();
 	}
 
@@ -110,7 +109,7 @@ public class JBookComponent extends JComponent {
 	 *
 	 */
 	public void scrollPageDown() {
-		this.myEngine.scrollPageDown();
+		this.myEngine.scroll(this.getPageHeight());
 		repaint();
 	}
 
@@ -119,25 +118,25 @@ public class JBookComponent extends JComponent {
 	 *
 	 */
 	public void scrollPageUp() {
-		this.myEngine.scrollPageUp();
+		this.myEngine.scroll( - this.getPageHeight());
 		repaint();
 	}
 
 	/**
-	 * Scroll the display down by specified amount of lines
-	 * @param lines the amount of lines to scroll
+	 * Scroll the display down by specified amount of pixels
+	 * @param pixels the amount of pixels to scroll
 	 */
-	public void scrollDown(int lines) {
-		this.myEngine.scrollDown(lines);
+	public void scrollDown(int pixels) {
+		this.myEngine.scroll(pixels);
 		repaint();
 	}
 
 	/**
-	 * Scroll the display up by specified amount of lines
-	 * @param lines the amount of lines to scroll
+	 * Scroll the display up by specified amount of pixels
+	 * @param pixels the amount of pixels to scroll
 	 */
-	public void scrollUp(int lines) {
-		this.myEngine.scrollUp(lines);
+	public void scrollUp(int pixels) {
+		this.myEngine.scroll( - pixels);
 		repaint();
 	}
 	

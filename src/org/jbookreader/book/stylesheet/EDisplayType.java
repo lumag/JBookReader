@@ -1,4 +1,4 @@
-package org.jbookreader.book.stylesheet.properties;
+package org.jbookreader.book.stylesheet;
 
 /**
  * This enum contains values corresponding to the 'display' CSS property.

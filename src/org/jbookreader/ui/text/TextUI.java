@@ -30,7 +30,7 @@ public class TextUI {
 		engine.setBook(book);
 		engine.setPainter(painter);
 		
-		engine.renderPage(false);
+		engine.renderPage();
 
 		wr.close();
 	}

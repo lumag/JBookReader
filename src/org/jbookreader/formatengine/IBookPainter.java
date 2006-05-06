@@ -77,5 +77,5 @@ public interface IBookPainter {
 	 * 
 	 * @return a rendering object for the image.
 	 */
-	IRenderingObject getImage(INode node, String contentType, InputStream stream);
+	IInlineRenderingObject getImage(INode node, String contentType, InputStream stream);
 }

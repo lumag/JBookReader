@@ -11,7 +11,7 @@ import org.jbookreader.formatengine.RenderingDimensions;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  * 
  */
-public class MetaString extends AbstractRenderingObject {
+public class MetaString extends AbstractInlineRenderingObject {
 	/**
 	 * Corresponding string.
 	 */
@@ -63,7 +63,7 @@ public class MetaString extends AbstractRenderingObject {
 		setWidth(dim.width);
 	}
 
-	public void render() {
+	public void renderInline() {
 		this.myFont.renderString(this.myText, this.myStart, this.myEnd);
 	}
 

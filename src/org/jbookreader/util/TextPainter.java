@@ -5,7 +5,7 @@ import java.io.PrintWriter;
 
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.IInlineRenderingObject;
 import org.jbookreader.formatengine.IFont;
 import org.jbookreader.formatengine.RenderingDimensions;
 
@@ -20,7 +20,7 @@ public class TextPainter implements IBookPainter {
 	private static final double EMULATED_FONT_SIZE = 12.0;
 
 	private static final double EMULATED_LINE_SKIP = 0.2 * EMULATED_FONT_SIZE;
-	
+
 	/**
 	 * Output device.
 	 */
@@ -37,6 +37,7 @@ public class TextPainter implements IBookPainter {
 	private double myWidth;
 
 	private double myRealX;
+	private double myIntY;
 	private double myRealY;
 
 	/**
@@ -53,6 +54,8 @@ public class TextPainter implements IBookPainter {
 	public void clear() {
 		this.myX = 0;
 		this.myRealX = 0;
+		this.myIntY = 0;
+		this.myRealY = 0;
 	}
 
 	public double getWidth() {
@@ -73,6 +76,7 @@ public class TextPainter implements IBookPainter {
 		this.myRealY += size;
 		while (this.myRealY >= (0.5 * (EMULATED_LINE_SKIP + EMULATED_FONT_SIZE))) {
 			this.myRealY -= EMULATED_FONT_SIZE + EMULATED_LINE_SKIP;
+			this.myIntY ++;
 			this.myOutput.println();
 			this.myX = 0;
 		}
@@ -132,10 +136,10 @@ public class TextPainter implements IBookPainter {
 		return this.myX;
 	}
 	public double getYCoordinate() {
-		return this.myRealY;
+		return this.myRealY + this.myIntY * (EMULATED_FONT_SIZE + EMULATED_LINE_SKIP);
 	}
 
-	public IRenderingObject getImage(INode node, String contentType, InputStream stream) {
+	public IInlineRenderingObject getImage(INode node, String contentType, InputStream stream) {
 		// allways null: we can't render images.
 		return null;
 	}

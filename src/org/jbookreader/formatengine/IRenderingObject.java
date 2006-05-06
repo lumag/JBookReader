@@ -17,13 +17,6 @@ public interface IRenderingObject {
 	double getHeight();
 
 	/**
-	 * Returns the depth (the distance between the baseline
-	 * and the bottom) of the object.
-	 * @return the depth of the object.
-	 */
-	double getDepth();
-
-	/**
 	 * Returns the width of the object.
 	 * @return the width of the object.
 	 */
@@ -41,4 +34,6 @@ public interface IRenderingObject {
 	 * @return the node which this rendering object represents.
 	 */
 	INode getNode();
+	
+	void setMargins(double top, double right, double bottom, double left);
 }

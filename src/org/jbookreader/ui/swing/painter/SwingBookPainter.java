@@ -6,8 +6,8 @@ import java.io.InputStream;
 
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.IFont;
+import org.jbookreader.formatengine.IInlineRenderingObject;
 
 /**
  * This is swing-based implementation of the {@link org.jbookreader.formatengine.IBookPainter}.
@@ -34,11 +34,11 @@ public class SwingBookPainter implements IBookPainter {
 	/**
 	 * Current X.
 	 */
-	private float myCurrentX;
+	private double myCurrentX;
 	/**
 	 * Current Y.
 	 */
-	private float myCurrentY;
+	private double myCurrentY;
 	
 	/**
 	 * Sets the Graphics2D object for rendering
@@ -56,9 +56,7 @@ public class SwingBookPainter implements IBookPainter {
 	public void clear() {
 		this.myGraphics.setColor(this.myGraphics.getBackground());
 		this.myGraphics.fill(this.myGraphics.getClip());
-
 		this.myGraphics.setColor(Color.BLACK);
-		this.myGraphics.drawRect(0, 0, (int)this.myWidth-1, (int)this.myHeight-1);
 
 		this.myCurrentX = this.myCurrentY = 0;
 	}
@@ -91,7 +89,7 @@ public class SwingBookPainter implements IBookPainter {
 		return this.myCurrentY;
 	}
 
-	public IRenderingObject getImage(INode node, String contentType, InputStream stream) {
+	public IInlineRenderingObject getImage(INode node, String contentType, InputStream stream) {
 		try {
 			return new ImageRenderingObject(this, node, stream);
 		} catch (Exception e) {

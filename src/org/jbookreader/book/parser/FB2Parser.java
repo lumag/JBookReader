@@ -142,6 +142,11 @@ public class FB2Parser {
 		private boolean hadOpenTag = false;
 		
 		/**
+		 * Flag used for whitespace trimming.
+		 */
+		private boolean hadCloseTag;
+		
+		/**
 		 * FIXME: remove this!!!!!
 		 * it a workaround: we can't parseXML metadata currently. Only bodies and binary.
 		 */
@@ -151,7 +156,7 @@ public class FB2Parser {
 		 * True if the current node can containt text.
 		 */
 		private boolean myParseText = false;
-		
+
 		/**
 		 * This constructs new parser for given <code>book</code>
 		 * @param book the book being parsed.
@@ -180,23 +185,21 @@ public class FB2Parser {
 		
 		/**
 		 * This processes information in <code>this.myText</code> into new #text node.
-		 * @param hasCloseTag TODO
-		 *
 		 * @see FB2ContentsHandler#myText
 		 */
-		private void processTextNode(boolean hasCloseTag) {
+		private void processTextNode() {
 			if (!this.myParseText) {
 				return;
 			}
 			
-			String string = trimStringBuilder(this.myText, this.hadOpenTag, hasCloseTag);
+			String string = trimStringBuilder(this.myText, this.hadOpenTag, this.hadCloseTag);
 //			String string = this.myText.toString();
 			this.myText.setLength(0);
 			
 			if (string.length() == 0) {
 				return;
 			}
-			
+
 			this.myContainer.newTextNode(string);
 
 //			System.out.println("#text: '" + string + "'");
@@ -234,7 +237,8 @@ public class FB2Parser {
 				this.myParseText = false;
 			} else {
 				// part of body
-				processTextNode(true);
+				this.hadCloseTag = true;
+				processTextNode();
 				this.hadOpenTag = false;
 				
 				if (isParagraphTag(localName)) {
@@ -272,7 +276,8 @@ public class FB2Parser {
 			} else {
 				INode node = null;
 
-				processTextNode(false);
+				this.hadCloseTag = false;
+				processTextNode();
 				this.hadOpenTag = true;
 			
 				if (localName.equals("body")) {

@@ -4,8 +4,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
+import org.jbookreader.book.stylesheet.EDisplayType;
 import org.jbookreader.book.stylesheet.IStyleStack;
-import org.jbookreader.book.stylesheet.properties.EDisplayType;
 
 class FB2StyleStack implements IStyleStack {
 	
@@ -57,15 +57,37 @@ class FB2StyleStack implements IStyleStack {
 	}
 
 	public double getMarginLeft() {
-		return 5;
+		SimpleNode node = this.myNodesList.get(this.myNodesList.size()-1);
+		if (node.name.equals("p")) {
+			return 5;
+		}
+		return 0;
 	}
 
 	public double getMarginRight() {
-		return 5;
+		SimpleNode node = this.myNodesList.get(this.myNodesList.size()-1);
+		if (node.name.equals("p")) {
+			return 5;
+		}
+		return 0;
+	}
+
+	public double getMarginBottom() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public double getMarginTop() {
+		// TODO Auto-generated method stub
+		return 0;
 	}
 
 	public double getTextIndent() {
-		return 5;
+		SimpleNode node = this.myNodesList.get(this.myNodesList.size()-1);
+		if (node.name.equals("p")) {
+			return 5;
+		}
+		return 0;
 	}
 
 	public double getLineHeight() {

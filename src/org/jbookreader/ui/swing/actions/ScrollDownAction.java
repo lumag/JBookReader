@@ -38,7 +38,7 @@ public class ScrollDownAction extends AbstractAction {
 
 	public void actionPerformed(ActionEvent e) {
 		// XXX: change to system property
-		MainWindow.getMainWindow().getBookComponent().scrollDown(1);
+		MainWindow.getMainWindow().getBookComponent().scrollDown(12);
 	}
 
 }

@@ -5,22 +5,20 @@ import java.util.List;
 
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.formatengine.IBookPainter;
-import org.jbookreader.formatengine.IRenderingObject;
+import org.jbookreader.formatengine.IInlineRenderingObject;
 
 /**
- * This class represents the main object of rendering engine &mdash; a sibgle line.
+ * This class represents the main object of rendering engine &mdash; a single line.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  * 
  */
-public class Line extends AbstractRenderingObject {
+public class Line extends AbstractInlineRenderingObject {
 	/**
 	 * The list of contained rendered objects.
 	 */
-	private final List<IRenderingObject> myRObjects = new LinkedList<IRenderingObject>();
+	private final List<IInlineRenderingObject> myRObjects = new LinkedList<IInlineRenderingObject>();
 	
-	private double myLeftMargin;
-
 	/**
 	 * This constructs new line for specified painter.
 	 * @param painter the painter on which this line will be rendered
@@ -36,44 +34,36 @@ public class Line extends AbstractRenderingObject {
 	 * 
 	 * @param object the object to add
 	 */
-	public void addObject(IRenderingObject object) {
+	public void addObject(IInlineRenderingObject object) {
 		double oldOver = this.getHeight() - this.getDepth();
 		double newOver = object.getHeight() - object.getDepth();
 		
 		this.myRObjects.add(object);
 		
-		if (object.getDepth() > this.getDepth()) {
-			setDepth(object.getDepth());
+		double oDepth = object.getDepth();
+		
+		if (oDepth > this.getDepth()) {
+			this.setDepth(oDepth);
 		}
 		
 		if (newOver > oldOver) {
-			setHeight(newOver + getDepth());
+			setHeight(newOver + this.getDepth());
 		}
 
 		setWidth(getWidth() + object.getWidth());
 	}
 
-	public void render() {
-		for (IRenderingObject robject : this.myRObjects) {
-			robject.render();
+	public void renderInline() {
+		IBookPainter painter = this.getPainter();
+		double y = painter.getYCoordinate() + getDepth();
+		if (y > painter.getHeight()
+			|| y < getHeight()) {
+			painter.addHorizontalStrut(getWidth());
+			return;
+		}
+
+		for (IInlineRenderingObject robject : this.myRObjects) {
+			robject.renderInline();
 		}
 	}
-
-	/**
-	 * Returns the left margin of the line.
-	 * @return the left margin of the line.
-	 */
-	public double getLeftMargin() {
-		return this.myLeftMargin;
-	}
-
-	/**
-	 * Sets the left margin of the line.
-	 *
-	 * @param leftMargin new left margin value.
-	 */
-	public void setLeftMargin(double leftMargin) {
-		this.myLeftMargin = leftMargin;
-	}
-
 }
