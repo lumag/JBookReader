@@ -44,6 +44,16 @@ public class Main {
 				createAndShowGUI();
 				if (bookname != null) {
 					MainWindow.getMainWindow().openBook(new File(bookname));
+				} else {
+					String url = Config.getConfig().getStringValue("book_url");
+					String position = Config.getConfig().getStringValue("book_position");
+					if (url != null) {
+						MainWindow.getMainWindow().openBook(new File(url));
+					}
+					
+					if (position != null && !position.equals("")) {
+						MainWindow.getMainWindow().getBookComponent().setBookPositionByReference(position);
+					}
 				}
 			}
 		});

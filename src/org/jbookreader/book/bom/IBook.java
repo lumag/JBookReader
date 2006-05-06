@@ -75,4 +75,12 @@ public interface IBook {
 	 * @return the node with specified ID.
 	 */
 	INode getNodeByID(String id);
+	
+	/**
+	 * Returns the node corresponding to the string reference.
+	 * @see INode#getNodeReference()
+	 * @param reference the strign reference of the node
+	 * @return the node corresponding to the <code>reference</code>.
+	 */
+	INode getNodeByReference(String reference);
 }

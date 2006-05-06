@@ -3,6 +3,7 @@ package org.jbookreader.book.bom.impl;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jbookreader.book.bom.IBinaryData;
@@ -92,6 +93,30 @@ public class Book implements IBook {
 		if (id != null) {
 			this.myIDmap.put(id, node);
 		}
+	}
+
+	public INode getNodeByReference(String reference) {
+		String[] tokens = reference.split(";");
+		INode node = null;
+		for (String token: tokens) {
+			// TODO: id handling
+			int index = Integer.parseInt(token);
+			// FIXME: find correct body!
+			if (node == null) {
+				node = getMainBody();
+			} else if (node instanceof IContainerNode){
+				List<INode> children = ((IContainerNode)node).getChildNodes();
+				if (index < 0 || index >= children.size()) {
+					System.err.println("Bad node reference: " + reference);
+					return node;
+				}
+				node = children.get(index);
+			} else {
+				System.err.println("Bad node reference: " + reference);
+				return node;
+			}
+		}
+		return node;
 	}
 
 }

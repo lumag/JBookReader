@@ -105,6 +105,7 @@ public class FormatEngine implements IFormatEngine {
 			this.myCurrentParagraph.addObject(this.myCurrentLine);
 			this.myCurrentLine = null;
 		} else {
+			// TODO: format title, etc.
 			this.myResult = robject;
 		}
 	}

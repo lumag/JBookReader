@@ -2,7 +2,7 @@ High priority:
 
 + antialiasing (Done: 15.04.2005: 0.1, trunk).
 + configurable priorities (Done: 16.04.2006: trunk).
-H- make font and fontsize configurable.
++ make font and fontsize configurable. (Done: 06.05.2006: css).
 H= finish new rendering engine: margins, centering, justification etc.
   (Work happening in the 'css' brahch).
 - make the JBR restore 'last reading position' for some last books.
@@ -13,9 +13,10 @@ M- detect the current position in the book and display it somehow
 M-- 'global' navigation (go to ~50% position)
 M- support links and footnotes
 - Create 'Command's and make Actions adapters for commands???
-- rewrite Line's caching!
 M/H- hyphenations
 VH- options dialog
+VH- support documents with multiple bodies
+VH- there is something strange with margins handling. debug it!
 
 Medium priority:
 H- Table Of Contents

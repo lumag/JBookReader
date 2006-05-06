@@ -206,7 +206,7 @@ public class MainWindow {
 
 		this.myFrame.addComponentListener(new MainWindowComponentListener());
 		this.myFrame.setTitle("JBookReader"); //$NON-NLS-1$
-		this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//		this.myFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		this.myFrame.setJMenuBar(createMenuBar());
 
@@ -289,6 +289,9 @@ public class MainWindow {
 			} else {
 				book = FB2Parser.parse(file);
 			}
+			Config.getConfig().setStringValue("book_url", file.getCanonicalPath());
+			Config.getConfig().setStringValue("book_position", "");
+			Config.getConfig().save();
 			this.myBookComponent.setBook(book);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -305,14 +308,6 @@ public class MainWindow {
 	 */
 	public JFrame getFrame() {
 		return this.myFrame;
-	}
-
-	/**
-	 * Disposes the frame and all associated resources.
-	 *
-	 */
-	public void dispose() {
-		this.myFrame.dispose();
 	}
 
 	/**

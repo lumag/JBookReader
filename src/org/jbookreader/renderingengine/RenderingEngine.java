@@ -184,7 +184,7 @@ public class RenderingEngine {
 		
 		styleStack = replayStyleStack(node);
 		
-		if (this.myStartY < 0) {
+		if (this.myStartY <= 0) {
 			while (true) {
 				IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
 				if (this.myStartY + paragraph.getHeight() >= 0) {
@@ -219,6 +219,8 @@ public class RenderingEngine {
 		}
 
 		this.myPainter.addVerticalStrut(this.myStartY);
+		
+//		System.out.println(node.getNodeReference() + " --- " + this.myBook.getNodeByReference(node.getNodeReference()).getNodeReference());
 		
 		while (node != null) {
 			double currentY = this.myPainter.getYCoordinate();
@@ -287,4 +289,22 @@ public class RenderingEngine {
 		this.myStartY = 0;
 	}
 
+	public String getDisplayNodeReference() {
+		if (this.myStartNode == null) {
+			return null;
+		}
+
+		return this.myStartNode.getNodeReference();
+	}
+
+
+	public void scrollToReference(String reference) {
+		INode node = this.myBook.getNodeByReference(reference);
+		if (node == null) {
+			System.err.println("Bad book reference passed: " + reference);
+			return;
+		}
+		this.myStartNode = node;
+		flush();
+	}
 }

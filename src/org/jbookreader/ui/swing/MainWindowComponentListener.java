@@ -5,9 +5,12 @@ package org.jbookreader.ui.swing;
 
 import java.awt.Dimension;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.io.IOException;
+
+import org.jbookreader.ui.swing.actions.QuitAction;
 
 class MainWindowComponentListener extends ComponentAdapter {
 	@Override
@@ -34,5 +37,11 @@ class MainWindowComponentListener extends ComponentAdapter {
 			e1.printStackTrace();
 		}
 
+	}
+	
+	@Override
+	public void componentHidden(ComponentEvent e) {
+		System.out.println("called");
+		QuitAction.getAction().actionPerformed(new ActionEvent(e.getSource(), e.getID(), null));
 	}
 }

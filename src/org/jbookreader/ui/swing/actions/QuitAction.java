@@ -1,10 +1,12 @@
 package org.jbookreader.ui.swing.actions;
 
 import java.awt.event.ActionEvent;
+import java.io.IOException;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 
+import org.jbookreader.ui.swing.Config;
 import org.jbookreader.ui.swing.MainWindow;
 import org.jbookreader.ui.swing.Messages;
 
@@ -39,7 +41,16 @@ public class QuitAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		MainWindow.getMainWindow().dispose();
+		String posref = MainWindow.getMainWindow().getBookComponent().getDisplayNodeReference();
+		if (posref != null) {
+			Config.getConfig().setStringValue("book_position", posref);
+			try {
+				Config.getConfig().save();
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+		}
+		MainWindow.getMainWindow().getFrame().dispose();
 	}
 
 }

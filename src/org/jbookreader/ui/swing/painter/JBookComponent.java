@@ -35,6 +35,7 @@ public class JBookComponent extends JComponent {
 	 */
 	private IBook myBook;
 	private boolean myAntialias;
+	private int myDefaultFontSize;
 	
 	/**
 	 * This constructs new Book displaying component.
@@ -104,12 +105,13 @@ public class JBookComponent extends JComponent {
 		repaint();
 	}
 
+	// FIXME: don't overscroll, or we miss broken line!
 	/**
 	 * Scrolls the display one page down
 	 *
 	 */
 	public void scrollPageDown() {
-		this.myEngine.scroll(this.getPageHeight());
+		this.myEngine.scroll(this.getPageHeight() - this.myDefaultFontSize * 2);
 		repaint();
 	}
 
@@ -118,7 +120,7 @@ public class JBookComponent extends JComponent {
 	 *
 	 */
 	public void scrollPageUp() {
-		this.myEngine.scroll( - this.getPageHeight());
+		this.myEngine.scroll( - (this.getPageHeight() - this.myDefaultFontSize * 2));
 		repaint();
 	}
 
@@ -146,6 +148,7 @@ public class JBookComponent extends JComponent {
 	 * @param size font size
 	 */
 	public void setDefaultFont(String family, int size) {
+		this.myDefaultFontSize = size;
 		this.myEngine.setDefaultFont(family, size);
 	}
 
@@ -165,4 +168,11 @@ public class JBookComponent extends JComponent {
 		this.myAntialias = antialias;
 	}
 
+	public String getDisplayNodeReference() {
+		return this.myEngine.getDisplayNodeReference();
+	}
+
+	public void setBookPositionByReference(String reference) {
+		this.myEngine.scrollToReference(reference);
+	}
 }

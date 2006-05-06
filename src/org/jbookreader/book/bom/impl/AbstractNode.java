@@ -100,4 +100,17 @@ abstract class AbstractNode implements INode {
 		this.myNodeClass = nodeClass;
 	}
 
+	public String getNodeReference() {
+		// TODO: reenable id handling
+//		if (this.myID != null) {
+//			return "#" + this.myID;
+//		}
+		if (this.myParentNode == null) {
+			// FIXME! Body names
+			return "0";
+		}
+		int index = this.myParentNode.getChildNodes().indexOf(this);
+		return this.myParentNode.getNodeReference() + ";" + index;
+	}
+
 }

@@ -56,4 +56,6 @@ public interface INode {
 	 * @return a book containing this node.
 	 */
 	IBook getBook();
+	
+	String getNodeReference();
 }
