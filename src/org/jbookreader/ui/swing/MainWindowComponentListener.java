@@ -41,7 +41,6 @@ class MainWindowComponentListener extends ComponentAdapter {
 	
 	@Override
 	public void componentHidden(ComponentEvent e) {
-		System.out.println("called");
 		QuitAction.getAction().actionPerformed(new ActionEvent(e.getSource(), e.getID(), null));
 	}
 }

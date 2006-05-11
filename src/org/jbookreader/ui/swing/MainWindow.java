@@ -26,6 +26,7 @@ import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.ui.swing.actions.OpenAction;
 import org.jbookreader.ui.swing.actions.PageDownAction;
 import org.jbookreader.ui.swing.actions.PageUpAction;
+import org.jbookreader.ui.swing.actions.PreferencesAction;
 import org.jbookreader.ui.swing.actions.QuitAction;
 import org.jbookreader.ui.swing.actions.ScrollDownAction;
 import org.jbookreader.ui.swing.actions.ScrollUpAction;
@@ -131,7 +132,7 @@ public class MainWindow {
 		
 		menu.add(new JSeparator());
 
-		menuItem = new JMenuItem(Messages.getString("Preferences"), KeyEvent.VK_E); //$NON-NLS-1$
+		menuItem = new JMenuItem(PreferencesAction.getAction());
 		menu.add(menuItem);
 		
 		return menu;

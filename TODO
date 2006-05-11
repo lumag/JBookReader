@@ -5,10 +5,9 @@ High priority:
 + make font and fontsize configurable. (Done: 06.05.2006: css).
 H= finish new rendering engine: margins, centering, justification etc.
   (Work happening in the 'css' brahch).
-- make the JBR restore 'last reading position' for some last books.
-H-- reopen last book
-H-- save/restore 'last reading position'
-M-- recent books list
+H+ reopen last book (Done: 06.05.2006: css).
+H- save/restore 'last reading position' for all books
+M- recent books list
 M- detect the current position in the book and display it somehow
 M-- 'global' navigation (go to ~50% position)
 M- support links and footnotes
