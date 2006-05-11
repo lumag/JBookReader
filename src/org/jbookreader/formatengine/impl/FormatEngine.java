@@ -1,6 +1,8 @@
 package org.jbookreader.formatengine.impl;
 
 import java.io.ByteArrayInputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.jbookreader.book.bom.IBinaryData;
 import org.jbookreader.book.bom.IContainerNode;
@@ -15,7 +17,6 @@ import org.jbookreader.formatengine.IRenderingObject;
 import org.jbookreader.formatengine.objects.HorizontalGlue;
 import org.jbookreader.formatengine.objects.Line;
 import org.jbookreader.formatengine.objects.MetaString;
-import org.jbookreader.formatengine.objects.VerticalIROStack;
 
 /**
  * This class represents the core of the program: the text-formatting engine.
@@ -29,8 +30,7 @@ import org.jbookreader.formatengine.objects.VerticalIROStack;
  */
 public class FormatEngine implements IFormatEngine {
 
-	private IRenderingObject myResult;
-	private VerticalIROStack myCurrentParagraph;
+	private List<IRenderingObject> myResult;
 	private Line myCurrentLine;
 
 	/**
@@ -102,11 +102,11 @@ public class FormatEngine implements IFormatEngine {
 
 			formatTextNode(image, styleStack, width);
 
-			this.myCurrentParagraph.addObject(this.myCurrentLine);
+			this.myResult.add(this.myCurrentLine);
 			this.myCurrentLine = null;
 		} else {
 			// TODO: format title, etc.
-			this.myResult = robject;
+			this.myResult.add(robject);
 		}
 	}
 
@@ -151,21 +151,22 @@ public class FormatEngine implements IFormatEngine {
 		// XXX: this is the main place for rendering decision
 		if (this.myCurrentLine.getWidth() + object.getWidth() > width) {
 			// XXX: adjust glue objects in the line
-			this.myCurrentParagraph.addObject(this.myCurrentLine);
+			this.myResult.add(this.myCurrentLine);
 			this.myCurrentLine = new Line(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode());
 		}
 		this.myCurrentLine.addObject(object);
 	}
 	
 	private void newParagraph(IBookPainter painter, INode node, IStyleStack styleStack) {
-		this.myResult = this.myCurrentParagraph = new VerticalIROStack(painter, node);
+		this.myResult = new ArrayList<IRenderingObject>();
 
-		this.myCurrentParagraph.setMargins(
-				styleStack.getMarginTop(),
-				styleStack.getMarginRight(),
-				styleStack.getMarginBottom(),
-				styleStack.getMarginLeft()
-				);
+		// FIXME: margins!
+//		this.myCurrentParagraph.setMargins(
+//				styleStack.getMarginTop(),
+//				styleStack.getMarginRight(),
+//				styleStack.getMarginBottom(),
+//				styleStack.getMarginLeft()
+//				);
 		
 		this.myCurrentLine = new Line(painter, node);
 		this.myCurrentLine.addObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
@@ -188,11 +189,13 @@ public class FormatEngine implements IFormatEngine {
 							)
 					);
 		}
-		this.myCurrentParagraph.addObject(this.myCurrentLine);
+		this.myResult.add(this.myCurrentLine);
 		this.myCurrentLine = null;
 	}
 
-	public IRenderingObject formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
+	public List<IRenderingObject> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
+		
+		this.myResult = new ArrayList<IRenderingObject>();
 		
 		if (node instanceof IImageNode) {
 			formatImageNode(painter, (IImageNode) node, styleStack, width);

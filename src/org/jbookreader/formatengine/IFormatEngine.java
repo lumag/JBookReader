@@ -1,6 +1,8 @@
 package org.jbookreader.formatengine;
 
 
+import java.util.List;
+
 import org.jbookreader.book.bom.INode;
 import org.jbookreader.book.stylesheet.IStyleStack;
 
@@ -18,8 +20,8 @@ public interface IFormatEngine {
 	 * @param node the node to format
 	 * @param styleStack the correspondig style stack
 	 * @param width the width for the formatted paragraph
-	 * @return formmated paragraph node. 
+	 * @return list of formmated objects for paragraph node. 
 	 */
-	IRenderingObject formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width);
+	List<IRenderingObject> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width);
 
 }

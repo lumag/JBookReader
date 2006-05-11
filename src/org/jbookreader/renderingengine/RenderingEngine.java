@@ -46,7 +46,7 @@ public class RenderingEngine {
 	private double myStartY;
 	private double myPageHeight;
 	
-	private Map<INode, IRenderingObject> myFormattedNodes = new WeakHashMap<INode, IRenderingObject>();
+	private Map<INode, List<IRenderingObject>> myFormattedNodes = new WeakHashMap<INode, List<IRenderingObject>>();
 	
 	/**
 	 * This constructs new Rendering engine for the given format engine.
@@ -154,8 +154,8 @@ public class RenderingEngine {
 //	private int access;
 //	private int misses;
 //	
-	private IRenderingObject getFormattedNode(INode node, IStyleStack styleStack, double width) {
-		IRenderingObject robject = this.myFormattedNodes.get(node);
+	private List<IRenderingObject> getFormattedNode(INode node, IStyleStack styleStack, double width) {
+		List<IRenderingObject> robject = this.myFormattedNodes.get(node);
 //		this.access ++;
 		if ((robject == null)/* || (robject.getWidth() != width)*/) {
 			robject = this.myFormatEngine.formatParagraphNode(this.myPainter, node, styleStack, width);
@@ -183,40 +183,41 @@ public class RenderingEngine {
 		}
 		
 		styleStack = replayStyleStack(node);
-		
-		if (this.myStartY <= 0) {
-			while (true) {
-				IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
-				if (this.myStartY + paragraph.getHeight() >= 0) {
-					break;
-				}
-				node = getParagraphNode(node, styleStack, true);
-				if (node == null) {
-					node = this.myStartNode;
-					styleStack = replayStyleStack(node);
-					this.myStartY = 0;
-					break;
-				}
-				this.myStartY += paragraph.getHeight();
-				this.myStartNode = node;
-			}
-		} else {
-			while (true) {
-				node = getParagraphNode(node, styleStack, false);
-				if (node == null) {
-					node = this.myStartNode;
-					styleStack = replayStyleStack(node);
-					this.myStartY = 0;
-					break;
-				}
-				IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
-				this.myStartY -= paragraph.getHeight();
-				this.myStartNode = node;
-				if (this.myStartY <= 0) {
-					break;
-				}
-			}
-		}
+
+		// FIXME: position handling (after I implement more correct node references)
+//		if (this.myStartY <= 0) {
+//			while (true) {
+//				List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+//				if (this.myStartY + paragraph.getHeight() >= 0) {
+//					break;
+//				}
+//				node = getParagraphNode(node, styleStack, true);
+//				if (node == null) {
+//					node = this.myStartNode;
+//					styleStack = replayStyleStack(node);
+//					this.myStartY = 0;
+//					break;
+//				}
+//				this.myStartY += paragraph.getHeight();
+//				this.myStartNode = node;
+//			}
+//		} else {
+//			while (true) {
+//				node = getParagraphNode(node, styleStack, false);
+//				if (node == null) {
+//					node = this.myStartNode;
+//					styleStack = replayStyleStack(node);
+//					this.myStartY = 0;
+//					break;
+//				}
+//				List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+//				this.myStartY -= paragraph.getHeight();
+//				this.myStartNode = node;
+//				if (this.myStartY <= 0) {
+//					break;
+//				}
+//			}
+//		}
 
 		this.myPainter.addVerticalStrut(this.myStartY);
 		
@@ -229,10 +230,12 @@ public class RenderingEngine {
 				return;
 			}
 
-			IRenderingObject paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
-			
-			paragraph.render();
+			List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
 
+			for (IRenderingObject robject: paragraph) {
+				robject.render();
+			}
+			
 			node = getParagraphNode(node, styleStack, true);
 		}
 
