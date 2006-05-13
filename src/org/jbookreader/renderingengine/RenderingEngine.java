@@ -43,6 +43,7 @@ public class RenderingEngine {
 	private int myFontSize;
 	
 	private INode myStartNode;
+	private int myStartRenderingObject;
 	private double myStartY;
 	private double myPageHeight;
 	
@@ -77,7 +78,9 @@ public class RenderingEngine {
 		this.myBook = book;
 		INode node = this.myBook.getMainBody();
 		IStyleStack styleStack = replayStyleStack(node);
+
 		this.myStartNode = getParagraphNodeDown(node, styleStack, true);
+		this.myStartRenderingObject = 0;
 
 		flush();
 	}
@@ -165,63 +168,90 @@ public class RenderingEngine {
 		
 		return robject;
 	}
+	
+	private void fixupStartPosition() {
+		INode node = this.myStartNode;
+		IStyleStack styleStack = replayStyleStack(node);
+
+		List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+		ListIterator<IRenderingObject> robjectIterator = paragraph.listIterator(this.myStartRenderingObject);
+
+		// FIXME: position handling (after I implement more correct node references)
+		if (this.myStartY <= 0) {
+			while (true) {
+				if (!robjectIterator.hasNext()) {
+					node = getParagraphNode(node, styleStack, true);
+					if (node == null) {
+						node = this.myStartNode;
+						styleStack = replayStyleStack(node);
+						this.myStartY = 0;
+						this.myStartRenderingObject --;
+						break;
+					}
+					paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+					this.myStartRenderingObject = 0;
+					robjectIterator = paragraph.listIterator(this.myStartRenderingObject);
+					this.myStartNode = node;
+				}
+				
+				IRenderingObject robject = robjectIterator.next();
+				
+				if (this.myStartY + robject.getHeight() >= 0) {
+					break;
+				}
+				this.myStartY += robject.getHeight();
+				this.myStartRenderingObject ++;
+			}
+		} else {
+			while (true) {
+				if (!robjectIterator.hasPrevious()) {
+					node = getParagraphNode(node, styleStack, false);
+					if (node == null) {
+						node = this.myStartNode;
+						styleStack = replayStyleStack(node);
+						this.myStartY = 0;
+						this.myStartRenderingObject = 0;
+						break;
+					}
+					paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
+					this.myStartRenderingObject = paragraph.size();
+					robjectIterator = paragraph.listIterator(this.myStartRenderingObject);
+					this.myStartNode = node;
+				}
+				
+				IRenderingObject robject = robjectIterator.previous();
+
+				this.myStartY -= robject.getHeight();
+				this.myStartRenderingObject --;
+				if (this.myStartY <= 0) {
+					break;
+				}
+			}
+		}
+	}
 
 	/**
 	 * Renders a page of text.
 	 */
 	public void renderPage() {
-		INode node = null;
-		IStyleStack styleStack;
-
 		this.myPainter.clear();
 
-		this.myPageHeight = this.myPainter.getHeight();
-
-		node = this.myStartNode;
-		if (node == null) {
+		if (this.myBook == null) {
 			return;
 		}
 		
-		styleStack = replayStyleStack(node);
+		this.myPageHeight = this.myPainter.getHeight();
 
-		// FIXME: position handling (after I implement more correct node references)
-//		if (this.myStartY <= 0) {
-//			while (true) {
-//				List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
-//				if (this.myStartY + paragraph.getHeight() >= 0) {
-//					break;
-//				}
-//				node = getParagraphNode(node, styleStack, true);
-//				if (node == null) {
-//					node = this.myStartNode;
-//					styleStack = replayStyleStack(node);
-//					this.myStartY = 0;
-//					break;
-//				}
-//				this.myStartY += paragraph.getHeight();
-//				this.myStartNode = node;
-//			}
-//		} else {
-//			while (true) {
-//				node = getParagraphNode(node, styleStack, false);
-//				if (node == null) {
-//					node = this.myStartNode;
-//					styleStack = replayStyleStack(node);
-//					this.myStartY = 0;
-//					break;
-//				}
-//				List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
-//				this.myStartY -= paragraph.getHeight();
-//				this.myStartNode = node;
-//				if (this.myStartY <= 0) {
-//					break;
-//				}
-//			}
-//		}
+		fixupStartPosition();
+
+//		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
+
+		INode node = this.myStartNode;
+		IStyleStack styleStack = replayStyleStack(node);
 
 		this.myPainter.addVerticalStrut(this.myStartY);
 		
-//		System.out.println(node.getNodeReference() + " --- " + this.myBook.getNodeByReference(node.getNodeReference()).getNodeReference());
+		int startObject = this.myStartRenderingObject;
 		
 		while (node != null) {
 			double currentY = this.myPainter.getYCoordinate();
@@ -232,11 +262,13 @@ public class RenderingEngine {
 
 			List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
 
-			for (IRenderingObject robject: paragraph) {
+			for (ListIterator<IRenderingObject> it = paragraph.listIterator(startObject); it.hasNext();) {
+				IRenderingObject robject = it.next();
 				robject.render();
 			}
 			
 			node = getParagraphNode(node, styleStack, true);
+			startObject = 0;
 		}
 
 	}
@@ -308,6 +340,8 @@ public class RenderingEngine {
 			return;
 		}
 		this.myStartNode = node;
+		// FIXME: in-node position
+		this.myStartRenderingObject = 0;
 		flush();
 	}
 }

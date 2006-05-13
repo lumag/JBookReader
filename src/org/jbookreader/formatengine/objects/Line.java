@@ -54,14 +54,14 @@ public class Line extends AbstractInlineRenderingObject {
 	}
 
 	public void renderInline() {
-		IBookPainter painter = this.getPainter();
-		double y = painter.getYCoordinate() + getDepth();
-		if (y > painter.getHeight()
-			|| y < getHeight()) {
-			painter.addHorizontalStrut(getWidth());
-			return;
-		}
-
+//		IBookPainter painter = this.getPainter();
+//		double y = painter.getYCoordinate() + getDepth();
+//		if (y > painter.getHeight()
+//			|| y < getHeight()) {
+//			painter.addHorizontalStrut(getWidth());
+//			return;
+//		}
+//
 		for (IInlineRenderingObject robject : this.myRObjects) {
 			robject.renderInline();
 		}
