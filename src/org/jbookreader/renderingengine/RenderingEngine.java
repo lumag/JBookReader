@@ -250,10 +250,10 @@ public class RenderingEngine {
 		
 		this.myPageHeight = this.myPainter.getHeight();
 
-		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
+//		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
 		fixupStartPosition();
 
-		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
+//		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
 
 		INode node = this.myStartNode;
 		IStyleStack styleStack = replayStyleStack(node);

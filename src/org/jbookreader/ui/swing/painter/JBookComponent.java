@@ -150,6 +150,8 @@ public class JBookComponent extends JComponent {
 	public void setDefaultFont(String family, int size) {
 		this.myDefaultFontSize = size;
 		this.myEngine.setDefaultFont(family, size);
+		this.myEngine.flush();
+		repaint();
 	}
 
 	/**
