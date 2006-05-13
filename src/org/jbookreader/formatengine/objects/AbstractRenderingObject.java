@@ -11,6 +11,12 @@ import org.jbookreader.formatengine.IRenderingObject;
  *
  */
 public abstract class AbstractRenderingObject implements IRenderingObject {
+	interface BoxSides {
+		int TOP = 0;
+		int RIGHT = 1;
+		int BOTTOM = 2;
+		int LEFT = 3;
+	}
 	/**
 	 * The height of the rendering object above the baseline.
 	 */
@@ -69,6 +75,10 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 		this.myMargins[BoxSides.RIGHT] = right;
 		this.myMargins[BoxSides.BOTTOM] = bottom;
 		this.myMargins[BoxSides.LEFT] = left;
+	}
+
+	public boolean isBrokeable() {
+		return false;
 	}
 
 }

@@ -51,5 +51,10 @@ class ImageRenderingObject extends AbstractInlineRenderingObject {
 				null);
 		this.getPainter().addHorizontalStrut(this.getWidth());
 	}
+
+	@Override
+	public boolean isBrokeable() {
+		return true;
+	}
 	
 }

@@ -177,7 +177,8 @@ public class RenderingEngine {
 		ListIterator<IRenderingObject> robjectIterator = paragraph.listIterator(this.myStartRenderingObject);
 
 		// FIXME: position handling (after I implement more correct node references)
-		if (this.myStartY <= 0) {
+
+		if (this.myStartY < 0) {
 			while (true) {
 				if (!robjectIterator.hasNext()) {
 					node = getParagraphNode(node, styleStack, true);
@@ -197,12 +198,16 @@ public class RenderingEngine {
 				IRenderingObject robject = robjectIterator.next();
 				
 				if (this.myStartY + robject.getHeight() >= 0) {
-					break;
+					if (robject.isBrokeable() || this.myStartY == 0) {
+						break;
+					}
+					this.myStartY = 0;
+				} else {
+					this.myStartY += robject.getHeight();
 				}
-				this.myStartY += robject.getHeight();
 				this.myStartRenderingObject ++;
 			}
-		} else {
+		} else if (this.myStartY > 0) {
 			while (true) {
 				if (!robjectIterator.hasPrevious()) {
 					node = getParagraphNode(node, styleStack, false);
@@ -224,6 +229,9 @@ public class RenderingEngine {
 				this.myStartY -= robject.getHeight();
 				this.myStartRenderingObject --;
 				if (this.myStartY <= 0) {
+					if (!robject.isBrokeable()) {
+						this.myStartY = 0;
+					}
 					break;
 				}
 			}
@@ -242,9 +250,10 @@ public class RenderingEngine {
 		
 		this.myPageHeight = this.myPainter.getHeight();
 
+		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
 		fixupStartPosition();
 
-//		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
+		System.out.println(this.myStartNode.getNodeReference() + " : " + this.myStartRenderingObject + " @ " + this.myStartY);
 
 		INode node = this.myStartNode;
 		IStyleStack styleStack = replayStyleStack(node);
@@ -253,17 +262,18 @@ public class RenderingEngine {
 		
 		int startObject = this.myStartRenderingObject;
 		
+		renderLoop:
 		while (node != null) {
-			double currentY = this.myPainter.getYCoordinate();
-			if (currentY >= this.myPageHeight) {
-//				System.out.println((1.0*this.misses)/this.access);
-				return;
-			}
-
 			List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
 
 			for (ListIterator<IRenderingObject> it = paragraph.listIterator(startObject); it.hasNext();) {
+				double currentY = this.myPainter.getYCoordinate();
+				if (currentY >= this.myPageHeight) {
+					break renderLoop;
+				}
+				
 				IRenderingObject robject = it.next();
+
 				robject.render();
 			}
 			
@@ -271,6 +281,7 @@ public class RenderingEngine {
 			startObject = 0;
 		}
 
+//		System.out.println((1.0*this.misses)/this.access);
 	}
 
 	private IStyleStack replayStyleStack(INode node) {

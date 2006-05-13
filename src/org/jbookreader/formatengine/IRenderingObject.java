@@ -36,4 +36,6 @@ public interface IRenderingObject {
 	INode getNode();
 	
 	void setMargins(double top, double right, double bottom, double left);
+	
+	boolean isBrokeable();
 }
