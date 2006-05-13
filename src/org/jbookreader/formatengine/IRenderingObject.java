@@ -37,5 +37,5 @@ public interface IRenderingObject {
 	
 	void setMargins(double top, double right, double bottom, double left);
 	
-	boolean isBrokeable();
+	boolean isSplittable();
 }

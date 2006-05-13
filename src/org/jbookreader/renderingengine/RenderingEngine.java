@@ -198,7 +198,7 @@ public class RenderingEngine {
 				IRenderingObject robject = robjectIterator.next();
 				
 				if (this.myStartY + robject.getHeight() >= 0) {
-					if (robject.isBrokeable() || this.myStartY == 0) {
+					if (robject.isSplittable() || this.myStartY == 0) {
 						break;
 					}
 					this.myStartY = 0;
@@ -229,7 +229,7 @@ public class RenderingEngine {
 				this.myStartY -= robject.getHeight();
 				this.myStartRenderingObject --;
 				if (this.myStartY <= 0) {
-					if (!robject.isBrokeable()) {
+					if (!robject.isSplittable()) {
 						this.myStartY = 0;
 					}
 					break;

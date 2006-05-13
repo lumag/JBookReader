@@ -77,7 +77,7 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 		this.myMargins[BoxSides.LEFT] = left;
 	}
 
-	public boolean isBrokeable() {
+	public boolean isSplittable() {
 		return false;
 	}
 

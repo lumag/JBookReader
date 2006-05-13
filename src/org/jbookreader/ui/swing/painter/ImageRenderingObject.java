@@ -53,7 +53,7 @@ class ImageRenderingObject extends AbstractInlineRenderingObject {
 	}
 
 	@Override
-	public boolean isBrokeable() {
+	public boolean isSplittable() {
 		return true;
 	}
 	
