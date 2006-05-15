@@ -35,7 +35,11 @@ public interface IRenderingObject {
 	 */
 	INode getNode();
 	
-	void setMargins(double top, double right, double bottom, double left);
-	
+	void setMarginTop(double margin);
+	void setMarginRight(double margin);
+	void setMarginBottom(double margin);
+	void setMarginLeft(double margin);
+
 	boolean isSplittable();
 }
+

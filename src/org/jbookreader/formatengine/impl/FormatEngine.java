@@ -181,14 +181,6 @@ public class FormatEngine implements IFormatEngine {
 	private void newParagraph(IBookPainter painter, INode node, IStyleStack styleStack) {
 		this.myResult = new ArrayList<IRenderingObject>();
 
-		// FIXME: margins!
-//		this.myCurrentParagraph.setMargins(
-//				styleStack.getMarginTop(),
-//				styleStack.getMarginRight(),
-//				styleStack.getMarginBottom(),
-//				styleStack.getMarginLeft()
-//				);
-		
 		this.myCurrentLine = new Line(painter, node);
 		this.myCurrentLine.appendObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
 	}
@@ -223,7 +215,15 @@ public class FormatEngine implements IFormatEngine {
 		} else {
 			formatStyledText(painter, node, styleStack, width);
 		}
-
+		
+		this.myResult.get(0).setMarginTop(styleStack.getMarginTop());
+		this.myResult.get(this.myResult.size()-1).setMarginBottom(styleStack.getMarginBottom());
+		
+		for (IRenderingObject robject: this.myResult) {
+			robject.setMarginLeft(styleStack.getMarginLeft());
+			robject.setMarginRight(styleStack.getMarginRight());
+		}
+		
 		return this.myResult;
 	}
 

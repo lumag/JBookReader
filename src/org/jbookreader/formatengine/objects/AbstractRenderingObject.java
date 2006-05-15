@@ -70,11 +70,20 @@ public abstract class AbstractRenderingObject implements IRenderingObject {
 
 	public abstract void renderContents();
 
-	public void setMargins(double top, double right, double bottom, double left) {
-		this.myMargins[BoxSides.TOP] = top;
-		this.myMargins[BoxSides.RIGHT] = right;
-		this.myMargins[BoxSides.BOTTOM] = bottom;
-		this.myMargins[BoxSides.LEFT] = left;
+	public void setMarginBottom(double margin) {
+		this.myMargins[BoxSides.BOTTOM] = margin;
+	}
+
+	public void setMarginLeft(double margin) {
+		this.myMargins[BoxSides.LEFT] = margin;
+	}
+
+	public void setMarginRight(double margin) {
+		this.myMargins[BoxSides.RIGHT] = margin;
+	}
+
+	public void setMarginTop(double margin) {
+		this.myMargins[BoxSides.TOP] = margin;
 	}
 
 	public boolean isSplittable() {
