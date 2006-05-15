@@ -1,5 +1,6 @@
 package org.jbookreader.book.parser;
 
+import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -51,7 +52,7 @@ public class FB2Parser {
 	 * @throws SAXException in case of XML parsing problem
 	 */
 	public static IBook parse(InputStream stream) throws IOException, SAXException {
-		return parse(new InputSource(stream));
+		return parse(new InputSource(new BufferedInputStream(stream)));
 	}
 
 	/**

@@ -86,4 +86,5 @@ public interface IStyleStack {
 	 */
 	void setDefaultFontSize(int size);
 
+	ETextAlign getTextAlign();
 }

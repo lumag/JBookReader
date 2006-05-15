@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.ListIterator;
 
 import org.jbookreader.book.stylesheet.EDisplayType;
+import org.jbookreader.book.stylesheet.ETextAlign;
 import org.jbookreader.book.stylesheet.IStyleStack;
 
 class FB2StyleStack implements IStyleStack {
@@ -110,4 +111,12 @@ class FB2StyleStack implements IStyleStack {
 		this.myFontSize = size;
 	}
 
+	public ETextAlign getTextAlign() {
+		// XXX: hack!
+		SimpleNode parentNode = this.myNodesList.get(this.myNodesList.size()-2);
+		if (parentNode.name.equals("title")) {
+			return ETextAlign.CENTER;
+		}
+		return ETextAlign.JUSTIFY;
+	}
 }

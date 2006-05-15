@@ -41,6 +41,7 @@ class ImageRenderingObject extends AbstractInlineRenderingObject {
 		setWidth(this.myImage.getWidth());
 	}
 
+	@Override
 	public void renderInline() {
 		SwingBookPainter painter = (SwingBookPainter) this.getPainter();
 		painter.getGraphics().drawImage(

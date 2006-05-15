@@ -98,6 +98,7 @@ public class RenderingEngine {
 	private INode getParagraphNode(INode node, IStyleStack styleStack, boolean next) {
 		while (true) {
 			IContainerNode pnode = node.getParentNode();
+			styleStack.popTag();
 
 			// end of book
 			if (pnode == null) {
@@ -111,6 +112,7 @@ public class RenderingEngine {
 				throw new IllegalStateException("Node '" + node + "' not found in it's parent list!!!!");
 			} else if (nextindex < children.size() && nextindex >= 0) {
 				node = children.get(nextindex);
+				styleStack.pushTag(node.getTagName(), node.getNodeClass(), node.getID());
 				break;
 			}
 			node = pnode;
@@ -267,13 +269,17 @@ public class RenderingEngine {
 			List<IRenderingObject> paragraph = getFormattedNode(node, styleStack, this.myPainter.getWidth());
 
 			for (ListIterator<IRenderingObject> it = paragraph.listIterator(startObject); it.hasNext();) {
+				IRenderingObject robject = it.next();
+				
 				double currentY = this.myPainter.getYCoordinate();
-				if (currentY >= this.myPageHeight) {
+
+				if ((currentY >= this.myPageHeight)
+					|| (!robject.isSplittable()
+							&& (currentY + robject.getHeight() > this.myPageHeight) )) {
 					break renderLoop;
 				}
 				
-				IRenderingObject robject = it.next();
-
+//				System.out.println(this.myPainter.getXCoordinate() + " : " + robject.getWidth());
 				robject.render();
 			}
 			

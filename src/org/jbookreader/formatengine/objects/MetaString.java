@@ -63,6 +63,7 @@ public class MetaString extends AbstractInlineRenderingObject {
 		setWidth(dim.width);
 	}
 
+	@Override
 	public void renderInline() {
 		this.myFont.renderString(this.myText, this.myStart, this.myEnd);
 	}

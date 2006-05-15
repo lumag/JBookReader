@@ -36,8 +36,19 @@ public class HorizontalGlue extends AbstractInlineRenderingObject {
 		setHeight(height);
 	}
 
+	@Override
 	public void renderInline() {
 		this.getPainter().addHorizontalStrut(this.getWidth());
+	}
+
+	@Override
+	public void adjustWidth(double width) throws UnsupportedOperationException {
+		setWidth(getWidth() + width);
+	}
+
+	@Override
+	public int getAdjustability() {
+		return 1;
 	}
 
 }

@@ -89,7 +89,7 @@ public class FormatEngine implements IFormatEngine {
 		if (robject == null) {
 			formatTextNode(image, styleStack, width);
 		} else {
-			appendRobject(width, robject);
+			appendRobject(robject, styleStack, width);
 		}
 	}
 
@@ -127,7 +127,7 @@ public class FormatEngine implements IFormatEngine {
 				// XXX: calculate more correct space size?
 				double strut = font.getSpaceWidth();
 				if (strut + this.myCurrentLine.getWidth() <= width) {
-					this.myCurrentLine.addObject(new HorizontalGlue(this.myCurrentLine.getPainter(), node, strut));
+					this.myCurrentLine.appendObject(new HorizontalGlue(this.myCurrentLine.getPainter(), node, strut));
 				}
 			}
 			end = start = newWord;
@@ -141,20 +141,41 @@ public class FormatEngine implements IFormatEngine {
 			}
 
 			IInlineRenderingObject string = new MetaString(this.myCurrentLine.getPainter(), node, styleStack.getLineHeight(), text, start, end, font);
-			appendRobject(width, string);
+			appendRobject(string, styleStack, width);
 
 			start = end;
 		}
 	}
+
+	private void flushLine(boolean lastLine, double width, IStyleStack styleStack) {
+		switch (styleStack.getTextAlign()) {
+			case LEFT:
+				this.myCurrentLine.appendObject(new HorizontalGlue(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode(), width - this.myCurrentLine.getWidth()));
+				break;
+			case RIGHT:
+				this.myCurrentLine.prependObject(new HorizontalGlue(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode(), width - this.myCurrentLine.getWidth()));
+				break;
+			case CENTER:
+				this.myCurrentLine.prependObject(new HorizontalGlue(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode(), (width - this.myCurrentLine.getWidth())/2));
+				this.myCurrentLine.appendObject(new HorizontalGlue(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode(), width - this.myCurrentLine.getWidth()));
+				break;
+			case JUSTIFY:
+				if (!lastLine) {
+					this.myCurrentLine.adjustWidth(width - this.myCurrentLine.getWidth());
+				}
+		}
+		this.myResult.add(this.myCurrentLine);
+		this.myCurrentLine = null;
+	}
 	
-	private void appendRobject (double width, IInlineRenderingObject object) {
+	private void appendRobject (IInlineRenderingObject object, IStyleStack styleStack, double width) {
 		// XXX: this is the main place for rendering decision
 		if (this.myCurrentLine.getWidth() + object.getWidth() > width) {
-			// XXX: adjust glue objects in the line
-			this.myResult.add(this.myCurrentLine);
-			this.myCurrentLine = new Line(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode());
+			Line newLine = new Line(this.myCurrentLine.getPainter(), this.myCurrentLine.getNode());
+			flushLine(false, width, styleStack);
+			this.myCurrentLine = newLine;
 		}
-		this.myCurrentLine.addObject(object);
+		this.myCurrentLine.appendObject(object);
 	}
 	
 	private void newParagraph(IBookPainter painter, INode node, IStyleStack styleStack) {
@@ -169,7 +190,7 @@ public class FormatEngine implements IFormatEngine {
 //				);
 		
 		this.myCurrentLine = new Line(painter, node);
-		this.myCurrentLine.addObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
+		this.myCurrentLine.appendObject(new HorizontalGlue(painter, node, styleStack.getTextIndent()));
 	}
 
 	private void formatStyledText(IBookPainter painter, INode node, IStyleStack styleStack, double width) {
@@ -178,9 +199,10 @@ public class FormatEngine implements IFormatEngine {
 
 		formatNode(node, styleStack, width);
 
+		// XXX: hack to fix emty-line rendering
 		if (this.myCurrentLine.getHeight() == 0
-			&& this.myCurrentLine.getWidth() != 0) {
-			this.myCurrentLine.addObject(
+			&& this.myCurrentLine.getWidth() == 0) {
+			this.myCurrentLine.appendObject(
 					new HorizontalGlue(
 							painter,
 							this.myCurrentLine.getNode(),
@@ -189,8 +211,7 @@ public class FormatEngine implements IFormatEngine {
 							)
 					);
 		}
-		this.myResult.add(this.myCurrentLine);
-		this.myCurrentLine = null;
+		flushLine(true, width, styleStack);
 	}
 
 	public List<IRenderingObject> formatParagraphNode(IBookPainter painter, INode node, IStyleStack styleStack, double width) {

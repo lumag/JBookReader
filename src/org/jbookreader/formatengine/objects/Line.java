@@ -19,6 +19,8 @@ public class Line extends AbstractInlineRenderingObject {
 	 */
 	private final List<IInlineRenderingObject> myRObjects = new LinkedList<IInlineRenderingObject>();
 	
+	private int myAdjustability;
+	
 	/**
 	 * This constructs new line for specified painter.
 	 * @param painter the painter on which this line will be rendered
@@ -29,16 +31,30 @@ public class Line extends AbstractInlineRenderingObject {
 	}
 
 	/**
-	 * Adds a rendering object to the line.
+	 * Appends a rendering object to the line.
 	 * TODO: Vertical align support 
 	 * 
-	 * @param object the object to add
+	 * @param object the object to append
 	 */
-	public void addObject(IInlineRenderingObject object) {
+	public void appendObject(IInlineRenderingObject object) {
+		this.myRObjects.add(object);
+		adjustProperties(object);
+	}
+		
+	/**
+	 * Prepends a rendering object to the line.
+	 * TODO: Vertical align support 
+	 * 
+	 * @param object the object to prepend
+	 */
+	public void prependObject(IInlineRenderingObject object) {
+		this.myRObjects.add(0, object);
+		adjustProperties(object);
+	}
+		
+	private void adjustProperties(IInlineRenderingObject object) {
 		double oldOver = this.getHeight() - this.getDepth();
 		double newOver = object.getHeight() - object.getDepth();
-		
-		this.myRObjects.add(object);
 		
 		double oDepth = object.getDepth();
 		
@@ -51,8 +67,11 @@ public class Line extends AbstractInlineRenderingObject {
 		}
 
 		setWidth(getWidth() + object.getWidth());
+		
+		this.myAdjustability += object.getAdjustability();
 	}
 
+	@Override
 	public void renderInline() {
 //		IBookPainter painter = this.getPainter();
 //		double y = painter.getYCoordinate() + getDepth();
@@ -64,6 +83,36 @@ public class Line extends AbstractInlineRenderingObject {
 //
 		for (IInlineRenderingObject robject : this.myRObjects) {
 			robject.renderInline();
+		}
+	}
+
+//	public List<IInlineRenderingObject> getObjects() {
+//		return Collections.unmodifiableList(this.myRObjects);
+//	}
+
+	@Override
+	public int getAdjustability() {
+		return this.myAdjustability;
+	}
+
+	@Override
+	public void adjustWidth(double width) throws UnsupportedOperationException {
+		int adjustability = this.myAdjustability;
+		if (adjustability == 0) {
+			return;
+		}
+		setWidth(getWidth() + width);
+		for (IInlineRenderingObject robject: this.myRObjects) {
+			if (adjustability == 0) {
+				break;
+			}
+			int currentAdjustability = robject.getAdjustability();
+			if (currentAdjustability != 0) {
+				double adjWidth = width * currentAdjustability / adjustability;
+				adjustability -= currentAdjustability;
+				robject.adjustWidth(adjWidth);
+				width -= adjWidth;
+			}
 		}
 	}
 }

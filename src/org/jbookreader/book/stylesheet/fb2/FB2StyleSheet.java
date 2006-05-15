@@ -18,7 +18,7 @@ import org.jbookreader.book.stylesheet.IStyleStack;
 public class FB2StyleSheet implements IStyleSheet {
 	
 	/**
-	 * This mapping holds tagName -> display type information.
+	 * This mapping holds tagName -&gt; display type information.
 	 */
 	private static Map<String, EDisplayType> ourDisplayTypes = new HashMap<String,EDisplayType>();
 	

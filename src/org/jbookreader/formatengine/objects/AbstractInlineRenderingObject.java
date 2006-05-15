@@ -30,4 +30,13 @@ public abstract class AbstractInlineRenderingObject extends
 		painter.addVerticalStrut(getDepth());
 	}
 
+	public abstract void renderInline();
+
+	public int getAdjustability() {
+		return 0;
+	}
+
+	public void adjustWidth(double width) throws UnsupportedOperationException {
+		throw new UnsupportedOperationException("adjusting of this objects isn't supported");
+	}
 }

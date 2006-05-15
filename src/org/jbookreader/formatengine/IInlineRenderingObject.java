@@ -10,4 +10,7 @@ public interface IInlineRenderingObject extends IRenderingObject {
 
 	void renderInline();
 	
+	int getAdjustability();
+	
+	void adjustWidth(double width) throws UnsupportedOperationException;
 }

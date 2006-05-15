@@ -1,11 +1,9 @@
 package org.jbookreader.ui.swing;
 
 import java.awt.BorderLayout;
-import java.awt.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.event.ComponentListener;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
