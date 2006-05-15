@@ -1,39 +1,43 @@
 High priority:
 
+VH- options dialog
+VH- support documents with multiple bodies
+
 + antialiasing (Done: 15.04.2005: 0.1, trunk).
 + configurable priorities (Done: 16.04.2006: trunk).
 + make font and fontsize configurable. (Done: 06.05.2006: css).
-H= finish new rendering engine: margins, centering, justification etc.
-  (Work happening in the 'css' brahch).
-H+ reopen last book (Done: 06.05.2006: css).
-H- save/restore 'last reading position' for all books
-M- recent books list
-M- detect the current position in the book and display it somehow
-M-- 'global' navigation (go to ~50% position)
-M- support links and footnotes
++ finish new rendering engine: margins, centering, justification etc.
+  (Done: 15.05.2006: css).
++ reopen last book (Done: 06.05.2006: css).
+- save/restore 'last reading position' for all books
 - Create 'Command's and make Actions adapters for commands???
-M/H- hyphenations
-VH- options dialog
-VH- support documents with multiple bodies
-VH- there is something strange with margins handling. debug it!
+
+- Table Of Contents
+- the 'go back' feature
 
 Medium priority:
-H- Table Of Contents
-M- bookmarks
-H- the 'go back' feature
-M- make keybindings configurable
-M- Searching in the book
+
+- hyphenation support
+- recent books list
+- detect the current position in the book and display it somehow
+- 'global' navigation (go to ~50% position)
+- support links and footnotes
+- bookmarks
+- make keybindings configurable
+- Searching in the book
 - multiple css.
 + mouse wheel support (Done: 16.04.2006, trunk).
-L- 'metadata' loading.
 - maybe remove direct link FormatEngine->BookPainter and dependency of
   all rendering objects to the painter by providing adaptor
   rendering objects factory?
 
 Low priority:
-VL- Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about
-  possibility for DOC, PDF, M$Lit.
-VL- Write text and SWT? ui. Also think about GTK-java, QT-java.
-L- Smooth scrolling support.
-L- Support for making small corrections.
++ Smooth scrolling support (Done: 13.05.2006: css)
+- 'metadata' loading.
+- Support for making small corrections.
 - support metadata organisation in to some type of DB.
+
+Very Low:
+- Support more book formats: XHTML/HTML, DocBook, RTF, ISilo. Think about
+  possibility for DOC, PDF, M$Lit.
+- Write text and SWT? ui. Also think about GTK-java, QT-java.
