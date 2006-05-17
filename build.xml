@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project [<!ENTITY buildfile SYSTEM "file:./build-user.xml">]>
-<project basedir="." default="build" name="JBookReader">
+<project basedir="." default="jar" name="JBookReader">
     <!-- Loads global properties for this build -->
     <property file="build.properties"/>
+    <filter filtersfile="build.properties" />
 
     <path id="project.classpath">
         <pathelement location="bin"/>
@@ -16,37 +16,29 @@
 
     <target name="init">
         <mkdir dir="bin"/>
-        <mkdir dir="bin-misc"/>
         <mkdir dir="bin-tests"/>
 	<mkdir dir="tests/temp"/>
+	<copy overwrite="true" filtering="true" file="src/org/jbookreader/Values.java.in" tofile="src/org/jbookreader/Values.java" />
     </target>
     <target name="clean">
         <delete dir="bin"/>
-        <delete dir="bin-misc"/>
         <delete dir="bin-tests"/>
+	<delete>
+		<fileset includes="TEST-*"/>
+		<fileset includes="TESTS-*"/>
+	</delete>
+	<delete file="src/org/jbookreader/Values.java" />
+	<delete dir="docs/api" />
+	<delete dir="docs/report" />
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
         <javac debug="${build.debug}" destdir="bin">
-            <src path="src-model"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-parser"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-painter"/>
-        </javac>
-	<javac debug="${build.debug}" destdir="bin">
-            <src path="src-swingui"/>
+            <src path="src"/>
         </javac>
 	<copy todir="bin">
-	    <fileset dir="src-swingui" includes="**/*.properties" />
+	    <fileset dir="src" includes="**/*.properties" />
 	</copy>
-        <javac debug="${build.debug}" destdir="bin-misc">
-            <src path="src-misc"/>
-            <src path="src-ui"/>
-            <classpath refid="project.classpath"/>
-        </javac>
         <javac debug="${build.debug}" destdir="bin-tests">
             <src path="src-tests"/>
             <classpath refid="tests.classpath"/>
@@ -62,23 +54,38 @@
             <classpath refid="tests.classpath"/>
         </java>
     </target>
+    <target name="javadoc" depends="init">
+    	<javadoc destdir="docs/api" version="true" use="true" author="true">
+		<fileset dir="src"/>
+	</javadoc>
+    </target>
     <target name="jdepend" depends="build">
     	<jdepend outputfile="jdepend-report.txt">
 		<exclude name="java.*" />
 		<exclude name="javax.*" />
 		<exclude name="org.xml.*" />
+		<exclude name="org.w3c.*" />
 		<classespath refid="project.classpath" />
 	</jdepend>
     </target>
-    <target name="AllTest" depends="build">
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="plain"/>
-            <test name="org.jbookreader.AllTest"/>
+    <target name="test" depends="build">
+        <junit fork="yes" printsummary="on" haltonfailure="on">
+            <formatter type="xml"/>
+<!--            <test name="org.jbookreader.AllTests"/> -->
+	    <batchtest>
+	    	<fileset dir="bin-tests" includes="**/*Test*.java" excludes="**/AllTests.java" />
+	    </batchtest>
             <classpath refid="tests.classpath"/>
         </junit>
+	<junitreport >
+	    <fileset dir="." includes="TEST-*.xml"/>
+	    <report format="frames" todir="docs/report" />
+	</junitreport>
     </target>
-    <target name="jar" depends="AllTest">
+    <target name="jar" depends="test">
 	<jar destfile="jbookreader-${project.version}.jar" basedir="bin">
+	    <fileset dir="bin" />
+	    <fileset file="COPYING" />
 	    <manifest>
 	    	<attribute name="Sealed" value="true" />
 		<attribute name="Main-Class" value="org.jbookreader.ui.swing.Main" />
@@ -87,11 +94,13 @@
     </target>
     <target name="srczip" >
     	<zip destfile="jbookreader-${project.version}-src.zip" >
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-model/**,src-parser/**,src-painter/**,src-swingui/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-misc/**,src-ui/**"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-tests/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="docs/**" excludes="docs/api/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="build.*"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="COPYING"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="TODO"/>
 	</zip>
     </target>
     <target name="help">
