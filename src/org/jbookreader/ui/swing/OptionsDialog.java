@@ -10,12 +10,12 @@ import javax.swing.AbstractAction;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
+import javax.swing.JCheckBox;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 
 public class OptionsDialog {
 	private class OptionsComponentListener extends ComponentAdapter {
@@ -54,6 +54,9 @@ public class OptionsDialog {
 	private OptionsDialog() {
 		this.myDialog = new JDialog(MainWindow.getMainWindow().getFrame());
 		this.myDialog.setTitle("Options");
+		this.myDialog.setModal(true);
+
+		this.myDialog.setDefaultCloseOperation(JDialog.HIDE_ON_CLOSE);
 		
 		this.myDialog.addComponentListener(new OptionsComponentListener());
 		
@@ -63,7 +66,6 @@ public class OptionsDialog {
 		this.myDialog.add(createButtonPane(), BorderLayout.SOUTH);
 
 		this.myDialog.pack();
-		this.myDialog.setVisible(true);
 	}
 	
 	public static OptionsDialog getOptionsDialog() {
@@ -77,7 +79,7 @@ public class OptionsDialog {
 		return this.myDialog;
 	}
 	
-	private JToggleButton myAntialias;
+	private JCheckBox myAntialias;
 	private JTextField myFontFamily;
 	private JSpinner myFontSize;
 
@@ -88,7 +90,7 @@ public class OptionsDialog {
 		
 		option = new JPanel();
 		option.setLayout(new BoxLayout(option, BoxLayout.X_AXIS));
-		option.add(this.myAntialias = new JToggleButton("Antialias text"));
+		option.add(this.myAntialias = new JCheckBox("Antialias text"));
 		pane.add(option);
 		
 		option = new JPanel();

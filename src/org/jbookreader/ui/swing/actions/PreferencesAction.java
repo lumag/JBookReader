@@ -39,8 +39,6 @@ public class PreferencesAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		// TODO Auto-generated method stub
-		
 		OptionsDialog.getOptionsDialog().getDialog().setVisible(true);
 	}
 
