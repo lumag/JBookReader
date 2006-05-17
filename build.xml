@@ -73,7 +73,7 @@
             <formatter type="xml"/>
 <!--            <test name="org.jbookreader.AllTests"/> -->
 	    <batchtest>
-	    	<fileset dir="bin-tests" includes="**/*Test*.java" excludes="**/AllTests.java" />
+	    	<fileset dir="src-tests" includes="**/*Test.java" excludes="**/AllTests.java, **/Abstract*" />
 	    </batchtest>
             <classpath refid="tests.classpath"/>
         </junit>
