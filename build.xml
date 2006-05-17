@@ -84,6 +84,8 @@
     </target>
     <target name="jar" depends="test">
 	<jar destfile="jbookreader-${project.version}.jar" basedir="bin">
+	    <fileset dir="bin" />
+	    <fileset file="COPYING" />
 	    <manifest>
 	    	<attribute name="Sealed" value="true" />
 		<attribute name="Main-Class" value="org.jbookreader.ui.swing.Main" />
@@ -97,6 +99,8 @@
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="docs/**" excludes="docs/api/**"/>
 	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="build.*"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="COPYING"/>
+	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="TODO"/>
 	</zip>
     </target>
     <target name="help">
