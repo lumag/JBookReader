@@ -14,7 +14,7 @@ import org.jbookreader.parser.FB2ParserTest;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class AllTest  {
+public class AllTests {
 	/**
 	 * This creates testsuite.
 	 * @return all-test testsuite.
