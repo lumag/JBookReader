@@ -1,0 +1,5 @@
+package org.jbookreader;
+
+public interface Values {
+	String version = "@project.version@";
+}

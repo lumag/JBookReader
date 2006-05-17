@@ -8,7 +8,6 @@ import java.awt.event.ComponentEvent;
 import java.io.IOException;
 
 import javax.swing.AbstractAction;
-import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JCheckBox;
@@ -17,6 +16,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class OptionsDialog {
 	private class OptionsComponentListener extends ComponentAdapter {
@@ -69,10 +69,10 @@ public class OptionsDialog {
 
 		pane.add(this.myAntialias = new JCheckBox("Antialias text"));
 
-		pane.add(new JLabel("Font Family"));
+		pane.add(new JLabel("Font Family", SwingConstants.CENTER));
 		pane.add(this.myFontFamily = new JTextField(15));
 
-		pane.add(new JLabel("Font Size"));
+		pane.add(new JLabel("Font Size", SwingConstants.CENTER));
 		pane.add(this.myFontSize = new JSpinner());
 
 		pane.add(new JButton(new OKAction()));

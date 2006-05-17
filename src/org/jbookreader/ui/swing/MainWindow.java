@@ -23,6 +23,7 @@ import javax.swing.KeyStroke;
 
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
+import org.jbookreader.ui.swing.actions.AboutAction;
 import org.jbookreader.ui.swing.actions.OpenAction;
 import org.jbookreader.ui.swing.actions.PageDownAction;
 import org.jbookreader.ui.swing.actions.PageUpAction;
@@ -191,7 +192,7 @@ public class MainWindow {
 		menu = new JMenu(Messages.getString("Help")); //$NON-NLS-1$
 		menu.setMnemonic(KeyEvent.VK_H);
 
-		menuItem = new JMenuItem(Messages.getString("About"), KeyEvent.VK_A); //$NON-NLS-1$
+		menuItem = new JMenuItem(AboutAction.getAction());
 		menu.add(menuItem);
 		
 		return menu;

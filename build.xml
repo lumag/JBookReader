@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE project [<!ENTITY buildfile SYSTEM "file:./build-user.xml">]>
-<project basedir="." default="build" name="JBookReader">
+<project basedir="." default="jar" name="JBookReader">
     <!-- Loads global properties for this build -->
     <property file="build.properties"/>
+    <filter filtersfile="build.properties" />
 
     <path id="project.classpath">
         <pathelement location="bin"/>
@@ -18,11 +18,18 @@
         <mkdir dir="bin"/>
         <mkdir dir="bin-tests"/>
 	<mkdir dir="tests/temp"/>
+	<copy overwrite="true" filtering="true" file="src/org/jbookreader/Values.java.in" tofile="src/org/jbookreader/Values.java" />
     </target>
     <target name="clean">
         <delete dir="bin"/>
         <delete dir="bin-tests"/>
+	<delete>
+		<fileset includes="TEST-*"/>
+		<fileset includes="TESTS-*"/>
+	</delete>
+	<delete file="src/org/jbookreader/Values.java" />
 	<delete dir="docs/api" />
+	<delete dir="docs/report" />
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
@@ -61,14 +68,21 @@
 		<classespath refid="project.classpath" />
 	</jdepend>
     </target>
-    <target name="AllTest" depends="build">
-        <junit fork="yes" printsummary="withOutAndErr">
-            <formatter type="plain"/>
-            <test name="org.jbookreader.AllTest"/>
+    <target name="test" depends="build">
+        <junit fork="yes" printsummary="on" haltonfailure="on">
+            <formatter type="xml"/>
+<!--            <test name="org.jbookreader.AllTests"/> -->
+	    <batchtest>
+	    	<fileset dir="bin-tests" includes="**/*Test*.java" excludes="**/AllTests.java" />
+	    </batchtest>
             <classpath refid="tests.classpath"/>
         </junit>
+	<junitreport >
+	    <fileset dir="." includes="TEST-*.xml"/>
+	    <report format="frames" todir="docs/report" />
+	</junitreport>
     </target>
-    <target name="jar" depends="AllTest">
+    <target name="jar" depends="test">
 	<jar destfile="jbookreader-${project.version}.jar" basedir="bin">
 	    <manifest>
 	    	<attribute name="Sealed" value="true" />
