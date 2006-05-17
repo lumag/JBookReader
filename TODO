@@ -11,6 +11,7 @@ VH- support documents with multiple bodies
 + reopen last book (Done: 06.05.2006: css).
 - save/restore 'last reading position' for all books
 - Create 'Command's and make Actions adapters for commands???
+- Externalize all strings in org.jbookreader.ui.swing
 
 - Table Of Contents
 - the 'go back' feature
