@@ -1,6 +1,7 @@
 package org.jbookreader.ui.swing;
 
-import java.awt.BorderLayout;
+import java.awt.Container;
+import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
@@ -60,10 +61,22 @@ public class OptionsDialog {
 		
 		this.myDialog.addComponentListener(new OptionsComponentListener());
 		
-		this.myDialog.getContentPane().setLayout(new BorderLayout());
-		
-		this.myDialog.add(createContents());
-		this.myDialog.add(createButtonPane(), BorderLayout.SOUTH);
+		Container pane = this.myDialog.getContentPane();
+
+		pane.setLayout(new GridLayout(4, 2));
+
+		pane.add(new JLabel());
+
+		pane.add(this.myAntialias = new JCheckBox("Antialias text"));
+
+		pane.add(new JLabel("Font Family"));
+		pane.add(this.myFontFamily = new JTextField(15));
+
+		pane.add(new JLabel("Font Size"));
+		pane.add(this.myFontSize = new JSpinner());
+
+		pane.add(new JButton(new OKAction()));
+		pane.add(new JButton(new CancelAction()));
 
 		this.myDialog.pack();
 	}
@@ -83,31 +96,6 @@ public class OptionsDialog {
 	private JTextField myFontFamily;
 	private JSpinner myFontSize;
 
-	private JComponent createContents() {
-		JPanel pane = new JPanel();
-		JPanel option;
-		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
-		
-		option = new JPanel();
-		option.setLayout(new BoxLayout(option, BoxLayout.X_AXIS));
-		option.add(this.myAntialias = new JCheckBox("Antialias text"));
-		pane.add(option);
-		
-		option = new JPanel();
-		option.setLayout(new BoxLayout(option, BoxLayout.X_AXIS));
-		option.add(new JLabel("Font Family"));
-		option.add(this.myFontFamily = new JTextField(15));
-		pane.add(option);
-		
-		option = new JPanel();
-		option.setLayout(new BoxLayout(option, BoxLayout.X_AXIS));
-		option.add(new JLabel("Font Size"));
-		option.add(this.myFontSize = new JSpinner());
-		pane.add(option);
-
-		return pane;
-	}
-	
 	private void fillValues() {
 		this.myAntialias.setSelected(Config.getConfig().getBooleanValue("antialias"));
 		this.myFontFamily.setText(Config.getConfig().getStringValue("fontfamily"));
@@ -135,16 +123,6 @@ public class OptionsDialog {
 		}
 
 		OptionsDialog.this.getDialog().setVisible(false);
-	}
-
-	private JComponent createButtonPane() {
-		JPanel pane = new JPanel();
-		pane.setLayout(new BoxLayout(pane, BoxLayout.X_AXIS));
-
-		pane.add(new JButton(new OKAction()));
-		pane.add(new JButton(new CancelAction()));
-
-		return pane;
 	}
 
 }
