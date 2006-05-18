@@ -28,9 +28,9 @@ import java.io.PrintWriter;
 import junit.framework.TestCase;
 
 import org.jbookreader.TestConfig;
-import org.jbookreader.TestUtil;
 import org.jbookreader.book.bom.impl.Book;
 import org.jbookreader.util.ModelDumper;
+import org.lumag.filetest.FileTestUtil;
 
 /**
  * A very simple demonstration for the book model.
@@ -195,8 +195,8 @@ public class BookModelTest extends TestCase {
 		assertNotNull(this.myBook);
 		assertNull(this.myContainer);
 		
-		File expected = TestUtil.getExpectedFile("BOM", "BOM.xml");
-		File tempFile = File.createTempFile(expected.getName() + '.', ".test", TestConfig.getTempDir());
+		File expected = FileTestUtil.getExpectedFile(new TestConfig(),  "BOM", "BOM.xml");
+		File tempFile = FileTestUtil.getTempFile(new TestConfig(), "BOM", "BOM.xml");
 		
 		PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(tempFile))));
 		
@@ -204,7 +204,7 @@ public class BookModelTest extends TestCase {
 		
 		pwr.close();
 		
-		TestUtil.assertFileEqualsStream(expected, tempFile);
+		FileTestUtil.assertFileEqualsStream(expected, tempFile);
 		
 		tempFile.delete();
 	}

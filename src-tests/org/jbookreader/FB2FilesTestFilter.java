@@ -26,7 +26,7 @@ import java.io.FilenameFilter;
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  */
-public class FB2FilesFilter implements FilenameFilter {
+public class FB2FilesTestFilter implements FilenameFilter {
 	public boolean accept(File dir, String name) {
 		if (name.endsWith(".fb2")) {
 			return true;

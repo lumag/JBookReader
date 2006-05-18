@@ -16,17 +16,19 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.jbookreader;
+package org.lumag.filetest;
 
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.Reader;
 
 import junit.framework.Assert;
+import junit.framework.TestSuite;
 
 /**
  * This class contains some utility functions for tests.
@@ -34,7 +36,7 @@ import junit.framework.Assert;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class TestUtil {
+public class FileTestUtil {
 	/**
 	 * Line-by-line compares two streams identified by <code>Reader</code>s
 	 *  <code>expected</code> and <code>test</code>.
@@ -92,23 +94,63 @@ public class TestUtil {
 	}
 
 	/**
+	 * Constructs new <code>TestSuite</code> for files testing.
+	 * @param config the file tests config
+	 * @param module the module which we test
+	 * @param filterClass the filter class for files with tests
+	 * @param fileTestClass the class with testCase.
+	 * @return new <code>TestSuite</code> with file tests.
+	 * @throws Exception if anything goes wrong
+	 */
+	public static TestSuite constructTestSuite(ITestConfig config, String module, Class<? extends FilenameFilter> filterClass, Class<? extends FileTestCase> fileTestClass) throws Exception {
+		TestSuite suite = new TestSuite();
+
+		File fb2TestsDirectory = new File(config.getTestsDir(), module);	
+		File[] tests = fb2TestsDirectory.listFiles(filterClass.newInstance());
+
+		for (File f: tests) {
+			FileTestCase testCase = fileTestClass.newInstance();
+			testCase.setName("testFile");
+			testCase.setModule(module);
+			testCase.setFile(f);
+			suite.addTest(testCase);
+		}
+		
+		return suite;
+
+	}
+	/**
 	 * Returns the test file with specified <code>id</code> for <code>module</code>.
+	 * @param config test configuration
 	 * @param module the module for which to get test
 	 * @param id the id of the test
 	 * @return the test file.
 	 */
-	public static File getTestFile(String module, String id) {
-		return new File(new File(TestConfig.getTestsDir(), module), id);
+	public static File getTestFile(ITestConfig config, String module, String id) {
+		return new File(new File(config.getTestsDir(), module), id);
 	}
 
 	/**
 	 * Returns the file with expected result of test for <code>module</code>
 	 * specified by<code>id</code> .
+	 * @param config test configuration
 	 * @param module the module for which to get expected result file
 	 * @param id the id of the test
 	 * @return the expected result file.
 	 */
-	public static File getExpectedFile(String module, String id) {
-		return new File(new File(TestConfig.getExpectedDir(), module), id);
+	public static File getExpectedFile(ITestConfig config, String module, String id) {
+		return new File(new File(config.getExpectedDir(), module), id);
+	}
+	/**
+	 * Returns the file for temp result of test for <code>module</code>
+	 * specified by<code>id</code> .
+	 * @param config test configuration
+	 * @param module the module for which to get temp result file
+	 * @param id the id of the test
+	 * @return the temp result file.
+	 * @throws IOException If a file could not be created
+	 */
+	public static File getTempFile(ITestConfig config, String module, String id) throws IOException {
+		return File.createTempFile(module + ".", "." + id, config.getTempDir());
 	}
 }

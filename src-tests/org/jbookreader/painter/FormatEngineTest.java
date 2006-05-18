@@ -26,15 +26,16 @@ import java.io.PrintWriter;
 
 import junit.framework.Test;
 
-import org.jbookreader.AbstractFileTestConstructor;
-import org.jbookreader.FB2FilesFilter;
-import org.jbookreader.FileTestCase;
+import org.jbookreader.FB2FilesTestFilter;
+import org.jbookreader.TestConfig;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.formatengine.IBookPainter;
 import org.jbookreader.formatengine.impl.FormatEngine;
 import org.jbookreader.renderingengine.RenderingEngine;
 import org.jbookreader.util.TextPainter;
+import org.lumag.filetest.FileTestCase;
+import org.lumag.filetest.FileTestUtil;
 
 /**
  * This class is a test case generator for the {@link org.jbookreader.formatengine.impl.FormatEngine}.
@@ -43,7 +44,7 @@ import org.jbookreader.util.TextPainter;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class FormatEngineTest extends AbstractFileTestConstructor {
+public class FormatEngineTest {
 	
 	/**
 	 * This is one {@link FormatEngine} <code>TestCase</code>.
@@ -78,7 +79,7 @@ public class FormatEngineTest extends AbstractFileTestConstructor {
 	 */
 	public static Test suite() {
 		try {
-			return constructTestSuite("fengine", FB2FilesFilter.class, FormatEngineTestCase.class);
+			return FileTestUtil.constructTestSuite(new TestConfig(), "fengine", FB2FilesTestFilter.class, FormatEngineTestCase.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

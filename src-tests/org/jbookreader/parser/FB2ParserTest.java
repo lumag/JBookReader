@@ -26,12 +26,13 @@ import java.io.PrintWriter;
 
 import junit.framework.Test;
 
-import org.jbookreader.AbstractFileTestConstructor;
-import org.jbookreader.FB2FilesFilter;
-import org.jbookreader.FileTestCase;
+import org.jbookreader.FB2FilesTestFilter;
+import org.jbookreader.TestConfig;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
 import org.jbookreader.util.ModelDumper;
+import org.lumag.filetest.FileTestCase;
+import org.lumag.filetest.FileTestUtil;
 
 /**
  * A testsuite for the {@link org.jbookreader.book.parser.FB2Parser} class.
@@ -39,7 +40,7 @@ import org.jbookreader.util.ModelDumper;
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class FB2ParserTest extends AbstractFileTestConstructor {
+public class FB2ParserTest {
 	
 	/**
 	 * This class represents one TestCase for parser (one pair of input/expected files).
@@ -66,7 +67,7 @@ public class FB2ParserTest extends AbstractFileTestConstructor {
 	 */
 	public static Test suite() {
 		try {
-			return constructTestSuite("fb2parser", FB2FilesFilter.class, FB2ParserTestCase.class);
+			return FileTestUtil.constructTestSuite(new TestConfig(), "fb2parser", FB2FilesTestFilter.class, FB2ParserTestCase.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}

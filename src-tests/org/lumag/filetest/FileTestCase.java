@@ -16,9 +16,11 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.jbookreader;
+package org.lumag.filetest;
 
 import java.io.File;
+
+import org.jbookreader.TestConfig;
 
 import junit.framework.TestCase;
 
@@ -38,6 +40,10 @@ public abstract class FileTestCase extends TestCase {
 	 * The module which we test.
 	 */
 	private String myModule;
+	/**
+	 * The file tests config
+	 */
+	private ITestConfig myConfig;
 	
 	/**
 	 * Sets the file with test.
@@ -56,17 +62,25 @@ public abstract class FileTestCase extends TestCase {
 	}
 	
 	/**
+	 * Sets the file test config.
+	 * @param config the file test config
+	 */
+	public void setConfig(ITestConfig config) {
+		this.myConfig = config;
+	}
+
+	/**
 	 * This tests one test/expected file pair. If the test fails, the file with generated result
 	 * is left in the {@link TestConfig#getTempDir()} directory.
 	 * @throws Exception if anything goes wrong
 	 */
 	public void testFile() throws Exception {
-		File expected =  TestUtil.getExpectedFile(this.myModule, this.myFile.getName());
-		File tempFile = File.createTempFile(this.myModule + ".",  "." + expected.getName(), TestConfig.getTempDir());
+		File expected =  FileTestUtil.getExpectedFile(this.myConfig, this.myModule, this.myFile.getName());
+		File tempFile = FileTestUtil.getTempFile(this.myConfig, this.myModule, this.myFile.getName());
 		
 		generateOutput(this.myFile, tempFile);
 		
-		TestUtil.assertFileEqualsStream(expected, tempFile);
+		FileTestUtil.assertFileEqualsStream(expected, tempFile);
 		
 		tempFile.delete();
 
