@@ -22,8 +22,8 @@ import junit.framework.Test;
 import junit.framework.TestSuite;
 
 import org.jbookreader.book.bom.BookModelTest;
-import org.jbookreader.painter.FormatEngineTest;
-import org.jbookreader.parser.FB2ParserTest;
+import org.jbookreader.book.parser.FB2ParserTest;
+import org.jbookreader.renderingengine.RenderEngineTest;
 
 /**
  * This <code>TestSuite</code> calls all other <code>TestSuite</code>
@@ -42,7 +42,7 @@ public class AllTests {
 
 		test.addTestSuite(BookModelTest.class);
 		test.addTest(FB2ParserTest.suite());
-		test.addTest(FormatEngineTest.suite());
+		test.addTest(RenderEngineTest.suite());
 
 		return test;
 	}

@@ -16,7 +16,7 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
-package org.jbookreader.parser;
+package org.jbookreader.renderingengine;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -30,46 +30,59 @@ import org.jbookreader.FB2FilesTestFilter;
 import org.jbookreader.TestConfig;
 import org.jbookreader.book.bom.IBook;
 import org.jbookreader.book.parser.FB2Parser;
-import org.jbookreader.util.ModelDumper;
+import org.jbookreader.formatengine.IBookPainter;
+import org.jbookreader.formatengine.impl.FormatEngine;
+import org.jbookreader.renderingengine.RenderingEngine;
+import org.jbookreader.util.TextPainter;
 import org.lumag.filetest.FileTestCase;
 import org.lumag.filetest.FileTestUtil;
 
 /**
- * A testsuite for the {@link org.jbookreader.book.parser.FB2Parser} class.
+ * This class is a test case generator for the {@link org.jbookreader.formatengine.impl.FormatEngine}.
+ * The engine is tested via formatting with {@link org.jbookreader.util.TextPainter}.
  * 
  * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
  *
  */
-public class FB2ParserTest {
+public class RenderEngineTest {
 	
 	/**
-	 * This class represents one TestCase for parser (one pair of input/expected files).
+	 * This is one {@link FormatEngine} <code>TestCase</code>.
 	 * 
 	 * @author Dmitry Baryshkov (dbaryshkov@gmail.com)
 	 *
 	 */
-	public static class FB2ParserTestCase extends FileTestCase {
+	public static class RenderEngineTestCase extends FileTestCase {
 		@Override
-		protected void generateOutput(File inFile, File outFile) throws Exception {
+		protected void generateOutput(File inFile, File outFile)
+				throws Exception {
 			IBook book = FB2Parser.parse(inFile);
 			PrintWriter pwr = new PrintWriter(new OutputStreamWriter(new BufferedOutputStream(new FileOutputStream(outFile))));
 			
-			ModelDumper.dumpBOM(pwr, book);
+			IBookPainter painter = new TextPainter(pwr, 80);
+			
+			RenderingEngine engine = new RenderingEngine(new FormatEngine());
+
+			engine.setBook(book);
+			engine.setPainter(painter);
+			engine.renderPage();
 			
 			pwr.close();
-			
 		}
+
+		
 	}
-	
+
 	/**
-	 * Generates testsuite containing {@link FB2ParserTestCase} for each test file.
-	 * @return a test for the FB2 parser.
+	 * Generates testsuite containing {@link RenderEngineTestCase} for each test file.
+	 * @return a test for the formatting engine.
 	 */
 	public static Test suite() {
 		try {
-			return FileTestUtil.constructTestSuite(new TestConfig(), "fb2parser", FB2FilesTestFilter.class, FB2ParserTestCase.class);
+			return FileTestUtil.constructTestSuite(new TestConfig(), "fengine", FB2FilesTestFilter.class, RenderEngineTestCase.class);
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
 	}
+
 }
