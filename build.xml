@@ -75,8 +75,8 @@
 	<fail if="project.test.failed" />
     </target>
     <target name="jar" depends="test">
-	<jar destfile="${ant.project.name}-${project.version}.jar" basedir="bin">
-	    <fileset dir="bin" />
+	<jar destfile="${ant.project.name}-${project.version}.jar">
+	    <fileset dir="bin" excludes="**/*Test*" />
 	    <fileset file="COPYING" />
 	    <manifest>
 	    	<attribute name="Sealed" value="true" />

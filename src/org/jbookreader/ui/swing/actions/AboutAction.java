@@ -66,7 +66,7 @@ public class AboutAction extends AbstractAction {
 		JPanel pane = new JPanel();
 		pane.setLayout(new BoxLayout(pane, BoxLayout.Y_AXIS));
 
-		JLabel label = new JLabel("JBookReader " + org.jbookreader.Values.version, SwingConstants.CENTER);
+		JLabel label = new JLabel("JBookReader " + org.jbookreader.Values.getProjectVersion(), SwingConstants.CENTER);
 		label.setFont(new Font("Sans", Font.BOLD, 16));
 //		label.setBorder(BorderFactory.createEmptyBorder(7, 7, 7, 7));
 		pane.add(label);
