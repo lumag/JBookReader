@@ -74,7 +74,7 @@
 	<fail if="project.test.failed" />
     </target>
     <target name="jar" depends="test">
-	<jar destfile="${ant.project.name}-${project.version}.jar" basedir="bin">
+	<jar destfile="${ant.project.name}-${project.version}.jar">
 	    <fileset dir="bin" />
 	    <fileset file="COPYING" />
 	    <manifest>
