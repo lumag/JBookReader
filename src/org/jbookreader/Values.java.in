@@ -18,6 +18,9 @@
  */
 package org.jbookreader;
 
-public interface Values {
-	String version = "@project.version@";
+public class Values {
+	private static final String PROJECT_VERSION = "@project.version@";
+	public static String getProjectVersion() {
+		return PROJECT_VERSION;
+	}
 }
