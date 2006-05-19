@@ -5,27 +5,22 @@
     <filter filtersfile="build.properties" />
 
     <path id="project.classpath">
-        <pathelement location="bin"/>
-    </path>
-    <path id="tests.classpath">
-    	<path refid="project.classpath"/>
-        <pathelement location="bin-tests"/>
-        <pathelement location="bin-misc"/>
-        <pathelement location="${JUNIT_HOME}/junit.jar"/>
+	<pathelement path="${classpath}" />
+	<pathelement location="bin" />
+	<fileset dir="lib" includes="**/*.jar" />
+	<pathelement location="${JUNIT_HOME}/junit.jar" />
     </path>
 
     <target name="init">
         <mkdir dir="bin"/>
-        <mkdir dir="bin-tests"/>
 	<mkdir dir="tests/temp"/>
 	<copy overwrite="true" filtering="true" file="src/org/jbookreader/Values.java.in" tofile="src/org/jbookreader/Values.java" />
     </target>
     <target name="clean">
         <delete dir="bin"/>
-        <delete dir="bin-tests"/>
 	<delete>
-		<fileset includes="TEST-*"/>
-		<fileset includes="TESTS-*"/>
+		<fileset dir="." includes="TEST-*"/>
+		<fileset dir="." includes="TESTS-*"/>
 	</delete>
 	<delete file="src/org/jbookreader/Values.java" />
 	<delete dir="docs/api" />
@@ -33,16 +28,13 @@
     </target>
     <target depends="init" name="build">
         <echo message="${ant.project.name}: ${ant.file}"/>
-        <javac debug="${build.debug}" destdir="bin">
+	<javac debug="${build.debug}" destdir="bin" classpathref="project.classpath">
             <src path="src"/>
+            <src path="src-css-parser/"/>
         </javac>
 	<copy todir="bin">
 	    <fileset dir="src" includes="**/*.properties" />
 	</copy>
-        <javac debug="${build.debug}" destdir="bin-tests">
-            <src path="src-tests"/>
-            <classpath refid="tests.classpath"/>
-        </javac>
     </target>
     <target name="Main" depends="build">
         <java classname="org.jbookreader.ui.swing.Main" failonerror="true" fork="yes">
@@ -51,7 +43,7 @@
     </target>
     <target name="TextUI" depends="build">
         <java classname="org.jbookreader.ui.text.TextUI" failonerror="true" fork="yes">
-            <classpath refid="tests.classpath"/>
+            <classpath refid="project.classpath"/>
         </java>
     </target>
     <target name="javadoc" depends="init">
@@ -69,21 +61,21 @@
 	</jdepend>
     </target>
     <target name="test" depends="build">
-        <junit fork="yes" printsummary="on" haltonfailure="on">
+        <junit fork="yes" printsummary="on" haltonfailure="off" failureproperty="project.test.failed">
             <formatter type="xml"/>
-<!--            <test name="org.jbookreader.AllTests"/> -->
 	    <batchtest>
-	    	<fileset dir="bin-tests" includes="**/*Test*.java" excludes="**/AllTests.java" />
+	    	<fileset dir="src" includes="**/*Test.java" excludes="**/AllTests.java, **/Abstract*" />
 	    </batchtest>
-            <classpath refid="tests.classpath"/>
+            <classpath refid="project.classpath"/>
         </junit>
 	<junitreport >
 	    <fileset dir="." includes="TEST-*.xml"/>
 	    <report format="frames" todir="docs/report" />
 	</junitreport>
+	<fail if="project.test.failed" />
     </target>
     <target name="jar" depends="test">
-	<jar destfile="jbookreader-${project.version}.jar" basedir="bin">
+	<jar destfile="${ant.project.name}-${project.version}.jar" basedir="bin">
 	    <fileset dir="bin" />
 	    <fileset file="COPYING" />
 	    <manifest>
@@ -93,14 +85,13 @@
 	</jar>
     </target>
     <target name="srczip" >
-    	<zip destfile="jbookreader-${project.version}-src.zip" >
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="src-tests/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="docs/**" excludes="docs/api/**"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="build.*"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="COPYING"/>
-	    <zipfileset prefix="jbookreader-${project.version}" dir="." includes="TODO"/>
+    	<zip destfile="${ant.project.name}-${project.version}-src.zip" >
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="src/**"/>
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="tests/**" excludes="tests/temp/**"/>
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="docs/**" excludes="docs/api/**, docs/report/**"/>
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="build.*"/>
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="COPYING"/>
+	    <zipfileset prefix="${ant.project.name}-${project.version}" dir="." includes="TODO"/>
 	</zip>
     </target>
     <target name="help">
